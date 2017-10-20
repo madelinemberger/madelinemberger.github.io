@@ -1,3 +1,5 @@
+* {margin:0;padding:0;box-sizing:border-box;}
+img { width:300px; }
 header {
 	text-align: center;
 	padding: 20px;
@@ -14,14 +16,7 @@ nav a{
 }
 
 body {
-	background-color: white;
 	font-family: Helvetica, Arial, sans-serif;
-}
-
-section {
-	padding: 0;
-	margin-right: 200px;
-	margin-left: 200px;
 }
 
 ul {
@@ -39,16 +34,14 @@ footer{
 
 #logo {
 	height: auto;
-	max-width: 200px;
+	width: 200px;
 	display: block;
 	margin:0 auto;
 }
 
-#hero { 
-	height: auto;
-	max-width: 1000px; 
-	display: block;
-	margin:0 auto;
+#hero {
+	height: 90vh;
+	background: url(../images/Hero2.png);
 }
 
 
