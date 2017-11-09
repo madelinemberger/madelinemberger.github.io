@@ -1,0 +1,101 @@
+@import url('https://fonts.googleapis.com/css?family=Teko:400, 700');
+
+* {margin:0;padding:0;box-sizing:border-box;}
+img { width:300px; }
+header {
+	text-align: center;
+	padding: 20px;
+	background-color: #FFED74; /*remove later*/
+	border: 1 px black solid;/*remove later*/
+}
+
+a {
+	color: #787F78;
+	text-decoration: none;
+}
+
+nav a{
+	color: #787F78;
+	margin-right: 20px; /*why did I put a?*/
+	padding: 20px;
+	background-color: #E8C66A; /*remove later*/
+	border: border 1px black solid;
+}
+
+body {
+	font-family: Helvetica, Arial, sans-serif;
+}
+
+h2 {
+	font-family: 'Teko', sans-serif;
+}
+
+
+section {
+	padding: 20px;
+}
+
+ul {
+	list-style-type: none;
+}
+
+footer{
+	padding: 20px;
+	background-color: #FF957E;/*#3C403C*/
+	border: 1px black solid;
+}
+
+
+#slogan {
+	font-style: italic;
+	font-family: 'Teko', sans-serif;
+}
+
+#logo {
+	height: auto;
+	width: 200px;
+	display: block;
+	margin:0 auto;
+}
+
+#hero {
+	height: 90vh;
+	background: url(../images/Hero2.png);
+}
+
+.wrapper { /*remove later*/
+	background-color: #FFE2B8;
+	border: 1px black solid;
+	padding: 20px;
+}
+
+.bb {
+	background-color: #FFE2B8;
+	border: 1px black solid;
+	padding: 20px;
+}
+
+#three_column{
+	background-color: #FFB7CF;
+	border: 1px black solid;
+	padding: 20px;
+}
+
+#left {
+	background-color: #E582A2;
+	border: 1px black solid;
+	padding: 20px;
+}
+
+#center {
+	border: 1px black solid;
+	padding: 20px;
+	background-color: #FFF
+}
+
+#projects {
+	background-color: #E89C6C;
+	border: 1px black solid;
+	padding: 20px;
+}
+
