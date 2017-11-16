@@ -3,21 +3,23 @@ img { width:300px; }
 header {
 	text-align: center;
 	padding: 20px;
-	background-color: #FFED74; /*remove later*/
 	border: 1 px black solid;/*remove later*/
 }
 
 a {
-	color: #787F78;
-	text-decoration: none;
+	color: black;
 }
 
-nav a{
-	color: #787F78;
-	margin-right: 20px; /*why did I put a?*/
+nav {
+	margin-right: 20px;
 	padding: 20px;
-	background-color: #E8C66A; /*remove later*/
 	border: border 1px black solid;
+}
+
+nav a {
+	color: #787F78;
+	text-decoration: none;
+	padding: 20px;
 }
 
 body {
@@ -56,44 +58,40 @@ footer{
 }
 
 .bb {
-	background-color: #FFE2B8;
-	border: 1px black solid;
 	padding: 20px;
+	margin: 5px;
+	border: 1px black solid;
+	max-width: 20em;
+	background-color: (255,255,255);
 }
 
 #three_column{
-	background-color: #FFB7CF;
+	background-color: #84D629;
 	border: 1px black solid;
-	padding: 20px;
+	padding-top: 40px;
+	height: 25em;
+	border: 1px black;
+	padding-left: 40px;
+	padding-right: 40px;
 }
 
 #left {
-	background-color: violet;
-	border: 1px black solid;
-	padding: 20px;
 	float: left;
-	width: 30%;
+	width: 33.3%;
 }
 
 #center {
-	border: 1px black solid;
-	padding: 20px;
-	background-color: white;
-	float: center;
-	width: 30%;
+	float: left;
+	width: 33.3%;
 }
 
+
 #right {
-	background-color: pink;
-	border: 1px black solid;
-	padding: 20px;
 	float: left;
-	width: 30%;
+	width: 33.3%;
 }
 
 #projects {
-	background-color: #E89C6C;
-	border: 1px black solid;
 	padding: 20px;
 }
 
