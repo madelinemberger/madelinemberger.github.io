@@ -1,0 +1,117 @@
+* {margin:0;padding:0;box-sizing:border-box;}
+img { width:300px; }
+header {
+	text-align: center;
+	padding: 20px;
+	border: 1 px black solid;/*remove later*/
+}
+
+a {
+	color: black;
+}
+
+nav {
+	margin-right: 20px;
+	padding: 20px;
+	border: border 1px black solid;
+}
+
+nav a {
+	color: #787F78;
+	text-decoration: none;
+	padding: 20px;
+}
+
+body {
+	font-family: Helvetica, Arial, sans-serif;
+}
+
+h2 {
+	font-family: Helvetica, Arial, sans-serif;
+}
+
+
+section {
+	padding: 20px;
+}
+
+ul {
+	list-style-type: none;
+}
+
+li {
+	float: left;
+}
+
+footer{
+	padding: 20px;
+	background-color: #FF957E;/*#3C403C*/
+	border: 1px black solid;
+}
+
+#logo {
+	height: auto;
+	width: 200px;
+	display: block;
+	margin:0 auto;
+}
+
+#hero {
+	height: 90vh;
+	background: url(../images/Hero2.png);
+}
+
+#three_column{
+	background-color: #84D629;
+	border: 1px black solid;
+	padding-top: 40px;
+	height: 25em;
+	border: 1px black;
+	padding-left: 40px;
+	padding-right: 40px;
+}
+
+#left {
+	float: left;
+	width: 33.3%;
+}
+
+#center {
+	float: left;
+	width: 33.3%;
+}
+
+
+#right {
+	float: left;
+	width: 33.3%;
+}
+
+#projects {
+	padding: 20px;
+}
+
+.clearfix:after {
+	visibility: hidden;
+	display: block;
+	font-size: 0;
+	content: " ";
+	clear: both;
+	height: 0;
+}
+
+.bb{ 
+    padding: 20px;
+	margin: 5px;
+	border: 1px black solid;
+	max-width: 20em;
+	background-color: (255,255,255);
+	height: 181px; /*why isnt this working*/
+
+ }
+
+ .bbtext {
+ 	padding: 5%;
+ }
+
+
