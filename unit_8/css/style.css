@@ -3,7 +3,6 @@ img { width:300px; }
 header {
 	text-align: center;
 	padding: 20px;
-	border: 1 px black solid;/*remove later*/
 }
 
 a {
