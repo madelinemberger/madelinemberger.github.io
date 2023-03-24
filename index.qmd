@@ -1,12 +1,32 @@
 ---
-title: "madelinemberger.github.io"
+title: "Madeline Berger"
+image: Madeline5.jpg
+about:
+  template: trestles
+  image-shape: rounded
+  image-width: 15em
+  links: 
+    - text: LinkedIn
+      href: https://www.linkedin.com/in/madeline-berger-a803a27a/
+    - text: GitHub
+      href: https://github.com/madelinemberger
+    - text: Email
+      href: mailto:mberge15@asu.edu
+
 ---
 
-Yo.
-Thanks!
+## Hello!
 
-To learn more about Quarto websites visit <https://quarto.org/docs/websites>.
+I am a spatial data analyst working to support marine management projects. I like swimming, running, and lizards. I also love maps and exploring different tools to support good science and participatory decision making.
 
-```{r}
-1 + 1
-```
+--- 
+
+## Education
+
+**MESM in Conservation Planning & Data Science** (2020) |
+University of California, Santa Barbara | Santa Barbara, CA
+
+
+**BA in Economics** (2016) | University of California, Los Angeles | Los Angeles, CA
+
+---
