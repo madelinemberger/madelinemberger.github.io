@@ -1,0 +1,22 @@
+---
+title: "Resources"
+subtitle: "A place to compile data resources related to ocean management and spatial planning"
+
+---
+
+## Map Tools
+
+As spatial planning, and especially marine spatial planning, gains more momentum as a management tool for healthy environments, organizations have been creating helpful interactive map tools to view and assess data. Some of these sources also provide data, and are included in my "user friendly / wrangle level" graphic. 
+
+
+
+## Ocean Data Sources
+
+There is *tons* of data to download out there, but even after 3+ years working with marine data I realized that I still started most of my data hunts with a generic Google search. This section to start recording different sources I've found useful, both for my own and hopefully for others' benefit.  
+
+
+
+
+## Open Source Science
+
+I was incredibly fortunate to launch my career in conservation at the National Center for Ecological Analysis and Synthesis, where open and reproducible science is at the forefront of every project. These are some resources I found most helpful when thinking about how to structure projects, and code, in a way that is clear and easy to share with others. 

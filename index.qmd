@@ -1,6 +1,6 @@
 ---
 title: "Madeline Berger"
-image: Madeline5.jpg
+image: images/Madeline5.jpg
 about:
   template: trestles
   image-shape: rounded
@@ -17,7 +17,7 @@ about:
 
 ## Hello!
 
-I am a spatial data analyst working to support marine management projects. I like swimming, running, and lizards. I also love maps and exploring different tools to support good science and participatory decision making.
+I am an interdisciplinary spatial data analyst, currently working to support marine management projects. I love data, maps and exploring different tools to support good science and participatory decision making. I also like swimming, running, and lizards.
 
 --- 
 
@@ -30,3 +30,14 @@ University of California, Santa Barbara | Santa Barbara, CA
 **BA in Economics** (2016) | University of California, Los Angeles | Los Angeles, CA
 
 ---
+
+## Experience
+
+**Spatial Analysis and Data Specialist**, 2022 - Present
+*Hawaii Monitoring and Reporting Collaborative*
+
+**Spatial Analyst and Modeler**, September 2020 - October 2022
+*National Center for Ecological Analysis & Synthesis*
+
+**Ocean Health Index Fellow**, March 2020 - September 2020
+*National Center for Ecological Analysis & Synthesis*

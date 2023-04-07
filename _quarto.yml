@@ -8,11 +8,15 @@ website:
     left:
       - href: index.qmd
         text: Home
-      - about.qmd
+      - href: resources.qmd
+        text: Resources
+      - href: CV/MBerger_CV.pdf
+        text: CV
+  
 
 format:
   html:
-    theme: cosmo
+    theme: minty
     css: styles.css
     toc: true
 

@@ -4,7 +4,7 @@
     "href": "index.html",
     "title": "Madeline Berger",
     "section": "",
-    "text": "I am a spatial data analyst working to support marine management projects. I like swimming, running, and lizards. I also love maps and exploring different tools to support good science and participatory decision making."
+    "text": "I am an interdisciplinary spatial data analyst, currently working to support marine management projects. I love data, maps and exploring different tools to support good science and participatory decision making. I also like swimming, running, and lizards."
   },
   {
     "objectID": "index.html#education",
@@ -14,10 +14,31 @@
     "text": "Education\nMESM in Conservation Planning & Data Science (2020) | University of California, Santa Barbara | Santa Barbara, CA\nBA in Economics (2016) | University of California, Los Angeles | Los Angeles, CA"
   },
   {
-    "objectID": "about.html",
-    "href": "about.html",
-    "title": "About",
+    "objectID": "index.html#experience",
+    "href": "index.html#experience",
+    "title": "Madeline Berger",
+    "section": "Experience",
+    "text": "Experience\nSpatial Analysis and Data Specialist, 2022 - Present Hawaii Monitoring and Reporting Collaborative\nSpatial Analyst and Modeler, September 2020 - October 2022 National Center for Ecological Analysis & Synthesis\nOcean Health Index Fellow, March 2020 - September 2020 National Center for Ecological Analysis & Synthesis"
+  },
+  {
+    "objectID": "resources.html",
+    "href": "resources.html",
+    "title": "Resources",
     "section": "",
-    "text": "About this site\n\n1 + 1\n\n[1] 2"
+    "text": "With spatial planning, and especially marine spatial planning, gains more momentum as a management tool for healthy environments, organizations have been creating helpful interactive map tools to view and assess data. Some of these sources also provide data, and are included in my “user friendly / wrangle level” graphic."
+  },
+  {
+    "objectID": "resources.html#data-sources",
+    "href": "resources.html#data-sources",
+    "title": "Resources",
+    "section": "Data Sources",
+    "text": "Data Sources\nThere is tons of data to download out there, but even after 3+ years working with marine data I realized that I still started by data hunts with a generic Google search. This section to start recording different sources I’ve found useful, both for my own and hopefully others benefit."
+  },
+  {
+    "objectID": "resources.html#open-source-science",
+    "href": "resources.html#open-source-science",
+    "title": "Resources",
+    "section": "Open Source Science",
+    "text": "Open Source Science\nI was incredibly fortunate to launch my career in conservation at the National Center for Ecological Analysis and Synthesis, where open and reproducible science is at the forefront of every project. These are some resources I found most helpful when thinking about how to structure projects, and code, in a way that is clear and easy to share with others."
   }
 ]
