@@ -4,14 +4,26 @@ project:
 
 website:
   title: "Madeline Berger"
+  favicon: images/logos/green_burger.png
   navbar:
-    left:
+    title: Madeline Berger
+    #logo: images/logos/logo_green.png
+    right:
       - href: index.qmd
         text: Home
       - href: resources.qmd
         text: Resources
       - href: CV/MBerger_CV.pdf
         text: CV
+  page-footer: 
+    background: light
+    left: 
+      - "Copyright 2022, Madeline Berger"
+    right: 
+      - icon: github
+        href: https://github.com/madelinemberger
+      #- icon: twitter
+       # href: https://twitter.com/SamanthaCsik
   
 
 format:

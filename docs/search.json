@@ -18,21 +18,21 @@
     "href": "index.html#experience",
     "title": "Madeline Berger",
     "section": "Experience",
-    "text": "Experience\nSpatial Analysis and Data Specialist, 2022 - Present Hawaii Monitoring and Reporting Collaborative\nSpatial Analyst and Modeler, September 2020 - October 2022 National Center for Ecological Analysis & Synthesis\nOcean Health Index Fellow, March 2020 - September 2020 National Center for Ecological Analysis & Synthesis"
+    "text": "Experience\nSpatial Analysis and Data Specialist, 2022 - Present | Hawaii Monitoring and Reporting Collaborative (HIMARC)\nSpatial Analyst and Modeler, September 2020 - October 2022 | National Center for Ecological Analysis & Synthesis & SeaSketch\nOcean Health Index Fellow, March 2020 - September 2020 | National Center for Ecological Analysis & Synthesis"
   },
   {
     "objectID": "resources.html",
     "href": "resources.html",
     "title": "Resources",
     "section": "",
-    "text": "With spatial planning, and especially marine spatial planning, gains more momentum as a management tool for healthy environments, organizations have been creating helpful interactive map tools to view and assess data. Some of these sources also provide data, and are included in my “user friendly / wrangle level” graphic."
+    "text": "As spatial planning, and especially marine spatial planning, gains more momentum as a management tool for healthy environments, organizations have been creating helpful interactive map tools to view and assess data. Some of these sources also provide data, and are included in my “user friendly / wrangle level” graphic."
   },
   {
-    "objectID": "resources.html#data-sources",
-    "href": "resources.html#data-sources",
+    "objectID": "resources.html#ocean-data-sources",
+    "href": "resources.html#ocean-data-sources",
     "title": "Resources",
-    "section": "Data Sources",
-    "text": "Data Sources\nThere is tons of data to download out there, but even after 3+ years working with marine data I realized that I still started by data hunts with a generic Google search. This section to start recording different sources I’ve found useful, both for my own and hopefully others benefit."
+    "section": "Ocean Data Sources",
+    "text": "Ocean Data Sources\nThere is tons of data to download out there, but even after 3+ years working with marine data I realized that I still started most of my data hunts with a generic Google search. This section to start recording different sources I’ve found useful, both for my own and hopefully for others’ benefit."
   },
   {
     "objectID": "resources.html#open-source-science",
