@@ -7,7 +7,7 @@ website:
   favicon: images/logos/green_burger.png
   navbar:
     title: Madeline Berger
-    #logo: images/logos/logo_green.png
+    logo: images/logos/name_icon_giant.png
     right:
       - href: index.qmd
         text: Home

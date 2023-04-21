@@ -1,9 +1,9 @@
 ---
 title: "Madeline Berger"
-image: images/Madeline5.jpg
+image: images/headshot_sq.jpg
 about:
   template: trestles
-  image-shape: rounded
+  image-shape: round
   image-width: 15em
   links: 
     - text: LinkedIn
