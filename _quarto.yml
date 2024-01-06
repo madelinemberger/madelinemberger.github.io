@@ -13,6 +13,8 @@ website:
         text: Home
       - href: resources.qmd
         text: Resources
+      - href: posts.qmd
+        text: Porfolio
       - href: CV/MBerger_CV.pdf
         text: CV
   page-footer: 
