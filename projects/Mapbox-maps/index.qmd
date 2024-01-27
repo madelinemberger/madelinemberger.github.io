@@ -1,0 +1,11 @@
+---
+title: "Dynamic cartography using Mapbox"
+author: "Madeline Berger"
+editor: visual
+categories: [publications,analysis,coral]
+image: CFSB_Vectors_print.jpg
+---
+
+Working as a Marine Spatial Planning analyst with the McClintock lab had the added benefit that I got to know and learn how to use the latest advances in open source geospatial and mapping tools, as [SeaSketch](https://www.seasketch.org/) shifted towards its own completely open source design.
+
+One of those tools was Mapbox, and I found myself really enjoying the streamlined and transparent process of adding and then styling data using this tool. I've since used Mapbox to create maps for independent projects I've worked on free, which I'll explain more below.

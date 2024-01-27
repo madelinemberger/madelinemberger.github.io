@@ -2,13 +2,15 @@
   {
     "listing": "/posts_alt.html",
     "items": [
-      "/projects/MAR-paper/index.html"
+      "/projects/MAR-paper/index.html",
+      "/projects/Mapbox-maps/index.html"
     ]
   },
   {
     "listing": "/posts.html",
     "items": [
-      "/projects/MAR-paper/index.html"
+      "/projects/MAR-paper/index.html",
+      "/projects/Mapbox-maps/index.html"
     ]
   }
 ]

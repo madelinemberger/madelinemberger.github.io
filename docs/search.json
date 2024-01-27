@@ -56,6 +56,13 @@
     "text": "Experience\nSpatial Analysis and Data Specialist, 2022 - Present | Hawaii Monitoring and Reporting Collaborative (HIMARC)\nSpatial Analyst and Modeler, September 2020 - October 2022 | National Center for Ecological Analysis & Synthesis & SeaSketch\nOcean Health Index Fellow, March 2020 - September 2020 | National Center for Ecological Analysis & Synthesis"
   },
   {
+    "objectID": "projects/Mapbox-maps/index.html",
+    "href": "projects/Mapbox-maps/index.html",
+    "title": "Dynamic cartography using Mapbox",
+    "section": "",
+    "text": "Working as a Marine Spatial Planning analyst with the McClintock lab had the added benefit that I got to know and learn how to use the latest advances in open source geospatial and mapping tools, as SeaSketch shifted towards its own completely open source design.\nOne of those tools was Mapbox, and I found myself really enjoying the streamlined and transparent process of adding and then styling data using this tool. I’ve since used Mapbox to create maps for independent projects I’ve worked on free, which I’ll explain more below."
+  },
+  {
     "objectID": "projects/MAR-paper/index.html",
     "href": "projects/MAR-paper/index.html",
     "title": "Quantifying nitrogen pollution to the worlds 2nd largest barrier reef",
@@ -74,6 +81,6 @@
     "href": "posts.html",
     "title": "Portfolio",
     "section": "",
-    "text": "Quantifying nitrogen pollution to the worlds 2nd largest barrier reef\n\n\n\n\n\n\nMadeline Berger\n\n\n\n\n\n\n\n\nNo matching items"
+    "text": "Quantifying nitrogen pollution to the worlds 2nd largest barrier reef\n\n\n\n\n\n\nMadeline Berger\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nDynamic cartography using Mapbox\n\n\n\n\n\n\nMadeline Berger\n\n\n\n\n\n\n\n\nNo matching items"
   }
 ]
