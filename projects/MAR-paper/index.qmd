@@ -1,0 +1,9 @@
+---
+title: "Quantifying nitrogen pollution to the worlds 2nd largest barrier reef"
+author: "Madeline Berger"
+editor: visual
+categories: [publications,analysis,coral]
+image: 5_sources_by_basin_v4.jpg
+---
+
+In 2020 I published the results from an analysis I worked on as a spatial data analyst at NCEAS.

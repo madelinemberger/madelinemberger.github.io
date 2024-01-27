@@ -32,7 +32,7 @@
     "href": "posts.html",
     "title": "Portfolio",
     "section": "",
-    "text": "No matching items"
+    "text": "Quantifying nitrogen pollution to the worlds 2nd largest barrier reef\n\n\n\n\n\n\nMadeline Berger\n\n\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "resources.html",
@@ -61,5 +61,19 @@
     "title": "Resources",
     "section": "Open Source Science",
     "text": "Open Source Science\nI was incredibly fortunate to launch my career in conservation at the National Center for Ecological Analysis and Synthesis, where open and reproducible science is at the forefront of every project. These are some resources I found most helpful when thinking about how to structure projects, and code, in a way that is clear and easy to share with others."
+  },
+  {
+    "objectID": "projects/MAR-paper/index.html",
+    "href": "projects/MAR-paper/index.html",
+    "title": "Quantifying nitrogen pollution to the worlds 2nd largest barrier reef",
+    "section": "",
+    "text": "In 2020 I published the results from an analysis I worked on as a spatial data analyst at NCEAS."
+  },
+  {
+    "objectID": "posts.html#mar-sample",
+    "href": "posts.html#mar-sample",
+    "title": "Portfolio",
+    "section": "MAR sample",
+    "text": "MAR sample\n\n\nHow does this look\n\n\n\n\n\n\nFigure 5"
   }
 ]

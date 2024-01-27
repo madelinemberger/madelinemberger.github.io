@@ -7,3 +7,21 @@ listing:
   categories: false # allows you to sort posts by assigned categories 
 ---
 
+```         
+
+```
+
+## MAR sample
+
+::: columns
+::: {.column width="55%"}
+How does this look
+:::
+
+::: {.column width="5%"}
+:::
+
+::: {.column width="40%"}
+![Figure 5](./projects/MAR-paper/5_sources_by_basin_v4.jpg)
+:::
+:::

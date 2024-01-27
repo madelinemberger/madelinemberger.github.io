@@ -1,6 +1,8 @@
 [
   {
     "listing": "/posts.html",
-    "items": []
+    "items": [
+      "/projects/MAR-paper/index.html"
+    ]
   }
 ]
