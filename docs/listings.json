@@ -1,5 +1,11 @@
 [
   {
+    "listing": "/posts_alt.html",
+    "items": [
+      "/projects/MAR-paper/index.html"
+    ]
+  },
+  {
     "listing": "/posts.html",
     "items": [
       "/projects/MAR-paper/index.html"

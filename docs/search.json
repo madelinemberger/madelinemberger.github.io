@@ -1,40 +1,5 @@
 [
   {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "Madeline Berger",
-    "section": "",
-    "text": "I am an interdisciplinary spatial data analyst, currently working to support marine management projects. I love data, maps and exploring different tools to support good science and participatory decision making."
-  },
-  {
-    "objectID": "index.html#hello",
-    "href": "index.html#hello",
-    "title": "Madeline Berger",
-    "section": "",
-    "text": "I am an interdisciplinary spatial data analyst, currently working to support marine management projects. I love data, maps and exploring different tools to support good science and participatory decision making."
-  },
-  {
-    "objectID": "index.html#education",
-    "href": "index.html#education",
-    "title": "Madeline Berger",
-    "section": "Education",
-    "text": "Education\nMESM in Conservation Planning & Data Science (2020) | University of California, Santa Barbara | Santa Barbara, CA\nBA in Economics (2016) | University of California, Los Angeles | Los Angeles, CA"
-  },
-  {
-    "objectID": "index.html#experience",
-    "href": "index.html#experience",
-    "title": "Madeline Berger",
-    "section": "Experience",
-    "text": "Experience\nSpatial Analysis and Data Specialist, 2022 - Present | Hawaii Monitoring and Reporting Collaborative (HIMARC)\nSpatial Analyst and Modeler, September 2020 - October 2022 | National Center for Ecological Analysis & Synthesis & SeaSketch\nOcean Health Index Fellow, March 2020 - September 2020 | National Center for Ecological Analysis & Synthesis"
-  },
-  {
-    "objectID": "posts.html",
-    "href": "posts.html",
-    "title": "Portfolio",
-    "section": "",
-    "text": "Quantifying nitrogen pollution to the worlds 2nd largest barrier reef\n\n\n\n\n\n\nMadeline Berger\n\n\n\n\n\n\n\n\nNo matching items"
-  },
-  {
     "objectID": "resources.html",
     "href": "resources.html",
     "title": "Resources",
@@ -63,6 +28,34 @@
     "text": "Open Source Science\nI was incredibly fortunate to launch my career in conservation at the National Center for Ecological Analysis and Synthesis, where open and reproducible science is at the forefront of every project. These are some resources I found most helpful when thinking about how to structure projects, and code, in a way that is clear and easy to share with others."
   },
   {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Madeline Berger",
+    "section": "",
+    "text": "I am an interdisciplinary spatial data analyst, currently working to support marine management projects. I love data, maps and exploring different tools to support good science and participatory decision making."
+  },
+  {
+    "objectID": "index.html#hello",
+    "href": "index.html#hello",
+    "title": "Madeline Berger",
+    "section": "",
+    "text": "I am an interdisciplinary spatial data analyst, currently working to support marine management projects. I love data, maps and exploring different tools to support good science and participatory decision making."
+  },
+  {
+    "objectID": "index.html#education",
+    "href": "index.html#education",
+    "title": "Madeline Berger",
+    "section": "Education",
+    "text": "Education\nMESM in Conservation Planning & Data Science (2020) | University of California, Santa Barbara | Santa Barbara, CA\nBA in Economics (2016) | University of California, Los Angeles | Los Angeles, CA"
+  },
+  {
+    "objectID": "index.html#experience",
+    "href": "index.html#experience",
+    "title": "Madeline Berger",
+    "section": "Experience",
+    "text": "Experience\nSpatial Analysis and Data Specialist, 2022 - Present | Hawaii Monitoring and Reporting Collaborative (HIMARC)\nSpatial Analyst and Modeler, September 2020 - October 2022 | National Center for Ecological Analysis & Synthesis & SeaSketch\nOcean Health Index Fellow, March 2020 - September 2020 | National Center for Ecological Analysis & Synthesis"
+  },
+  {
     "objectID": "projects/MAR-paper/index.html",
     "href": "projects/MAR-paper/index.html",
     "title": "Quantifying nitrogen pollution to the worlds 2nd largest barrier reef",
@@ -70,10 +63,17 @@
     "text": "In 2020 I published the results from an analysis I worked on as a spatial data analyst at NCEAS."
   },
   {
-    "objectID": "posts.html#mar-sample",
-    "href": "posts.html#mar-sample",
+    "objectID": "posts_alt.html#mar-sample",
+    "href": "posts_alt.html#mar-sample",
     "title": "Portfolio",
     "section": "MAR sample",
     "text": "MAR sample\n\n\nHow does this look\n\n\n\n\n\n\nFigure 5"
+  },
+  {
+    "objectID": "posts.html",
+    "href": "posts.html",
+    "title": "Portfolio",
+    "section": "",
+    "text": "Quantifying nitrogen pollution to the worlds 2nd largest barrier reef\n\n\n\n\n\n\nMadeline Berger\n\n\n\n\n\n\n\n\nNo matching items"
   }
 ]
