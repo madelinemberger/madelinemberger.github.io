@@ -11,7 +11,7 @@ about:
     - text: GitHub
       href: https://github.com/madelinemberger
     - text: Email
-      href: mailto:mberge15@asu.edu
+      href: mailto:maddiemt8@gmail.com
 
 ---
 

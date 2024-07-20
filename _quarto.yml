@@ -3,7 +3,7 @@ project:
   output-dir: docs
 
 website:
-  title: "Madeline Berger"
+  title: " "
   favicon: images/logos/green_burger.png
   navbar:
     title: Madeline Berger
