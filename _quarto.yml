@@ -14,7 +14,7 @@ website:
       - href: resources.qmd
         text: Resources
       - href: posts.qmd
-        text: Porfolio
+        text: Portfolio
       - href: CV/MBerger_CV.pdf
         text: CV
   page-footer: 
