@@ -32,28 +32,21 @@
     "href": "index.html",
     "title": "Madeline Berger",
     "section": "",
-    "text": "I am an interdisciplinary spatial data analyst, currently working to support marine management projects. I love data, maps and exploring different tools to support good science and participatory decision making."
-  },
-  {
-    "objectID": "index.html#hello",
-    "href": "index.html#hello",
-    "title": "Madeline Berger",
-    "section": "",
-    "text": "I am an interdisciplinary spatial data analyst, currently working to support marine management projects. I love data, maps and exploring different tools to support good science and participatory decision making."
+    "text": "I am a data scientist and spatial ecologist, currently working to support marine conservation and management in Hawaiʻi. I am passionate about leveraging open source tools to create data products that support good science and participatory decision making."
   },
   {
     "objectID": "index.html#education",
     "href": "index.html#education",
     "title": "Madeline Berger",
     "section": "Education",
-    "text": "Education\nMESM in Conservation Planning & Data Science (2020) | University of California, Santa Barbara | Santa Barbara, CA\nBA in Economics (2016) | University of California, Los Angeles | Los Angeles, CA"
+    "text": "Education\nPhD in Marine Biology in Progress (expected 2027) | University of Hawaiʻi at Mānoa | Honolulu, HI\nMESM in Conservation Planning & Data Science (2020) | University of California, Santa Barbara | Santa Barbara, CA\nBA in Economics (2016) | University of California, Los Angeles | Los Angeles, CA"
   },
   {
     "objectID": "index.html#experience",
     "href": "index.html#experience",
     "title": "Madeline Berger",
     "section": "Experience",
-    "text": "Experience\nSpatial Analysis and Data Specialist, 2022 - Present | Hawaii Monitoring and Reporting Collaborative (HIMARC)\nSpatial Analyst and Modeler, September 2020 - October 2022 | National Center for Ecological Analysis & Synthesis & SeaSketch\nOcean Health Index Fellow, March 2020 - September 2020 | National Center for Ecological Analysis & Synthesis"
+    "text": "Experience\nFreelance data scientist, 2024 - Present\nSpatial Analysis and Data Specialist, 2022 - Present | Hawaii Monitoring and Reporting Collaborative (HIMARC)\nSpatial Analyst and Modeler, September 2020 - October 2022 | National Center for Ecological Analysis & Synthesis & SeaSketch\nOcean Health Index Fellow, March 2020 - September 2020 | National Center for Ecological Analysis & Synthesis"
   },
   {
     "objectID": "projects/Mapbox-maps/index.html",
@@ -67,7 +60,49 @@
     "href": "projects/MAR-paper/index.html",
     "title": "Quantifying nitrogen pollution to the worlds 2nd largest barrier reef",
     "section": "",
-    "text": "In 2020 I published the results from an analysis I worked on as a spatial data analyst at NCEAS."
+    "text": "This project was assigned to me while working as a Data Analyst at the National Center for Ecological Analysis and Synthesis (NCEAS), the first job I held after finishing my master’s degree at the University of California, Santa Barbara. I worked on the analysis from 2020 - 2021, and the paper was published in Ocean and Coastal Management in 2022.\nLand-based nitrogen pollution is a major threat to coastal ecosystems, especially in tropical regions home to high biodiversity habitats such as coral reefs and seagrass beds. The sustained addition of excess nutrients (in the form of nitrates) to these ecosystems, which are adapted to low-nutrient environments, disrupts ecosystem function and the ability to provide services that support livelihoods and benefit human well-being. Nitrogen (N) primarily originates from agricultural crop production, livestock waste, and human sewage, as well as excretion from seabird and feral ungulates for some small atolls and cayes.\nDetermining the most effective mitigation strategies to reduce N pollution in a given location begins with identifying and quantifying input from the source. For this project, we modeled four major sources of N pollution – crop production, livestock production, wastewater generated from permanent residents and wastewater generated from seasonal populations, ie tourists – at the regional scale, measuring inputs and impacts from 430 watersheds that drain into the Mesoamerican Reef (MAR) region"
+  },
+  {
+    "objectID": "projects/MAR-paper/index.html#project-overview",
+    "href": "projects/MAR-paper/index.html#project-overview",
+    "title": "Quantifying nitrogen pollution to the worlds 2nd largest barrier reef",
+    "section": "",
+    "text": "This project was assigned to me while working as a Data Analyst at the National Center for Ecological Analysis and Synthesis (NCEAS), the first job I held after finishing my master’s degree at the University of California, Santa Barbara. I worked on the analysis from 2020 - 2021, and the paper was published in Ocean and Coastal Management in 2022.\nLand-based nitrogen pollution is a major threat to coastal ecosystems, especially in tropical regions home to high biodiversity habitats such as coral reefs and seagrass beds. The sustained addition of excess nutrients (in the form of nitrates) to these ecosystems, which are adapted to low-nutrient environments, disrupts ecosystem function and the ability to provide services that support livelihoods and benefit human well-being. Nitrogen (N) primarily originates from agricultural crop production, livestock waste, and human sewage, as well as excretion from seabird and feral ungulates for some small atolls and cayes.\nDetermining the most effective mitigation strategies to reduce N pollution in a given location begins with identifying and quantifying input from the source. For this project, we modeled four major sources of N pollution – crop production, livestock production, wastewater generated from permanent residents and wastewater generated from seasonal populations, ie tourists – at the regional scale, measuring inputs and impacts from 430 watersheds that drain into the Mesoamerican Reef (MAR) region"
+  },
+  {
+    "objectID": "projects/MAR-paper/index.html#tools-and-libraries",
+    "href": "projects/MAR-paper/index.html#tools-and-libraries",
+    "title": "Quantifying nitrogen pollution to the worlds 2nd largest barrier reef",
+    "section": "Tools and Libraries",
+    "text": "Tools and Libraries\n\nAll analysis was done in R using tidyverse, sf, raster (this was pre-terra days), purr, foreach\nGraphs were created using ggplot2 and maps were created using tmap\nMajor shout out to Coolors for helping me pick the perfect color palette"
+  },
+  {
+    "objectID": "projects/MAR-paper/index.html#methodology",
+    "href": "projects/MAR-paper/index.html#methodology",
+    "title": "Quantifying nitrogen pollution to the worlds 2nd largest barrier reef",
+    "section": "Methodology",
+    "text": "Methodology\n\nEstimating N from Wastewater: Sourced publicly available data, as well as data from partner organizations in the Mesoamerican reef region, on hotel and other tourist accommodation locations, watershed boundaries, pourpoints, population densities, and access to wastewater treatment types (UNICEF) for an area spanning from Mexico to Honduras. (Fig 1)\nEstimating N from Agriculture and Livestock: I collaborated with the team behind the fantastic paper paper to acquire spatial crop and livestock production data. I replicated their methods for estimating N generated from each unit area of production, which was based on Fertilizer input and type of production. See Halpern et al (2021) for more details.\nEstimating N from Cruise ships: Used AIS ship tracking data shared by Global Fishing Watch to identify location of cruise ships present in the region in a 1 year time span. This data also allowed me to estimate how many days cruiseships spent in the MAR. I used web scraping (via Wikipedia) to generate a dataset listing active cruiseships and their human capacity, and matched ship vessel numbers to the spatial data to ID each ship in space and time. I used the capacity of the ship to estimate how much wastewater effluent each might be producing, and therefore how much Nitrogen each ship might add to the wastwater system in the watershed where it was docked, by offloading its waste*\nEstimating pollution impact area in the nearshore marine environment:\n\nI quantified the amount of N from the above three sources in spatially explicit, and then used a raster depicting location of surface waters (including rivers, streams, wetlands) to filter out any N that was further than 1 km from a water source. This is a very “rough” way of estimating watershed transport dynamics, but I consulted a few experts that felt it was satisfactory for our purposes.\nI summarized N pollution within 1 km of surface waters by watershed, then assigned that amount to the corresponding pour point. I used a diffusion equation developed by Tuhloske et al in to then estimate the extent of the spatial “plume” that would result from that magnitude of pollution. Note: this script was shared with me and was written using GRASS cli. I amended and customized the script to support iterative analyses, building a loop around it. This was a major learning experience.\n\nAssessing habitat impact: I used publicly available spatial data on the spatial extent of three key marine habitats in the region: coral reefs, sea grasses, and mangroves. I intersected these with my N “plume” maps to estimate what area percentage of each habitat might be impacted by N pollution (ie Nitrogen enrichment)"
+  },
+  {
+    "objectID": "projects/MAR-paper/index.html#key-findings",
+    "href": "projects/MAR-paper/index.html#key-findings",
+    "title": "Quantifying nitrogen pollution to the worlds 2nd largest barrier reef",
+    "section": "Key Findings",
+    "text": "Key Findings\n\nAt the watershed level, watersheds from the Southern portion of the MAR seem to be contributing the most N pollution, across all sources analysed\n\n\n\n\nFigure 4 from my paper - created using tmap"
+  },
+  {
+    "objectID": "projects/MAR-paper/index.html#skills-i-learned-honed",
+    "href": "projects/MAR-paper/index.html#skills-i-learned-honed",
+    "title": "Quantifying nitrogen pollution to the worlds 2nd largest barrier reef",
+    "section": "Skills I learned & honed",
+    "text": "Skills I learned & honed\nThis project challenged me immensely, and I credit it with pushing me from a freshly-minted master’s student in spatial planning to seasoned data wrangler and analyst within the 1.5 years I worked on it. I performed many of these analyses on my own, sometimes with help from other project teams at NCEAS and from prior publications, but in general was working through this solo. And note this was pre-AI, so I spent A LOT of time troubleshooting and Googling, but it helped me learn so much in process.\nThe most useful skills I built from this project were:\n\nweb scraping\nwriting iterative scripts for automated workflows\ncommand line interface programming\ncross-cultural collaboration & scientific publishing"
+  },
+  {
+    "objectID": "projects/MAR-paper/index.html#acknowledgements",
+    "href": "projects/MAR-paper/index.html#acknowledgements",
+    "title": "Quantifying nitrogen pollution to the worlds 2nd largest barrier reef",
+    "section": "Acknowledgements",
+    "text": "Acknowledgements\nI had the most fantastic co-authors on this project: Steve Canty from the Smithsonian, Cascade Tuhloske ( now a professor at University of Montana) and NCEAS Director Ben Halpern. I also just want to shout out the many individuals who helped with data collection, feedback, or just general moral support along the way. Thank you to Antonella Rivera, Jenny Myton, Javier Pizaña and others from Coral Reef Alliance, Melanie McField and Ana Giro at Healthy Reefs Initiative, Alejandro Lopez and others at Centinelas de Agua, Mauricio Mejia at WWF Mesoamerica and Lauretta Burke at WRI for sharing data and their knowledge.\nThis work was funded by the Summit Foundation and the National Philanthropic Fund."
   },
   {
     "objectID": "posts_alt.html#mar-sample",
@@ -81,6 +116,6 @@
     "href": "posts.html",
     "title": "Portfolio",
     "section": "",
-    "text": "Quantifying nitrogen pollution to the worlds 2nd largest barrier reef\n\n\n\n\n\n\nMadeline Berger\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nDynamic cartography using Mapbox\n\n\n\n\n\n\nMadeline Berger\n\n\n\n\n\n\n\n\nNo matching items"
+    "text": "Dynamic cartography using Mapbox\n\n\n\n\n\n\nMadeline Berger\n\n\n\n\n\n\n\n\n\n\n\nQuantifying nitrogen pollution to the worlds 2nd largest barrier reef\n\n\nSpatial analysis of anthropogenic sourcs of Nitrogen to the Mesoamerican Reef using R and open data.\n\n\n\nMadeline Berger\n\n\nJun 11, 2021\n\n\n\n\n\n\nNo matching items"
   }
 ]

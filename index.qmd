@@ -1,6 +1,6 @@
 ---
 title: "Madeline Berger"
-image: images/headshot_sq.jpg
+image: images/me_shangrila.jpeg
 about:
   template: trestles
   image-shape: round
@@ -15,13 +15,13 @@ about:
 
 ---
 
-## Hello!
-
-I am an interdisciplinary spatial data analyst, currently working to support marine management projects. I love data, maps and exploring different tools to support good science and participatory decision making.
+I am a data scientist and spatial ecologist, currently working to support marine conservation and management in Hawaiʻi. I am passionate about leveraging open source tools to create data products that support good science and participatory decision making.
 
 --- 
 
 ## Education
+
+**PhD in Marine Biology in Progress** (expected 2027) | University of Hawaiʻi at Mānoa | Honolulu, HI
 
 **MESM in Conservation Planning & Data Science** (2020) |
 University of California, Santa Barbara | Santa Barbara, CA
@@ -32,6 +32,8 @@ University of California, Santa Barbara | Santa Barbara, CA
 ---
 
 ## Experience
+
+**Freelance data scientist**, 2024 - Present
 
 **Spatial Analysis and Data Specialist**, 2022 - Present |  [*Hawaii Monitoring and Reporting Collaborative (HIMARC)*](himarc.org)
 
