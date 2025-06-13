@@ -101,10 +101,6 @@ ul.task-list li input[type="checkbox"] {
 <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../../resources.html"> 
-<span class="menu-text">Resources</span></a>
-  </li>  
-  <li class="nav-item">
     <a class="nav-link" href="../../posts.html"> 
 <span class="menu-text">Portfolio</span></a>
   </li>  
@@ -191,23 +187,24 @@ ul.task-list li input[type="checkbox"] {
 <section id="tools-and-libraries" class="level2">
 <h2 class="anchored" data-anchor-id="tools-and-libraries">Tools and Libraries</h2>
 <ul>
-<li><p>All analysis was done in <code>R</code> using <code>tidyverse</code>, <code>sf</code>, <code>raster</code> (this was pre-<code>terra</code> days), <code>purr</code>, <code>foreach</code></p></li>
+<li><p>All original analysis was done in <code>R</code> using <code>tidyverse</code>, <code>sf</code>, <code>raster</code> (this was pre-<code>terra</code> days), <code>purr</code>, <code>foreach</code></p></li>
 <li><p>Graphs were created using <code>ggplot2</code> and maps were created using <code>tmap</code></p></li>
+<li><p>I also updated and ran command line scripts written using <code>Python</code> and <code>GRASS</code> , developed and shared with me by other researchers</p></li>
 <li><p>Major shout out to <a href="https://coolors.co">Coolors</a> for helping me pick the perfect color palette</p></li>
 </ul>
 </section>
 <section id="methodology" class="level2">
 <h2 class="anchored" data-anchor-id="methodology">Methodology</h2>
 <ol type="1">
-<li>Estimating N from Wastewater: Sourced publicly available data, as well as data from partner organizations in the Mesoamerican reef region, on hotel and other tourist accommodation locations, watershed boundaries, pourpoints, population densities, and access to wastewater treatment types (UNICEF) for an area spanning from Mexico to Honduras. (Fig 1)</li>
-<li>Estimating N from Agriculture and Livestock: I collaborated with the team behind the fantastic paper paper to acquire spatial crop and livestock production data. I replicated their methods for estimating N generated from each unit area of production, which was based on Fertilizer input and type of production. See Halpern et al (2021) for more details.</li>
-<li>Estimating N from Cruise ships: Used AIS ship tracking data shared by Global Fishing Watch to identify location of cruise ships present in the region in a 1 year time span. This data also allowed me to estimate how many days cruiseships spent in the MAR. I used web scraping (via Wikipedia) to generate a dataset listing active cruiseships and their human capacity, and matched ship vessel numbers to the spatial data to ID each ship in space and time. I used the capacity of the ship to estimate how much wastewater effluent each might be producing, and therefore how much Nitrogen each ship might add to the wastwater system in the watershed where it was docked, by offloading its waste*</li>
-<li>Estimating pollution impact area in the nearshore marine environment:
+<li><strong>Estimating N from Wastewater:</strong> Sourced publicly available data, as well as data from partner organizations in the Mesoamerican reef region, on hotel and other tourist accommodation locations, watershed boundaries, pourpoints, population densities, and access to wastewater treatment types (UNICEF) for an area spanning from Mexico to Honduras. (Fig 1)</li>
+<li><strong>Estimating N from Agriculture and Livestock:</strong> I collaborated with the team behind the fantastic paper paper to acquire spatial crop and livestock production data. I replicated their methods for estimating N generated from each unit area of production, which was based on Fertilizer input data from the FAO and type and area of production (SPAMM). See Halpern et al (2021) for more details.</li>
+<li><strong>Estimating N from Cruise ships:</strong> I used AIS ship tracking data shared by Global Fishing Watch to identify location of cruise ships present in the region in a 1 year time span. This data also allowed me to estimate how many days cruiseships spent in the MAR. I used web scraping (via Wikipedia) to generate a dataset listing active cruiseships and their human capacity, and matched ship vessel numbers to the spatial data, to ID each ship that passed through my study area in space and time. I used the capacity of the ship to estimate how much wastewater effluent each might be producing, and therefore how much Nitrogen each ship might add to the wastewater system in the watershed where it was docked, by offloading its waste*</li>
+<li><strong>Modeling pollution impact area in the nearshore marine environment:</strong>
 <ol type="1">
-<li>I quantified the amount of N from the above three sources in spatially explicit, and then used a raster depicting location of surface waters (including rivers, streams, wetlands) to filter out any N that was further than 1 km from a water source. This is a very “rough” way of estimating watershed transport dynamics, but I consulted a few experts that felt it was satisfactory for our purposes.</li>
-<li>I summarized N pollution within 1 km of surface waters by watershed, then assigned that amount to the corresponding pour point. I used a diffusion equation developed by <strong>Tuhloske et al</strong> in to then estimate the extent of the spatial “plume” that would result from that magnitude of pollution. Note: this script was shared with me and was written using GRASS cli. I amended and customized the script to support iterative analyses, building a loop around it. This was a major learning experience.</li>
+<li>I quantified the amount of N from the above three sources at the approximate location the N pollution was generated, and then used a raster depicting location of surface waters (including rivers, streams, wetlands) to filter out any pollution that occured further than 1 km from a water source. This is a very “rough” way of estimating watershed transport dynamics, but I consulted a few experts and confirmed it was satisfactory for our purposes.</li>
+<li>I summarized N pollution within 1 km of surface waters by watershed, then assigned that amount to the corresponding pour point. I used a diffusion equation developed by <strong>Tuhloske et al</strong> in to then estimate the extent of the spatial “plume” that would result in nearshore coastal waters. Note: this script was shared with me and was written using GRASS cli. I amended and customized the script to support iterative analyses, building a loop around it. This was a major learning experience.</li>
 </ol></li>
-<li>Assessing habitat impact: I used publicly available spatial data on the spatial extent of three key marine habitats in the region: coral reefs, sea grasses, and mangroves. I intersected these with my N “plume” maps to estimate what area percentage of each habitat might be impacted by N pollution (ie Nitrogen enrichment)</li>
+<li><strong>Assessing habitat impact:</strong> I used publicly available spatial data on the spatial extent of three key marine habitats in the region: coral reefs, sea grasses, and mangroves. I intersected these with my N “plume” maps to estimate what area percentage of each habitat might be impacted by N pollution (ie Nitrogen enrichment)</li>
 </ol>
 </section>
 <section id="key-findings" class="level2">
@@ -226,12 +223,18 @@ ul.task-list li input[type="checkbox"] {
 <h2 class="anchored" data-anchor-id="skills-i-learned-honed">Skills I learned &amp; honed</h2>
 <p>This project challenged me immensely, and I credit it with pushing me from a freshly-minted master’s student in spatial planning to seasoned data wrangler and analyst within the 1.5 years I worked on it. I performed many of these analyses on my own, sometimes with help from other project teams at NCEAS and from prior publications, but in general was working through this solo. And note this was pre-AI, so I spent A LOT of time troubleshooting and Googling, but it helped me learn so much in process.</p>
 <p>The most useful skills I built from this project were:</p>
-<ul>
-<li><p>web scraping</p></li>
-<li><p>writing iterative scripts for automated workflows</p></li>
-<li><p>command line interface programming</p></li>
-<li><p>cross-cultural collaboration &amp; scientific publishing</p></li>
-</ul>
+<section id="web-scraping" class="level4">
+<h4 class="anchored" data-anchor-id="web-scraping">web scraping</h4>
+</section>
+<section id="writing-iterative-scripts-for-automated-workflows" class="level4">
+<h4 class="anchored" data-anchor-id="writing-iterative-scripts-for-automated-workflows">writing iterative scripts for automated workflows</h4>
+</section>
+<section id="command-line-interface-programming" class="level4">
+<h4 class="anchored" data-anchor-id="command-line-interface-programming">command line interface programming</h4>
+</section>
+<section id="cross-cultural-collaboration-scientific-publishing" class="level4">
+<h4 class="anchored" data-anchor-id="cross-cultural-collaboration-scientific-publishing">cross-cultural collaboration &amp; scientific publishing</h4>
+</section>
 </section>
 <section id="acknowledgements" class="level2">
 <h2 class="anchored" data-anchor-id="acknowledgements">Acknowledgements</h2>
