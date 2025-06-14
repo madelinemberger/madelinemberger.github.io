@@ -1,0 +1,330 @@
+---
+title: "Wikipedia webscrape to generate a dataset of cruiseships and their passenger capacities"
+description: "Using the rvest R package to help estimate cruiseship impact on marine habitats"
+author: "Madeline Berger"
+date: 2021-06-11
+categories: [Webscraping, R, Cruiseships, Pollution]
+image: images/polina-rytova-unsplash.jpg
+status: completed
+format:
+  html:
+    toc: true
+    toc-depth: 2
+    code-fold: show
+    page-layout: full
+    theme: cosmo
+---
+
+## Project Overview
+
+For my paper quantifying nutrient pollution in the Mesoamerican Reef, I wanted to explore ways to include pollution generated from cruise ships in our analysis. The large-scale cruise industry has become somewhat notorious for poor environmental practices (including dredging reefs to accommodate increasingly enormous ships, pollution, whale strikes...), so its perhaps not surprising that there is very little data publicly available. I did [find a page on Wikipedia](https://en.wikipedia.org/wiki/List_of_cruise_ships) listing all known ships both in service and ones that have ceased to operate.
+
+Given the long list, I decided to try out the `rvest` package to see if I could just scrape the information I wanted from the webpage. The rest of this post walks through my process and code.
+
+\*thumbnail by photo by [Polina Rytova](https://unsplash.com/@polina_art?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash) on [Unsplash](https://unsplash.com/photos/aerial-photography-of-white-and-brown-cruise-ship-on-water-1AUe0hwdC3o?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash)
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+
+library(tidyverse)
+library(janitor)
+library(magrittr)
+library(here)
+library(rvest) #for scraping
+library(purrr)
+library(foreach)
+library(doParallel)
+library(httr)
+
+
+#source(here("scripts/workflow", "file_paths.R"))
+
+```
+
+First, I need to examine the webpage to understand what elements I want. In this case, I want all the cruise ship names. Then, I want to go onto each cruises own page and grab the number that is under the "capacity" row in the right hand summary table.
+
+To scrape stuff from the web, you need to look "under the hood" at the site code, and ID the xpath of the information you are interested in targeting.
+
+**Cruise ship names from full list**
+
+url = '[https://en.wikipedia.org/wiki/List_of_cruise_ships'](https://en.wikipedia.org/wiki/List_of_cruise_ships')
+
+#### Xpaths for the first 3 tables (A - C) :
+
+//[@id*="mw-content-text"*]*/div\[1\]/table\[2\] //*[@id="mw-content-text"]/div\[1\]/table\[3\] //\*[@id="mw-content-text"]/div\[1\]/table\[4\]
+
+#### Xpaths for the names of the cruiseships:
+
+//\*[@id="mw-content-text"]/div\[1\]/table\[2\]/tbody/tr\[42\]/th/i/a
+
+#### Xpaths for the capacity element on a ship page:
+
+//\*[@id="mw-content-text"]/div\[1\]/table\[1\]/tbody/tr\[30\]/td\[1\]
+
+# Getting Ship Page URLs
+
+First get a list of URLs to each ships' own wikipedia page
+
+```{r get-urls}
+
+### Step 1: Define URL ####
+
+url = 'https://en.wikipedia.org/wiki/List_of_cruise_ships'
+url2 = read_html('https://en.wikipedia.org/wiki/List_of_cruise_ships')
+
+### Step 2: Pull using the Xpath for the name element in the table OR using the html type ###
+
+# this works to get ship names
+sample1 = url %>%
+  read_html() %>%
+  html_nodes(xpath = '//*[@id="mw-content-text"]/div/table[2]') %>%
+  html_table(fill = TRUE) %>% 
+  pluck(1) %>% #this kind of works
+  as.data.frame()
+
+sample1 <- sample1[[1]] #this extracts the dataframe
+
+
+# this works to get ship links - but grabs ALL links on the page
+
+links <- url2 %>% 
+  html_nodes("a") %>% 
+  html_attr("href") %>% 
+  tibble::enframe() %>% 
+  as.data.frame()
+
+head(links)
+```
+
+Clean up `links` so that we just have a cruise ship name and its info. Looking at it, we can see there is a bunch of stuff we don't want. We really only want the links that start with `/wiki/`. And we also don't want any of the first 56 rows or the last batch of rows as well.
+
+```{r clean-urls}
+
+ship_links <- links %>% 
+  rename(idnum = name, link = value) %>%
+  mutate(
+    idnum = as.numeric(idnum)
+  ) %>% 
+  filter(idnum > 56) %>%
+  filter(str_detect(link,pattern = "/wiki/")) %>% #all this is stuff I saw while visually inspecting the dataset
+  filter(!str_detect(link, pattern = "_Cruises") & 
+           !str_detect(link, pattern = "_Line") & 
+           !str_detect(link, pattern = "Tonnage") &
+           !str_detect(link, pattern = "Ocean_liner") & 
+           !str_detect(link, pattern = "Cruise_%26_Maritime_Voyages") & 
+           !str_detect(link, pattern = "_International") &
+           !str_detect(link, pattern = "-class")&
+           !str_detect(link, pattern = ":") &
+           !str_detect(link, pattern = "%")
+  ) %>% 
+  filter(idnum < 1105) %>% #I found the last ship and got rid of all the links below it
+  mutate(
+    full_link = paste0("https://en.wikipedia.org",link) #create full link
+  ) 
+
+
+head(ship_links)
+```
+
+Now, we want to extract the name of the ship, which will be the last phrase of the link. Two options:
+
+1.  Use str to extract it from the link
+2.  Pull all the cruise names using `rvest` and then do some kind of str_detect to match it to capacity?
+
+```{r}
+
+ship_links_full <- ship_links %>% 
+  mutate(
+    tmp_chunks = str_split(link, fixed("/")) #split up the link
+  ) %>% 
+  mutate(
+    name = map_chr(tmp_chunks, 3) #extract the third element, which is the name
+  ) %>% 
+  mutate(
+    name = str_to_upper(str_replace_all(name,"_"," "))
+  ) %>% 
+  dplyr::select(-tmp_chunks) %>% 
+  rename(href = link)
+
+# save 
+
+write_csv(ship_links_full, "outputs/ship_links_clean.csv")
+
+```
+
+Now lets see if we can just filter out the ships we know are in the MAR region in 2019. I converted the names to uppercase to match the Global Fishing Watch data, but due to some being identified in either dataset with just their abbreviations it may not be perfect. Let's give it a shot.
+
+```{r}
+#| eval: false
+ship_links_clean <- read_csv(file.path(dir_interim,"/cruiseships/ship_links_clean.csv"))
+
+gfw_joined <- read_csv(file.path(dir_interim,"cruiseships/cruiseships_2019.csv"))
+
+names <- unique(ship_links_full$name)
+
+#ships in MAR region - 72
+MAR_names <- unique(gfw_joined$shipname)
+
+ship_links_MAR <- ship_links_clean %>% 
+  filter(name %in% MAR_names)
+
+
+```
+
+Darn - that only got 45 of them. Let's see if at least those 45 work to scrape the data. The rest I can fill in by hand:
+
+```{r}
+#| eval: false
+missing_df <- data.frame(
+  missing_names = setdiff(gfw_joined$shipname, ship_links_MAR$name)
+) %>% 
+  mutate(
+    name = as.character(missing_names)
+  ) %>% 
+  mutate(
+    full_link = case_when(
+      name %in% "FRAM" ~ "https://en.wikipedia.org/wiki/MS_Fram",
+      name %in% "SILVER WIND" ~ "https://en.wikipedia.org/wiki/Silver_Wind",
+      name %in% "NAVIGATOR OF THE SEA" ~ "https://en.wikipedia.org/wiki/Navigator_of_the_Seas",
+      name %in% "OOSTERDAM" ~ "https://en.wikipedia.org/wiki/MS_Oosterdam",
+      name %in% "ZUIDERDAM" ~ "https://en.wikipedia.org/wiki/MS_Zuiderdam",
+      name %in% "ISLAND PRINCESS" ~ "https://en.wikipedia.org/wiki/MS_Island_Princess_(2002)",
+      name %in% "ORIANA" ~ "https://en.wikipedia.org/wiki/MV_Piano_Land",
+      name %in% "REGATTA" ~ "https://en.wikipedia.org/wiki/MS_Regatta",
+      name %in% "AURORA" ~ "https://en.wikipedia.org/wiki/MV_Aurora_(2000)",
+      name %in% "CELEBRITYSILHOUETTE" ~ "https://en.wikipedia.org/wiki/Celebrity_Silhouette",
+      name %in% "NIEUW AMSTERDAM" ~ "https://en.wikipedia.org/wiki/MS_Marella_Spirit",
+      name %in% "EURODAM" ~ "https://en.wikipedia.org/wiki/MS_Eurodam",
+      name %in% "CARNIVAL MIRACLE TB1" ~ "https://en.wikipedia.org/wiki/Carnival_Miracle",
+      name %in% "VIKING SUN" ~ "https://en.wikipedia.org/wiki/MS_Amera",
+      name %in% "CARIBBEANPRINCE TB22" ~ "https://en.wikipedia.org/wiki/MS_Eurodam",
+      name %in% "NCL GETAWAY T6" ~ "https://en.wikipedia.org/wiki/Norwegian_Getaway",
+      name %in% "CARNIVAL MIRACLE TB5" ~ "https://en.wikipedia.org/wiki/Carnival_Miracle",
+      name %in% "M/S ROTTERDAM" ~ "https://en.wikipedia.org/wiki/MS_Borealis",
+      name %in% "VEENDAM" ~ "https://en.wikipedia.org/wiki/MS_Aegean_Majesty",
+      name %in% "INDEPENDENCE OF SEAS" ~ "https://en.wikipedia.org/wiki/Independence_of_the_Seas",
+      name %in% "ADVENTURE OF THE SEA" ~ "https://en.wikipedia.org/wiki/Adventure_of_the_Seas",
+      name %in% "BRILLIANCE OFTHESEAS" ~ "https://en.wikipedia.org/wiki/Brilliance_of_the_Seas",
+      name %in% "ENCHANTMENT OTS" ~ "https://en.wikipedia.org/wiki/MS_Aegean_Majesty",
+      TRUE ~ "NA"
+    )
+  ) %>% 
+  filter(!full_link == "NA") %>% 
+  select(-missing_names, full_link, name)
+
+# join with ship links MAR
+
+ship_links_MAR_all <- ship_links_MAR %>% 
+  dplyr::select(full_link,name) %>% 
+  rbind(missing_df)
+
+write_csv(ship_links_MAR_all, file.path(dir_interim,"/cruiseships/ship_links_all.csv"))
+```
+
+List of ships we could not find info for:
+
+-   M/V Hamburg
+-   RCGS Resolute
+-   Seven Seas Voyager 7 (we already have the seven seas voyager so not sure what this ship is)
+-   CaribbeanPrince TB22 (we already have Caribbean Princess?)
+-   Carnival Triumph (could not find)
+
+Other notes: Carnival Miracle TB5 is the same as Carnival Miracle, based on IMO number MS FRAM taken out below before running loop because it doesn't have a crew \#
+
+# Scrape passenger number from each ships' page
+
+Try using a loop - not as nice but the above is simply not working.
+
+```{r}
+#| eval: false
+#read in links csv
+ship_links_MAR_all <- read_csv(file.path(dir_interim,"/cruiseships/ship_links_all.csv")) %>% 
+  filter(!name == "FRAM")
+
+urls <- ship_links_MAR_all$full_link
+
+#urls_test <- urls[1:55]
+
+#create empty list 
+
+capacities_list <- list()
+
+#fill list by looping over each link in vector
+
+for (i in seq_along(urls)) {
+  
+   #x = urls[[46]]
+  
+    x = urls[i]
+  
+   table <-  read_html(x) %>% 
+    rvest::html_nodes("table.infobox") %>% 
+    rvest::html_table(header=F, fill = T) 
+  
+   table2 <- table[[1]] %>% 
+    clean_names() %>% 
+    rename(
+      name = 1, 
+      value = 2
+    ) %>% 
+     filter(name != "") %>%
+     pivot_wider(names_from = name,
+                 values_from = value) 
+   
+   table3 <- table2 %>% 
+       dplyr::select(`Capacity:`, `Crew:`) %>%
+       mutate(
+       full_link = x,
+       capacity = as.character(`Capacity:`),
+       crew = as.character(`Crew:`)
+       ) %>% 
+      dplyr::select(-`Capacity:`, -`Crew:`)
+   
+   print(i)
+
+   capacities_list[[i]] <- table3
+   
+}
+
+#unlist
+capacities_MAR = do.call(rbind, capacities_list)
+
+
+```
+
+Last step is to clean up the ship numbers using str - I'll just split it based on the space, and then grab the first element. Also need to add back in the MS FRAM since we took it out of the loop.
+
+```{r}
+#| eval: false
+
+#best way to get numbers out
+capacities_MAR_clean <- capacities_MAR %>%
+   mutate(
+    capacity_n = as.numeric(parse_number(capacity)),
+    crew_n = as.numeric(parse_number(crew))
+  ) %>% 
+  mutate(
+    total_ship_pop = crew_n + capacity_n
+  ) %>% 
+  dplyr::select(-crew, -capacity)
+
+#rejoin with shipnames and links 
+
+#FRAM df
+
+fram <- data.frame(
+  shipname = "FRAM",
+  capacity_n = 400,
+  crew_n = 0,
+  total_ship_pop = 400
+)
+
+cruise_capacities_final <- full_join(capacities_MAR_clean, ship_links_MAR_all, by = "full_link") %>% 
+  dplyr::select(shipname = name,capacity_n,crew_n,total_ship_pop) %>% 
+  rbind(fram)
+
+
+write_csv(cruise_capacities_final, file.path(dir_interim,"/cruiseships/cruise_capacities_final.csv"))
+
+```

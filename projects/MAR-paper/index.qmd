@@ -4,7 +4,7 @@ description: "Spatial analysis of anthropogenic sourcs of Nitrogen to the Mesoam
 author: "Madeline Berger"
 date: 2021-06-11
 categories: [Spatial Analysis, R, Coral Reefs, Pollution]
-thumbnail: images/5_sources_by_basin_v4.jpg
+image: images/coral_belize.JPG
 status: completed
 format:
   html:
@@ -19,9 +19,17 @@ format:
 
 This project was assigned to me while working as a Data Analyst at the National Center for Ecological Analysis and Synthesis (NCEAS), the first job I held after finishing my master's degree at the University of California, Santa Barbara. I worked on the analysis from 2020 - 2021, and [the paper was published in Ocean and Coastal Management](https://www.sciencedirect.com/science/article/pii/S0964569122002459#ack0010) in 2022.
 
+::::: columns
+::: {.column width="40%"}
+![Map of study area - created using `tmap`](images/orientation_map_v4.png)
+:::
+
+::: {.column width="60%"}
 Land-based nitrogen pollution is a major threat to coastal ecosystems, especially in tropical regions home to high biodiversity habitats such as coral reefs and seagrass beds. The sustained addition of excess nutrients (in the form of nitrates) to these ecosystems, which are adapted to low-nutrient environments, disrupts ecosystem function and the ability to provide services that support livelihoods and benefit human well-being. Nitrogen (N) primarily originates from agricultural crop production, livestock waste, and human sewage, as well as excretion from seabird and feral ungulates for some small atolls and cayes.
 
 Determining the most effective mitigation strategies to reduce N pollution in a given location begins with identifying and quantifying input from the source. For this project, we modeled four major sources of N pollution – crop production, livestock production, wastewater generated from permanent residents and wastewater generated from seasonal populations, ie tourists – at the regional scale, measuring inputs and impacts from 430 watersheds that drain into the Mesoamerican Reef (MAR) region
+:::
+:::::
 
 ## Tools and Libraries
 
@@ -45,15 +53,24 @@ Determining the most effective mitigation strategies to reduce N pollution in a 
 
 ## Key Findings
 
--   At the watershed level, watersheds from the Southern portion of the MAR seem to be contributing the most N pollution, across all sources analysed
+-   90% of the modeled nitrogen pollution was attributed to 20 watersheds, of which 11 were located in Guatemala or Honduras.
 
-![Figure 4 from my paper - created using `tmap`](images/5_sources_by_basin_v4.jpg)
+![Figure 5 from my paper - created using `ggplot2`](images/flower_bar.jpg){width="70%"}
+
+-   At the watershed level, watersheds from the Southern portion of the MAR contribute the most N pollution in a given year, across all sources analyzed
+
+![Figure 4 from my paper - created using `tmap`](images/5_sources_by_basin_v4.jpg){width="65%"}
+
+-   The majority of nitrogen pollution originated from crop production (52.1%) and livestock production (39.7%)
+-   An estimated 80% of coral reefs and 68% of seagrass beds are at risk for exposure to anthropogenic nitrogen pollution from watershed plumes.
+
+![Figure 5 from my paper - created using `tmap`](images/habitat_plumes.jpg){width="65%"}
 
 ## Skills I learned & honed
 
 This project challenged me immensely, and I credit it with pushing me from a freshly-minted master's student in spatial planning to seasoned data wrangler and analyst within the 1.5 years I worked on it. I performed many of these analyses on my own, sometimes with help from other project teams at NCEAS and from prior publications, but in general was working through this solo. And note this was pre-AI, so I spent A LOT of time troubleshooting and Googling, but it helped me learn so much in process.
 
-The most useful skills I built from this project were:
+The most useful skills I built from this project, with some original code snippets:
 
 #### web scraping
 
