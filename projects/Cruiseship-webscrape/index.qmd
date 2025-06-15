@@ -23,6 +23,15 @@ Given the long list, I decided to try out the `rvest` package to see if I could 
 
 \*thumbnail by photo by [Polina Rytova](https://unsplash.com/@polina_art?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash) on [Unsplash](https://unsplash.com/photos/aerial-photography-of-white-and-brown-cruise-ship-on-water-1AUe0hwdC3o?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash)
 
+## Tools and libraries used
+
+- Wrangling: `tidyverse`, `janitor`
+- Scraping: `rvest`, 
+- Looping: `purr`, `foreach`
+
+
+## Code 
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 
@@ -262,7 +271,7 @@ for (i in seq_along(urls)) {
     rvest::html_nodes("table.infobox") %>% 
     rvest::html_table(header=F, fill = T) 
   
-   table2 <- table[[1]] %>% 
+   table2 <- table[[1]] %>% # unlist
     clean_names() %>% 
     rename(
       name = 1, 
@@ -288,7 +297,7 @@ for (i in seq_along(urls)) {
 }
 
 #unlist
-capacities_MAR = do.call(rbind, capacities_list)
+capacities_MAR = do.call(rbind, capacities_list) # bind all the rows togther
 
 
 ```
@@ -309,9 +318,9 @@ capacities_MAR_clean <- capacities_MAR %>%
   ) %>% 
   dplyr::select(-crew, -capacity)
 
-#rejoin with shipnames and links 
+# rejoin with shipnames and links 
 
-#FRAM df
+#FRAM df - missing info 
 
 fram <- data.frame(
   shipname = "FRAM",
