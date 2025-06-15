@@ -1,11 +1,37 @@
 ---
 title: "Dynamic cartography using Mapbox"
+description: "Exploring new tools for spatial data visualization"
 author: "Madeline Berger"
+date: 2022-04-10
 editor: visual
-categories: [publications,analysis,coral]
+categories: [Cartography, Web mapping]
 image: CFSB_Vectors_print.jpg
+format:
+  html:
+    toc: true
+    toc-depth: 2
+    code-fold: show
+    page-layout: full
+    theme: cosmo
 ---
 
 Working as a Marine Spatial Planning analyst with the McClintock lab had the added benefit that I got to know and learn how to use the latest advances in open source geospatial and mapping tools, as [SeaSketch](https://www.seasketch.org/) shifted towards its own completely open source design.
 
-One of those tools was Mapbox, and I found myself really enjoying the streamlined and transparent process of adding and then styling data using this tool. I've since used Mapbox to create maps for independent projects I've worked on free, which I'll explain more below.
+One of those tools was Mapbox, and I found myself really enjoying the streamlined and transparent process of adding and then styling data using this tool. I've since used Mapbox to create maps for independent projects I've worked on free. In this post I'll discuss the basics of using Mapbox (specifically from the POV of a non-commercial user), and some helpful tips on how to transition data from Esri-optimized formats (shp, tif) to geojson.
+
+
+## What is Mapbox?
+
+
+
+### Getting Set Up 
+
+### Cartography Syntax
+
+## Helper Scripts for Data Management
+
+### Geojson versus shape - why it matters
+
+
+### Geojson.io
+

@@ -53,7 +53,21 @@
     "href": "projects/Mapbox-maps/index.html",
     "title": "Dynamic cartography using Mapbox",
     "section": "",
-    "text": "Working as a Marine Spatial Planning analyst with the McClintock lab had the added benefit that I got to know and learn how to use the latest advances in open source geospatial and mapping tools, as SeaSketch shifted towards its own completely open source design.\nOne of those tools was Mapbox, and I found myself really enjoying the streamlined and transparent process of adding and then styling data using this tool. I’ve since used Mapbox to create maps for independent projects I’ve worked on free, which I’ll explain more below."
+    "text": "Working as a Marine Spatial Planning analyst with the McClintock lab had the added benefit that I got to know and learn how to use the latest advances in open source geospatial and mapping tools, as SeaSketch shifted towards its own completely open source design.\nOne of those tools was Mapbox, and I found myself really enjoying the streamlined and transparent process of adding and then styling data using this tool. I’ve since used Mapbox to create maps for independent projects I’ve worked on free. In this post I’ll discuss the basics of using Mapbox (specifically from the POV of a non-commercial user), and some helpful tips on how to transition data from Esri-optimized formats (shp, tif) to geojson."
+  },
+  {
+    "objectID": "projects/Mapbox-maps/index.html#what-is-mapbox",
+    "href": "projects/Mapbox-maps/index.html#what-is-mapbox",
+    "title": "Dynamic cartography using Mapbox",
+    "section": "What is Mapbox?",
+    "text": "What is Mapbox?\n\nGetting Set Up\n\n\nCartography Syntax"
+  },
+  {
+    "objectID": "projects/Mapbox-maps/index.html#helper-scripts-for-data-management",
+    "href": "projects/Mapbox-maps/index.html#helper-scripts-for-data-management",
+    "title": "Dynamic cartography using Mapbox",
+    "section": "Helper Scripts for Data Management",
+    "text": "Helper Scripts for Data Management\n\nGeojson versus shape - why it matters\n\n\nGeojson.io"
   },
   {
     "objectID": "projects/Cruiseship-webscrape/index.html",
@@ -130,6 +144,6 @@
     "href": "posts.html",
     "title": "Portfolio",
     "section": "",
-    "text": "Dynamic cartography using Mapbox\n\n\n\n\n\n\nMadeline Berger\n\n\n\n\n\n\n\n\n\n\n\n\n\nWikipedia webscrape to generate a dataset of cruiseships and their passenger capacities\n\n\nUsing the rvest R package to help estimate cruiseship impact on marine habitats\n\n\n\nMadeline Berger\n\n\nJun 11, 2021\n\n\n\n\n\n\n\n\n\n\n\n\n\nQuantifying nitrogen pollution to the worlds 2nd largest barrier reef\n\n\nSpatial analysis of anthropogenic sourcs of Nitrogen to the Mesoamerican Reef using R and open data.\n\n\n\nMadeline Berger\n\n\nJun 11, 2021\n\n\n\n\n\n\nNo matching items"
+    "text": "Dynamic cartography using Mapbox\n\n\nExploring new tools for spatial data visualization\n\n\n\nMadeline Berger\n\n\nApr 10, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\nWikipedia webscrape to generate a dataset of cruiseships and their passenger capacities\n\n\nUsing the rvest R package to help estimate cruiseship impact on marine habitats\n\n\n\nMadeline Berger\n\n\nJun 11, 2021\n\n\n\n\n\n\n\n\n\n\n\n\n\nQuantifying nitrogen pollution to the worlds 2nd largest barrier reef\n\n\nSpatial analysis of anthropogenic sourcs of Nitrogen to the Mesoamerican Reef using R and open data.\n\n\n\nMadeline Berger\n\n\nJun 11, 2021\n\n\n\n\n\n\nNo matching items"
   }
 ]

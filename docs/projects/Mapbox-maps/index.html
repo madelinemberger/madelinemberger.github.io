@@ -7,6 +7,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Madeline Berger">
+<meta name="dcterms.date" content="2022-04-10">
+<meta name="description" content="Exploring new tools for spatial data visualization">
 
 <title>Dynamic cartography using Mapbox –</title>
 <style>
@@ -41,7 +43,7 @@ ul.task-list li input[type="checkbox"] {
 <link href="../../site_libs/quarto-html/quarto-syntax-highlighting-e1a5c8363afafaef2c763b6775fbf3ca.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-2f5bd19d9e867fdd46f59adfabd0cea5.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-800d58d8a656452b2cf839acf4fa445e.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -74,7 +76,7 @@ ul.task-list li input[type="checkbox"] {
 <link rel="stylesheet" href="../../styles.css">
 </head>
 
-<body class="nav-fixed fullcontent quarto-light">
+<body class="nav-fixed quarto-light">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -114,26 +116,39 @@ ul.task-list li input[type="checkbox"] {
     </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul class="collapse">
+  <li><a href="#what-is-mapbox" id="toc-what-is-mapbox" class="nav-link active" data-scroll-target="#what-is-mapbox">What is Mapbox?</a></li>
+  <li><a href="#helper-scripts-for-data-management" id="toc-helper-scripts-for-data-management" class="nav-link" data-scroll-target="#helper-scripts-for-data-management">Helper Scripts for Data Management</a></li>
+  </ul>
+</nav>
+    </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
+<main class="content column-page-left" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
 <h1 class="title">Dynamic cartography using Mapbox</h1>
   <div class="quarto-categories">
-    <div class="quarto-category">publications</div>
-    <div class="quarto-category">analysis</div>
-    <div class="quarto-category">coral</div>
+    <div class="quarto-category">Cartography</div>
+    <div class="quarto-category">Web mapping</div>
   </div>
   </div>
 
+<div>
+  <div class="description">
+    Exploring new tools for spatial data visualization
+  </div>
+</div>
 
 
-<div class="quarto-title-meta">
+<div class="quarto-title-meta column-page-left">
 
     <div>
     <div class="quarto-title-meta-heading">Author</div>
@@ -142,6 +157,12 @@ ul.task-list li input[type="checkbox"] {
           </div>
   </div>
     
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">April 10, 2022</p>
+    </div>
+  </div>
   
     
   </div>
@@ -152,9 +173,27 @@ ul.task-list li input[type="checkbox"] {
 
 
 <p>Working as a Marine Spatial Planning analyst with the McClintock lab had the added benefit that I got to know and learn how to use the latest advances in open source geospatial and mapping tools, as <a href="https://www.seasketch.org/">SeaSketch</a> shifted towards its own completely open source design.</p>
-<p>One of those tools was Mapbox, and I found myself really enjoying the streamlined and transparent process of adding and then styling data using this tool. I’ve since used Mapbox to create maps for independent projects I’ve worked on free, which I’ll explain more below.</p>
+<p>One of those tools was Mapbox, and I found myself really enjoying the streamlined and transparent process of adding and then styling data using this tool. I’ve since used Mapbox to create maps for independent projects I’ve worked on free. In this post I’ll discuss the basics of using Mapbox (specifically from the POV of a non-commercial user), and some helpful tips on how to transition data from Esri-optimized formats (shp, tif) to geojson.</p>
+<section id="what-is-mapbox" class="level2">
+<h2 class="anchored" data-anchor-id="what-is-mapbox">What is Mapbox?</h2>
+<section id="getting-set-up" class="level3">
+<h3 class="anchored" data-anchor-id="getting-set-up">Getting Set Up</h3>
+</section>
+<section id="cartography-syntax" class="level3">
+<h3 class="anchored" data-anchor-id="cartography-syntax">Cartography Syntax</h3>
+</section>
+</section>
+<section id="helper-scripts-for-data-management" class="level2">
+<h2 class="anchored" data-anchor-id="helper-scripts-for-data-management">Helper Scripts for Data Management</h2>
+<section id="geojson-versus-shape---why-it-matters" class="level3">
+<h3 class="anchored" data-anchor-id="geojson-versus-shape---why-it-matters">Geojson versus shape - why it matters</h3>
+</section>
+<section id="geojson.io" class="level3">
+<h3 class="anchored" data-anchor-id="geojson.io">Geojson.io</h3>
 
 
+</section>
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
