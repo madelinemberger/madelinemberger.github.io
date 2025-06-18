@@ -1,6 +1,6 @@
 ---
 title: "Quantifying nitrogen pollution to the worlds 2nd largest barrier reef"
-description: "Spatial analysis of anthropogenic sourcs of Nitrogen to the Mesoamerican Reef using R and open data."
+description: "Spatial analysis of anthropogenic sources of Nitrogen to the Mesoamerican Reef using R and open data."
 author: "Madeline Berger"
 date: 2021-06-11
 categories: [Spatial Analysis, R, Coral Reefs, Pollution]
