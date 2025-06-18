@@ -17,20 +17,20 @@ format:
 
 ## Project Overview
 
-For my paper quantifying nutrient pollution in the Mesoamerican Reef, I wanted to explore ways to include pollution generated from cruise ships in our analysis. The large-scale cruise industry has become somewhat notorious for poor environmental practices (including dredging reefs to accommodate increasingly enormous ships, pollution, whale strikes...), so its perhaps not surprising that there is very little data publicly available. I did [find a page on Wikipedia](https://en.wikipedia.org/wiki/List_of_cruise_ships) listing all known ships both in service and ones that have ceased to operate.
+For my paper quantifying nutrient pollution in the Mesoamerican Reef, I wanted to explore ways to include pollution generated from cruise ships in our analysis. The large-scale cruise industry is notorious for poor environmental practices (including dredging reefs to accommodate increasingly enormous ships, pollution, whale strikes...), so it's perhaps not surprising that there is very little data publicly available. I did [find a page on Wikipedia](https://en.wikipedia.org/wiki/List_of_cruise_ships) listing all known cruise ships (both in service and retired) with details about the ship capacity and build, which seemed to be the best source available.
 
-Given the long list, I decided to try out the `rvest` package to see if I could just scrape the information I wanted from the webpage. The rest of this post walks through my process and code.
+Given the long list, I decided to try out the `rvest` package to see if I could just scrape the information I wanted from the webpage. The rest of this post walks through my process and code. I already had a list of cruiseships that were present in the Mesoamerican Reef region from Global Fishing Watch, but I needed additional information about their passenger numbers to estimate the amount of waste water each of these ships might be generating.
 
 \*thumbnail by photo by [Polina Rytova](https://unsplash.com/@polina_art?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash) on [Unsplash](https://unsplash.com/photos/aerial-photography-of-white-and-brown-cruise-ship-on-water-1AUe0hwdC3o?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash)
 
 ## Tools and libraries used
 
-- Wrangling: `tidyverse`, `janitor`
-- Scraping: `rvest`, 
-- Looping: `purr`, `foreach`
+-   Wrangling: `tidyverse`, `janitor` , `stringr`
+-   Scraping: `rvest`,
+-   Looping: `purr`, `foreach`
+-   Tables: `gt`
 
-
-## Code 
+## Code
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE,
@@ -46,7 +46,7 @@ library(rvest) #for scraping
 library(purrr)
 library(foreach)
 library(doParallel)
-library(httr)
+library(httr) # for scrapping
 
 # for making nice tables
 
@@ -63,21 +63,21 @@ To scrape stuff from the web, you need to look "under the hood" at the site code
 
 **Cruise ship names from full list**
 
-url = '[https://en.wikipedia.org/wiki/List_of_cruise_ships'](https://en.wikipedia.org/wiki/List_of_cruise_ships')
+url = ['https://en.wikipedia.org/wiki/List_of_cruise_ships](https://en.wikipedia.org/wiki/List_of_cruise_ships)
 
-#### Xpaths for the first 3 tables (A - C) :
+##### Xpaths for the first 3 tables (A - C) :
 
 //[@id*="mw-content-text"*]*/div\[1\]/table\[2\] //*[@id="mw-content-text"]/div\[1\]/table\[3\] //\*[@id="mw-content-text"]/div\[1\]/table\[4\]
 
-#### Xpaths for the names of the cruiseships:
+##### Xpaths for the names of the cruiseships:
 
 //\*[@id="mw-content-text"]/div\[1\]/table\[2\]/tbody/tr\[42\]/th/i/a
 
-#### Xpaths for the capacity element on a ship page:
+##### Xpaths for the capacity element on a ship page:
 
 //\*[@id="mw-content-text"]/div\[1\]/table\[1\]/tbody/tr\[30\]/td\[1\]
 
-# Getting Ship Page URLs
+### Getting Ship Page URLs
 
 First get a list of URLs to each ships' own wikipedia page
 
@@ -253,14 +253,16 @@ List of ships we could not match to links:
 -   Seabourn Quest
 -   Vision of the seas
 -   Carnival Triumph (could not find)
--   Carnival Victory 
--   Seven Seas Voyager 
+-   Carnival Victory
+-   Seven Seas Voyager
 
-Other notes: 
-- Carnival Miracle TB5 is the same as Carnival Miracle, based on IMO number 
-- MS FRAM taken out below before running loop because it doesn't have a crew \#
+Other notes:
 
-# Scrape passenger number from each ships' page
+-   Carnival Miracle TB5 is the same as Carnival Miracle, based on IMO number
+
+-   MS FRAM taken out below before running loop because it doesn't have a crew \#
+
+### Scrape passenger number from each ships' page
 
 ```{r capacity-scrape, eval=FALSE}
 
@@ -329,7 +331,7 @@ capacities_MAR = do.call(rbind, capacities_list)
 
 ```
 
-Last step is to clean up the ship numbers using str - I'll just split it based on the space, and then grab the first element. Also need to add back in the MS FRAM since we took it out of the loop.
+Last step is to clean up the ship numbers using `stringr`- I'll just split it based on the space, and then grab the first element. Also need to add back in the MS FRAM since we took it out of the loop.
 
 ```{r capacity-clean, eval = FALSE}
 
@@ -365,7 +367,7 @@ write_csv(cruise_capacities_final, "outputs/cruise_capacities_final.csv")
 
 ```
 
-Voila! The final table with cruiseship 
+Voilá! The final table with cruiseship name, passenger capacity, crew capacity, and total ship population.
 
 ```{r include = FALSE}
 
@@ -393,4 +395,3 @@ gt <- cruise_capacities_final %>%
 gt
 
 ```
-
