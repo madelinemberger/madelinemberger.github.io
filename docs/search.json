@@ -72,16 +72,30 @@
   {
     "objectID": "projects/Cruiseship-webscrape/index.html",
     "href": "projects/Cruiseship-webscrape/index.html",
-    "title": "Wikipedia webscrape to generate a dataset of cruiseships and their passenger capacities",
+    "title": "Webscraping for Cruiseship Information",
     "section": "",
-    "text": "For my paper quantifying nutrient pollution in the Mesoamerican Reef, I wanted to explore ways to include pollution generated from cruise ships in our analysis. The large-scale cruise industry has become somewhat notorious for poor environmental practices (including dredging reefs to accommodate increasingly enormous ships, pollution, whale strikes…), so its perhaps not surprising that there is very little data publicly available. I did find a page on Wikipedia listing all known ships both in service and ones that have ceased to operate.\nGiven the long list, I decided to try out the rvest package to see if I could just scrape the information I wanted from the webpage. The rest of this post walks through my process and code.\n*thumbnail by photo by Polina Rytova on Unsplash\nFirst, I need to examine the webpage to understand what elements I want. In this case, I want all the cruise ship names. Then, I want to go onto each cruises own page and grab the number that is under the “capacity” row in the right hand summary table.\nTo scrape stuff from the web, you need to look “under the hood” at the site code, and ID the xpath of the information you are interested in targeting.\nCruise ship names from full list\nurl = ’https://en.wikipedia.org/wiki/List_of_cruise_ships’\n\n\n//[@id*=\"mw-content-text\"*]/div[1]/table[2] //[@id=\"mw-content-text\"]/div[1]/table[3] //*[@id=\"mw-content-text\"]/div[1]/table[4]\n\n\n\n//*[@id=\"mw-content-text\"]/div[1]/table[2]/tbody/tr[42]/th/i/a\n\n\n\n//*[@id=\"mw-content-text\"]/div[1]/table[1]/tbody/tr[30]/td[1]"
+    "text": "For my paper quantifying nutrient pollution in the Mesoamerican Reef, I wanted to explore ways to include pollution generated from cruise ships in our analysis. The large-scale cruise industry has become somewhat notorious for poor environmental practices (including dredging reefs to accommodate increasingly enormous ships, pollution, whale strikes…), so its perhaps not surprising that there is very little data publicly available. I did find a page on Wikipedia listing all known ships both in service and ones that have ceased to operate.\nGiven the long list, I decided to try out the rvest package to see if I could just scrape the information I wanted from the webpage. The rest of this post walks through my process and code.\n*thumbnail by photo by Polina Rytova on Unsplash"
   },
   {
     "objectID": "projects/Cruiseship-webscrape/index.html#project-overview",
     "href": "projects/Cruiseship-webscrape/index.html#project-overview",
-    "title": "Wikipedia webscrape to generate a dataset of cruiseships and their passenger capacities",
+    "title": "Webscraping for Cruiseship Information",
     "section": "",
-    "text": "For my paper quantifying nutrient pollution in the Mesoamerican Reef, I wanted to explore ways to include pollution generated from cruise ships in our analysis. The large-scale cruise industry has become somewhat notorious for poor environmental practices (including dredging reefs to accommodate increasingly enormous ships, pollution, whale strikes…), so its perhaps not surprising that there is very little data publicly available. I did find a page on Wikipedia listing all known ships both in service and ones that have ceased to operate.\nGiven the long list, I decided to try out the rvest package to see if I could just scrape the information I wanted from the webpage. The rest of this post walks through my process and code.\n*thumbnail by photo by Polina Rytova on Unsplash\nFirst, I need to examine the webpage to understand what elements I want. In this case, I want all the cruise ship names. Then, I want to go onto each cruises own page and grab the number that is under the “capacity” row in the right hand summary table.\nTo scrape stuff from the web, you need to look “under the hood” at the site code, and ID the xpath of the information you are interested in targeting.\nCruise ship names from full list\nurl = ’https://en.wikipedia.org/wiki/List_of_cruise_ships’\n\n\n//[@id*=\"mw-content-text\"*]/div[1]/table[2] //[@id=\"mw-content-text\"]/div[1]/table[3] //*[@id=\"mw-content-text\"]/div[1]/table[4]\n\n\n\n//*[@id=\"mw-content-text\"]/div[1]/table[2]/tbody/tr[42]/th/i/a\n\n\n\n//*[@id=\"mw-content-text\"]/div[1]/table[1]/tbody/tr[30]/td[1]"
+    "text": "For my paper quantifying nutrient pollution in the Mesoamerican Reef, I wanted to explore ways to include pollution generated from cruise ships in our analysis. The large-scale cruise industry has become somewhat notorious for poor environmental practices (including dredging reefs to accommodate increasingly enormous ships, pollution, whale strikes…), so its perhaps not surprising that there is very little data publicly available. I did find a page on Wikipedia listing all known ships both in service and ones that have ceased to operate.\nGiven the long list, I decided to try out the rvest package to see if I could just scrape the information I wanted from the webpage. The rest of this post walks through my process and code.\n*thumbnail by photo by Polina Rytova on Unsplash"
+  },
+  {
+    "objectID": "projects/Cruiseship-webscrape/index.html#tools-and-libraries-used",
+    "href": "projects/Cruiseship-webscrape/index.html#tools-and-libraries-used",
+    "title": "Webscraping for Cruiseship Information",
+    "section": "Tools and libraries used",
+    "text": "Tools and libraries used\n\nWrangling: tidyverse, janitor\nScraping: rvest,\nLooping: purr, foreach"
+  },
+  {
+    "objectID": "projects/Cruiseship-webscrape/index.html#code",
+    "href": "projects/Cruiseship-webscrape/index.html#code",
+    "title": "Webscraping for Cruiseship Information",
+    "section": "Code",
+    "text": "Code\nFirst, I need to examine the webpage to understand what elements I want. In this case, I want all the cruise ship names. Then, I want to go onto each cruises own page and grab the number that is under the “capacity” row in the right hand summary table.\nTo scrape stuff from the web, you need to look “under the hood” at the site code, and ID the xpath of the information you are interested in targeting.\nCruise ship names from full list\nurl = ’https://en.wikipedia.org/wiki/List_of_cruise_ships’\n\nXpaths for the first 3 tables (A - C) :\n//[@id*=\"mw-content-text\"*]/div[1]/table[2] //[@id=\"mw-content-text\"]/div[1]/table[3] //*[@id=\"mw-content-text\"]/div[1]/table[4]\n\n\nXpaths for the names of the cruiseships:\n//*[@id=\"mw-content-text\"]/div[1]/table[2]/tbody/tr[42]/th/i/a\n\n\nXpaths for the capacity element on a ship page:\n//*[@id=\"mw-content-text\"]/div[1]/table[1]/tbody/tr[30]/td[1]"
   },
   {
     "objectID": "projects/MAR-paper/index.html",
@@ -144,6 +158,6 @@
     "href": "posts.html",
     "title": "Portfolio",
     "section": "",
-    "text": "Dynamic cartography using Mapbox\n\n\nExploring new tools for spatial data visualization\n\n\n\nMadeline Berger\n\n\nApr 10, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\nWikipedia webscrape to generate a dataset of cruiseships and their passenger capacities\n\n\nUsing the rvest R package to help estimate cruiseship impact on marine habitats\n\n\n\nMadeline Berger\n\n\nJun 11, 2021\n\n\n\n\n\n\n\n\n\n\n\n\n\nQuantifying nitrogen pollution to the worlds 2nd largest barrier reef\n\n\nSpatial analysis of anthropogenic sourcs of Nitrogen to the Mesoamerican Reef using R and open data.\n\n\n\nMadeline Berger\n\n\nJun 11, 2021\n\n\n\n\n\n\nNo matching items"
+    "text": "Dynamic cartography using Mapbox\n\n\nExploring new tools for spatial data visualization\n\n\n\nMadeline Berger\n\n\nApr 10, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\nWebscraping for Cruiseship Information\n\n\nUsing the rvest R package to help estimate cruiseship impact on marine habitats\n\n\n\nMadeline Berger\n\n\nJun 11, 2021\n\n\n\n\n\n\n\n\n\n\n\n\n\nQuantifying nitrogen pollution to the worlds 2nd largest barrier reef\n\n\nSpatial analysis of anthropogenic sourcs of Nitrogen to the Mesoamerican Reef using R and open data.\n\n\n\nMadeline Berger\n\n\nJun 11, 2021\n\n\n\n\n\n\nNo matching items"
   }
 ]

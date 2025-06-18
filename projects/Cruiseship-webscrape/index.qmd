@@ -1,5 +1,5 @@
 ---
-title: "Wikipedia webscrape to generate a dataset of cruiseships and their passenger capacities"
+title: "Webscraping for Cruiseship Information"
 description: "Using the rvest R package to help estimate cruiseship impact on marine habitats"
 author: "Madeline Berger"
 date: 2021-06-11
@@ -33,7 +33,9 @@ Given the long list, I decided to try out the `rvest` package to see if I could 
 ## Code 
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE,
+                      message = FALSE,
+                      warning = FALSE)
 
 
 library(tidyverse)
@@ -46,6 +48,10 @@ library(foreach)
 library(doParallel)
 library(httr)
 
+# for making nice tables
+
+library(gt)
+library(gtExtras)
 
 #source(here("scripts/workflow", "file_paths.R"))
 
@@ -103,7 +109,7 @@ links <- url2 %>%
   tibble::enframe() %>% 
   as.data.frame()
 
-head(links)
+gt(head(links))
 ```
 
 Clean up `links` so that we just have a cruise ship name and its info. Looking at it, we can see there is a bunch of stuff we don't want. We really only want the links that start with `/wiki/`. And we also don't want any of the first 56 rows or the last batch of rows as well.
@@ -133,7 +139,7 @@ ship_links <- links %>%
   ) 
 
 
-head(ship_links)
+gt(head(ship_links))
 ```
 
 Now, we want to extract the name of the ship, which will be the last phrase of the link. Two options:
@@ -141,7 +147,7 @@ Now, we want to extract the name of the ship, which will be the last phrase of t
 1.  Use str to extract it from the link
 2.  Pull all the cruise names using `rvest` and then do some kind of str_detect to match it to capacity?
 
-```{r}
+```{r extract-shipname}
 
 ship_links_full <- ship_links %>% 
   mutate(
@@ -158,33 +164,35 @@ ship_links_full <- ship_links %>%
 
 # save 
 
-write_csv(ship_links_full, "outputs/ship_links_clean.csv")
+#write_csv(ship_links_full, "outputs/ship_links_clean.csv")
 
 ```
 
 Now lets see if we can just filter out the ships we know are in the MAR region in 2019. I converted the names to uppercase to match the Global Fishing Watch data, but due to some being identified in either dataset with just their abbreviations it may not be perfect. Let's give it a shot.
 
-```{r}
-#| eval: false
-ship_links_clean <- read_csv(file.path(dir_interim,"/cruiseships/ship_links_clean.csv"))
+```{r join-links}
 
-gfw_joined <- read_csv(file.path(dir_interim,"cruiseships/cruiseships_2019.csv"))
+ship_links_clean <- read_csv("outputs/ship_links_clean.csv")
 
-names <- unique(ship_links_full$name)
+gfw_joined <- read_csv("data/cruiseships_2019.csv") # list of location and length of stay per pixle of cruise ships, filtered for MAR region, 2019. Acquired from Global Fishing Watch
+
+names <- unique(ship_links_clean$name)
 
 #ships in MAR region - 72
-MAR_names <- unique(gfw_joined$shipname)
 
+MAR_names <- unique(gfw_joined$shipname) # 72 unique named ships
+
+# filter the links using the 72 cruise ship names that we know were present in the MAR region 
 ship_links_MAR <- ship_links_clean %>% 
   filter(name %in% MAR_names)
 
 
 ```
 
-Darn - that only got 45 of them. Let's see if at least those 45 work to scrape the data. The rest I can fill in by hand:
+Using a simple filter matching names from the links to the spatial dataset only got 38 of them. Let's see if at least those 38 work to scrape the data. The rest I can fill in by hand:
 
-```{r}
-#| eval: false
+```{r missing-shipnames}
+
 missing_df <- data.frame(
   missing_names = setdiff(gfw_joined$shipname, ship_links_MAR$name)
 ) %>% 
@@ -228,27 +236,36 @@ ship_links_MAR_all <- ship_links_MAR %>%
   dplyr::select(full_link,name) %>% 
   rbind(missing_df)
 
-write_csv(ship_links_MAR_all, file.path(dir_interim,"/cruiseships/ship_links_all.csv"))
+write_csv(ship_links_MAR_all, "outputs/ship_links_all.csv")
+
+missing_names = setdiff(gfw_joined$shipname, ship_links_MAR_all$name)
 ```
 
-List of ships we could not find info for:
+List of ships we could not match to links:
 
 -   M/V Hamburg
+-   Costa Luminosa
+-   Serenade of the Seas
+-   Seven Seas Mariner
+-   Sea Cloud II
 -   RCGS Resolute
--   Seven Seas Voyager 7 (we already have the seven seas voyager so not sure what this ship is)
--   CaribbeanPrince TB22 (we already have Caribbean Princess?)
+-   Seven Seas Voyager 7
+-   Seabourn Quest
+-   Vision of the seas
 -   Carnival Triumph (could not find)
+-   Carnival Victory 
+-   Seven Seas Voyager 
 
-Other notes: Carnival Miracle TB5 is the same as Carnival Miracle, based on IMO number MS FRAM taken out below before running loop because it doesn't have a crew \#
+Other notes: 
+- Carnival Miracle TB5 is the same as Carnival Miracle, based on IMO number 
+- MS FRAM taken out below before running loop because it doesn't have a crew \#
 
 # Scrape passenger number from each ships' page
 
-Try using a loop - not as nice but the above is simply not working.
+```{r capacity-scrape, eval=FALSE}
 
-```{r}
-#| eval: false
-#read in links csv
-ship_links_MAR_all <- read_csv(file.path(dir_interim,"/cruiseships/ship_links_all.csv")) %>% 
+#read in links csv if starting from here
+ship_links_MAR_all <- read_csv("outputs/ship_links_all.csv") %>% 
   filter(!name == "FRAM")
 
 urls <- ship_links_MAR_all$full_link
@@ -262,16 +279,20 @@ capacities_list <- list()
 #fill list by looping over each link in vector
 
 for (i in seq_along(urls)) {
-  
-   #x = urls[[46]]
+    
+    # for testing and de bugging 
+    #x = urls[[57]]
   
     x = urls[i]
-  
+    
+  # scrape ship info
    table <-  read_html(x) %>% 
     rvest::html_nodes("table.infobox") %>% 
     rvest::html_table(header=F, fill = T) 
-  
-   table2 <- table[[1]] %>% # unlist
+   
+    
+  # unlist to create clean table of info for each ship
+   table2 <- table[[1]] %>% 
     clean_names() %>% 
     rename(
       name = 1, 
@@ -281,31 +302,37 @@ for (i in seq_along(urls)) {
      pivot_wider(names_from = name,
                  values_from = value) 
    
+  if("Capacity" %in% colnames(table2)){
+   # select columns and reshape
    table3 <- table2 %>% 
-       dplyr::select(`Capacity:`, `Crew:`) %>%
+       dplyr::select(`Capacity`, `Crew`) %>%
        mutate(
        full_link = x,
-       capacity = as.character(`Capacity:`),
-       crew = as.character(`Crew:`)
+       capacity = as.character(`Capacity`),
+       crew = as.character(`Crew`)
        ) %>% 
-      dplyr::select(-`Capacity:`, -`Crew:`)
+      dplyr::select(-`Capacity`, -`Crew`)
    
-   print(i)
+   #print(i) # in case it breaks
 
    capacities_list[[i]] <- table3
+    
+  }else {
+    print(i) # one dropped out, url 57
+    next
+  }
    
 }
 
-#unlist
-capacities_MAR = do.call(rbind, capacities_list) # bind all the rows togther
-
+# bind all together in a dataframe
+capacities_MAR = do.call(rbind, capacities_list) 
 
 ```
 
 Last step is to clean up the ship numbers using str - I'll just split it based on the space, and then grab the first element. Also need to add back in the MS FRAM since we took it out of the loop.
 
-```{r}
-#| eval: false
+```{r capacity-clean, eval = FALSE}
+
 
 #best way to get numbers out
 capacities_MAR_clean <- capacities_MAR %>%
@@ -333,7 +360,37 @@ cruise_capacities_final <- full_join(capacities_MAR_clean, ship_links_MAR_all, b
   dplyr::select(shipname = name,capacity_n,crew_n,total_ship_pop) %>% 
   rbind(fram)
 
-
-write_csv(cruise_capacities_final, file.path(dir_interim,"/cruiseships/cruise_capacities_final.csv"))
+#gt(cruise_capacities_final)
+write_csv(cruise_capacities_final, "outputs/cruise_capacities_final.csv")
 
 ```
+
+Voila! The final table with cruiseship 
+
+```{r include = FALSE}
+
+# read in the csv so the loop above 
+cruise_capacities_final <- read_csv("outputs/cruise_capacities_final.csv")
+
+```
+
+```{r final-table}
+
+gt <- cruise_capacities_final %>% 
+  arrange(-total_ship_pop) %>% 
+  gt() %>% 
+  tab_header(
+    title = md("Passenger and Crew Capacities of Cruiseships in 2019"),
+    subtitle = md("Data for cruisehips present in the Mesoamerican Reef Region only")
+  ) %>% 
+  cols_label(shipname = "Ship name",
+             capacity_n = "Passenger Capacity",
+             crew_n = "Crew Capacity",
+             total_ship_pop = "Total Ship Population") %>% 
+  tab_source_note(source_note = "Source: List of Cruiseships Wikipedia Webpage") %>% 
+  tab_options(container.overflow.y = T)
+
+gt
+
+```
+

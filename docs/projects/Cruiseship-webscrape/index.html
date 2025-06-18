@@ -10,7 +10,7 @@
 <meta name="dcterms.date" content="2021-06-11">
 <meta name="description" content="Using the rvest R package to help estimate cruiseship impact on marine habitats">
 
-<title>Wikipedia webscrape to generate a dataset of cruiseships and their passenger capacities –</title>
+<title>Webscraping for Cruiseship Information –</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -160,6 +160,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul class="collapse">
   <li><a href="#project-overview" id="toc-project-overview" class="nav-link active" data-scroll-target="#project-overview">Project Overview</a></li>
+  <li><a href="#tools-and-libraries-used" id="toc-tools-and-libraries-used" class="nav-link" data-scroll-target="#tools-and-libraries-used">Tools and libraries used</a></li>
+  <li><a href="#code" id="toc-code" class="nav-link" data-scroll-target="#code">Code</a></li>
   <li><a href="#getting-ship-page-urls" id="toc-getting-ship-page-urls" class="nav-link" data-scroll-target="#getting-ship-page-urls">Getting Ship Page URLs</a></li>
   <li><a href="#scrape-passenger-number-from-each-ships-page" id="toc-scrape-passenger-number-from-each-ships-page" class="nav-link" data-scroll-target="#scrape-passenger-number-from-each-ships-page">Scrape passenger number from each ships’ page</a></li>
   </ul>
@@ -170,7 +172,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Wikipedia webscrape to generate a dataset of cruiseships and their passenger capacities</h1>
+<h1 class="title">Webscraping for Cruiseship Information</h1>
   <div class="quarto-categories">
     <div class="quarto-category">Webscraping</div>
     <div class="quarto-category">R</div>
@@ -215,6 +217,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>For my paper quantifying nutrient pollution in the Mesoamerican Reef, I wanted to explore ways to include pollution generated from cruise ships in our analysis. The large-scale cruise industry has become somewhat notorious for poor environmental practices (including dredging reefs to accommodate increasingly enormous ships, pollution, whale strikes…), so its perhaps not surprising that there is very little data publicly available. I did <a href="https://en.wikipedia.org/wiki/List_of_cruise_ships">find a page on Wikipedia</a> listing all known ships both in service and ones that have ceased to operate.</p>
 <p>Given the long list, I decided to try out the <code>rvest</code> package to see if I could just scrape the information I wanted from the webpage. The rest of this post walks through my process and code.</p>
 <p>*thumbnail by photo by <a href="https://unsplash.com/@polina_art?utm_content=creditCopyText&amp;utm_medium=referral&amp;utm_source=unsplash">Polina Rytova</a> on <a href="https://unsplash.com/photos/aerial-photography-of-white-and-brown-cruise-ship-on-water-1AUe0hwdC3o?utm_content=creditCopyText&amp;utm_medium=referral&amp;utm_source=unsplash">Unsplash</a></p>
+</section>
+<section id="tools-and-libraries-used" class="level2">
+<h2 class="anchored" data-anchor-id="tools-and-libraries-used">Tools and libraries used</h2>
+<ul>
+<li>Wrangling: <code>tidyverse</code>, <code>janitor</code></li>
+<li>Scraping: <code>rvest</code>,</li>
+<li>Looping: <code>purr</code>, <code>foreach</code></li>
+</ul>
+</section>
+<section id="code" class="level2">
+<h2 class="anchored" data-anchor-id="code">Code</h2>
 <p>First, I need to examine the webpage to understand what elements I want. In this case, I want all the cruise ship names. Then, I want to go onto each cruises own page and grab the number that is under the “capacity” row in the right hand summary table.</p>
 <p>To scrape stuff from the web, you need to look “under the hood” at the site code, and ID the xpath of the information you are interested in targeting.</p>
 <p><strong>Cruise ship names from full list</strong></p>
@@ -264,62 +277,1020 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>  tibble<span class="sc">::</span><span class="fu">enframe</span>() <span class="sc">%&gt;%</span> </span>
 <span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>()</span>
 <span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(links)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="fu">gt</span>(<span class="fu">head</span>(links))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-stdout">
-<pre><code>  name                       value
-1    1                #bodyContent
-2    2             /wiki/Main_Page
-3    3    /wiki/Wikipedia:Contents
-4    4 /wiki/Portal:Current_events
-5    5        /wiki/Special:Random
-6    6       /wiki/Wikipedia:About</code></pre>
+<div class="cell-output-display">
+<div id="fuilsbtyix" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#fuilsbtyix table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#fuilsbtyix thead, #fuilsbtyix tbody, #fuilsbtyix tfoot, #fuilsbtyix tr, #fuilsbtyix td, #fuilsbtyix th {
+  border-style: none;
+}
+
+#fuilsbtyix p {
+  margin: 0;
+  padding: 0;
+}
+
+#fuilsbtyix .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#fuilsbtyix .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#fuilsbtyix .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#fuilsbtyix .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#fuilsbtyix .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#fuilsbtyix .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#fuilsbtyix .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#fuilsbtyix .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#fuilsbtyix .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#fuilsbtyix .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#fuilsbtyix .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#fuilsbtyix .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#fuilsbtyix .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#fuilsbtyix .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#fuilsbtyix .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#fuilsbtyix .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#fuilsbtyix .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#fuilsbtyix .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#fuilsbtyix .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#fuilsbtyix .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#fuilsbtyix .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#fuilsbtyix .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#fuilsbtyix .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#fuilsbtyix .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#fuilsbtyix .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#fuilsbtyix .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#fuilsbtyix .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#fuilsbtyix .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#fuilsbtyix .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#fuilsbtyix .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#fuilsbtyix .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#fuilsbtyix .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#fuilsbtyix .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#fuilsbtyix .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#fuilsbtyix .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#fuilsbtyix .gt_left {
+  text-align: left;
+}
+
+#fuilsbtyix .gt_center {
+  text-align: center;
+}
+
+#fuilsbtyix .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#fuilsbtyix .gt_font_normal {
+  font-weight: normal;
+}
+
+#fuilsbtyix .gt_font_bold {
+  font-weight: bold;
+}
+
+#fuilsbtyix .gt_font_italic {
+  font-style: italic;
+}
+
+#fuilsbtyix .gt_super {
+  font-size: 65%;
+}
+
+#fuilsbtyix .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#fuilsbtyix .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#fuilsbtyix .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#fuilsbtyix .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#fuilsbtyix .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#fuilsbtyix .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#fuilsbtyix .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#fuilsbtyix .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#fuilsbtyix div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+
+<table class="gt_table caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<thead>
+<tr class="gt_col_headings header">
+<th id="name" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">name</th>
+<th id="value" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">value</th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_right" headers="name">1</td>
+<td class="gt_row gt_left" headers="value">#bodyContent</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="name">2</td>
+<td class="gt_row gt_left" headers="value">/wiki/Main_Page</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="name">3</td>
+<td class="gt_row gt_left" headers="value">/wiki/Wikipedia:Contents</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="name">4</td>
+<td class="gt_row gt_left" headers="value">/wiki/Portal:Current_events</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="name">5</td>
+<td class="gt_row gt_left" headers="value">/wiki/Special:Random</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="name">6</td>
+<td class="gt_row gt_left" headers="value">/wiki/Wikipedia:About</td>
+</tr>
+</tbody>
+</table>
+
+</div>
 </div>
 </div>
 <p>Clean up <code>links</code> so that we just have a cruise ship name and its info. Looking at it, we can see there is a bunch of stuff we don’t want. We really only want the links that start with <code>/wiki/</code>. And we also don’t want any of the first 56 rows or the last batch of rows as well.</p>
 <div class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>ship_links <span class="ot">&lt;-</span> links <span class="sc">%&gt;%</span> </span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">idnum =</span> name, <span class="at">link =</span> value) <span class="sc">%&gt;%</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">idnum =</span> <span class="fu">as.numeric</span>(idnum)</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(idnum <span class="sc">&gt;</span> <span class="dv">56</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">str_detect</span>(link,<span class="at">pattern =</span> <span class="st">"/wiki/"</span>)) <span class="sc">%&gt;%</span> <span class="co">#all this is stuff I saw while visually inspecting the dataset</span></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">str_detect</span>(link, <span class="at">pattern =</span> <span class="st">"_Cruises"</span>) <span class="sc">&amp;</span> </span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>           <span class="sc">!</span><span class="fu">str_detect</span>(link, <span class="at">pattern =</span> <span class="st">"_Line"</span>) <span class="sc">&amp;</span> </span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>           <span class="sc">!</span><span class="fu">str_detect</span>(link, <span class="at">pattern =</span> <span class="st">"Tonnage"</span>) <span class="sc">&amp;</span></span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>           <span class="sc">!</span><span class="fu">str_detect</span>(link, <span class="at">pattern =</span> <span class="st">"Ocean_liner"</span>) <span class="sc">&amp;</span> </span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>           <span class="sc">!</span><span class="fu">str_detect</span>(link, <span class="at">pattern =</span> <span class="st">"Cruise_%26_Maritime_Voyages"</span>) <span class="sc">&amp;</span> </span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>           <span class="sc">!</span><span class="fu">str_detect</span>(link, <span class="at">pattern =</span> <span class="st">"_International"</span>) <span class="sc">&amp;</span></span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>           <span class="sc">!</span><span class="fu">str_detect</span>(link, <span class="at">pattern =</span> <span class="st">"-class"</span>)<span class="sc">&amp;</span></span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>           <span class="sc">!</span><span class="fu">str_detect</span>(link, <span class="at">pattern =</span> <span class="st">":"</span>) <span class="sc">&amp;</span></span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>           <span class="sc">!</span><span class="fu">str_detect</span>(link, <span class="at">pattern =</span> <span class="st">"%"</span>)</span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(idnum <span class="sc">&lt;</span> <span class="dv">1105</span>) <span class="sc">%&gt;%</span> <span class="co">#I found the last ship and got rid of all the links below it</span></span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">full_link =</span> <span class="fu">paste0</span>(<span class="st">"https://en.wikipedia.org"</span>,link) <span class="co">#create full link</span></span>
-<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>  ) </span>
-<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(ship_links)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>ship_links <span class="ot">&lt;-</span> links <span class="sc">%&gt;%</span> </span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">idnum =</span> name, <span class="at">link =</span> value) <span class="sc">%&gt;%</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">idnum =</span> <span class="fu">as.numeric</span>(idnum)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(idnum <span class="sc">&gt;</span> <span class="dv">56</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">str_detect</span>(link,<span class="at">pattern =</span> <span class="st">"/wiki/"</span>)) <span class="sc">%&gt;%</span> <span class="co">#all this is stuff I saw while visually inspecting the dataset</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">str_detect</span>(link, <span class="at">pattern =</span> <span class="st">"_Cruises"</span>) <span class="sc">&amp;</span> </span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>           <span class="sc">!</span><span class="fu">str_detect</span>(link, <span class="at">pattern =</span> <span class="st">"_Line"</span>) <span class="sc">&amp;</span> </span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>           <span class="sc">!</span><span class="fu">str_detect</span>(link, <span class="at">pattern =</span> <span class="st">"Tonnage"</span>) <span class="sc">&amp;</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>           <span class="sc">!</span><span class="fu">str_detect</span>(link, <span class="at">pattern =</span> <span class="st">"Ocean_liner"</span>) <span class="sc">&amp;</span> </span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>           <span class="sc">!</span><span class="fu">str_detect</span>(link, <span class="at">pattern =</span> <span class="st">"Cruise_%26_Maritime_Voyages"</span>) <span class="sc">&amp;</span> </span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>           <span class="sc">!</span><span class="fu">str_detect</span>(link, <span class="at">pattern =</span> <span class="st">"_International"</span>) <span class="sc">&amp;</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>           <span class="sc">!</span><span class="fu">str_detect</span>(link, <span class="at">pattern =</span> <span class="st">"-class"</span>)<span class="sc">&amp;</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>           <span class="sc">!</span><span class="fu">str_detect</span>(link, <span class="at">pattern =</span> <span class="st">":"</span>) <span class="sc">&amp;</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>           <span class="sc">!</span><span class="fu">str_detect</span>(link, <span class="at">pattern =</span> <span class="st">"%"</span>)</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(idnum <span class="sc">&lt;</span> <span class="dv">1105</span>) <span class="sc">%&gt;%</span> <span class="co">#I found the last ship and got rid of all the links below it</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">full_link =</span> <span class="fu">paste0</span>(<span class="st">"https://en.wikipedia.org"</span>,link) <span class="co">#create full link</span></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>  ) </span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a><span class="fu">gt</span>(<span class="fu">head</span>(ship_links))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-stdout">
-<pre><code>  idnum                          link
-1    74             /wiki/Cruise_ship
-2    76    /wiki/List_of_ocean_liners
-3    81        /wiki/MS_Achille_Lauro
-4    83                /wiki/Nedlloyd
-5    84 /wiki/Achille_Lauro_hijacking
-6    86              /wiki/MS_Adriana
-                                              full_link
-1             https://en.wikipedia.org/wiki/Cruise_ship
-2    https://en.wikipedia.org/wiki/List_of_ocean_liners
-3        https://en.wikipedia.org/wiki/MS_Achille_Lauro
-4                https://en.wikipedia.org/wiki/Nedlloyd
-5 https://en.wikipedia.org/wiki/Achille_Lauro_hijacking
-6              https://en.wikipedia.org/wiki/MS_Adriana</code></pre>
+<div class="cell-output-display">
+<div id="grenihrdjn" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#grenihrdjn table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#grenihrdjn thead, #grenihrdjn tbody, #grenihrdjn tfoot, #grenihrdjn tr, #grenihrdjn td, #grenihrdjn th {
+  border-style: none;
+}
+
+#grenihrdjn p {
+  margin: 0;
+  padding: 0;
+}
+
+#grenihrdjn .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#grenihrdjn .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#grenihrdjn .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#grenihrdjn .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#grenihrdjn .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#grenihrdjn .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#grenihrdjn .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#grenihrdjn .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#grenihrdjn .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#grenihrdjn .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#grenihrdjn .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#grenihrdjn .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#grenihrdjn .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#grenihrdjn .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#grenihrdjn .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#grenihrdjn .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#grenihrdjn .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#grenihrdjn .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#grenihrdjn .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#grenihrdjn .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#grenihrdjn .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#grenihrdjn .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#grenihrdjn .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#grenihrdjn .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#grenihrdjn .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#grenihrdjn .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#grenihrdjn .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#grenihrdjn .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#grenihrdjn .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#grenihrdjn .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#grenihrdjn .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#grenihrdjn .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#grenihrdjn .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#grenihrdjn .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#grenihrdjn .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#grenihrdjn .gt_left {
+  text-align: left;
+}
+
+#grenihrdjn .gt_center {
+  text-align: center;
+}
+
+#grenihrdjn .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#grenihrdjn .gt_font_normal {
+  font-weight: normal;
+}
+
+#grenihrdjn .gt_font_bold {
+  font-weight: bold;
+}
+
+#grenihrdjn .gt_font_italic {
+  font-style: italic;
+}
+
+#grenihrdjn .gt_super {
+  font-size: 65%;
+}
+
+#grenihrdjn .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#grenihrdjn .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#grenihrdjn .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#grenihrdjn .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#grenihrdjn .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#grenihrdjn .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#grenihrdjn .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#grenihrdjn .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#grenihrdjn div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+
+<table class="gt_table caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<thead>
+<tr class="gt_col_headings header">
+<th id="idnum" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">idnum</th>
+<th id="link" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">link</th>
+<th id="full_link" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">full_link</th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_right" headers="idnum">74</td>
+<td class="gt_row gt_left" headers="link">/wiki/Cruise_ship</td>
+<td class="gt_row gt_left" headers="full_link">https://en.wikipedia.org/wiki/Cruise_ship</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="idnum">76</td>
+<td class="gt_row gt_left" headers="link">/wiki/List_of_ocean_liners</td>
+<td class="gt_row gt_left" headers="full_link">https://en.wikipedia.org/wiki/List_of_ocean_liners</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="idnum">81</td>
+<td class="gt_row gt_left" headers="link">/wiki/MS_Achille_Lauro</td>
+<td class="gt_row gt_left" headers="full_link">https://en.wikipedia.org/wiki/MS_Achille_Lauro</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="idnum">83</td>
+<td class="gt_row gt_left" headers="link">/wiki/Nedlloyd</td>
+<td class="gt_row gt_left" headers="full_link">https://en.wikipedia.org/wiki/Nedlloyd</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="idnum">84</td>
+<td class="gt_row gt_left" headers="link">/wiki/Achille_Lauro_hijacking</td>
+<td class="gt_row gt_left" headers="full_link">https://en.wikipedia.org/wiki/Achille_Lauro_hijacking</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="idnum">86</td>
+<td class="gt_row gt_left" headers="link">/wiki/MS_Adriana</td>
+<td class="gt_row gt_left" headers="full_link">https://en.wikipedia.org/wiki/MS_Adriana</td>
+</tr>
+</tbody>
+</table>
+
+</div>
 </div>
 </div>
 <p>Now, we want to extract the name of the ship, which will be the last phrase of the link. Two options:</p>
@@ -330,193 +1301,1168 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>ship_links_full <span class="ot">&lt;-</span> ship_links <span class="sc">%&gt;%</span> </span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">tmp_chunks =</span> <span class="fu">str_split</span>(link, <span class="fu">fixed</span>(<span class="st">"/"</span>)) <span class="co">#split up the link</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> <span class="fu">map_chr</span>(tmp_chunks, <span class="dv">3</span>) <span class="co">#extract the third element, which is the name</span></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> <span class="fu">str_to_upper</span>(<span class="fu">str_replace_all</span>(name,<span class="st">"_"</span>,<span class="st">" "</span>))</span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">-</span>tmp_chunks) <span class="sc">%&gt;%</span> </span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">href =</span> link)</span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="co"># save </span></span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(ship_links_full, <span class="st">"outputs/ship_links_clean.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>ship_links_full <span class="ot">&lt;-</span> ship_links <span class="sc">%&gt;%</span> </span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">tmp_chunks =</span> <span class="fu">str_split</span>(link, <span class="fu">fixed</span>(<span class="st">"/"</span>)) <span class="co">#split up the link</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> <span class="fu">map_chr</span>(tmp_chunks, <span class="dv">3</span>) <span class="co">#extract the third element, which is the name</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> <span class="fu">str_to_upper</span>(<span class="fu">str_replace_all</span>(name,<span class="st">"_"</span>,<span class="st">" "</span>))</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">-</span>tmp_chunks) <span class="sc">%&gt;%</span> </span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">href =</span> link)</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="co"># save </span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="co">#write_csv(ship_links_full, "outputs/ship_links_clean.csv")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p>Now lets see if we can just filter out the ships we know are in the MAR region in 2019. I converted the names to uppercase to match the Global Fishing Watch data, but due to some being identified in either dataset with just their abbreviations it may not be perfect. Let’s give it a shot.</p>
 <div class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>ship_links_clean <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="fu">file.path</span>(dir_interim,<span class="st">"/cruiseships/ship_links_clean.csv"</span>))</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>gfw_joined <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="fu">file.path</span>(dir_interim,<span class="st">"cruiseships/cruiseships_2019.csv"</span>))</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>names <span class="ot">&lt;-</span> <span class="fu">unique</span>(ship_links_full<span class="sc">$</span>name)</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co">#ships in MAR region - 72</span></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>MAR_names <span class="ot">&lt;-</span> <span class="fu">unique</span>(gfw_joined<span class="sc">$</span>shipname)</span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>ship_links_MAR <span class="ot">&lt;-</span> ship_links_clean <span class="sc">%&gt;%</span> </span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(name <span class="sc">%in%</span> MAR_names)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>ship_links_clean <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"outputs/ship_links_clean.csv"</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>gfw_joined <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/cruiseships_2019.csv"</span>) <span class="co"># list of location and length of stay per pixle of cruise ships, filtered for MAR region, 2019. Acquired from Global Fishing Watch</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>names <span class="ot">&lt;-</span> <span class="fu">unique</span>(ship_links_clean<span class="sc">$</span>name)</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co">#ships in MAR region - 72</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>MAR_names <span class="ot">&lt;-</span> <span class="fu">unique</span>(gfw_joined<span class="sc">$</span>shipname) <span class="co"># 72 unique named ships</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="co"># filter the links using the 72 cruise ship names that we know were present in the MAR region </span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>ship_links_MAR <span class="ot">&lt;-</span> ship_links_clean <span class="sc">%&gt;%</span> </span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(name <span class="sc">%in%</span> MAR_names)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<p>Darn - that only got 45 of them. Let’s see if at least those 45 work to scrape the data. The rest I can fill in by hand:</p>
+<p>Using a simple filter matching names from the links to the spatial dataset only got 38 of them. Let’s see if at least those 38 work to scrape the data. The rest I can fill in by hand:</p>
 <div class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>missing_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">missing_names =</span> <span class="fu">setdiff</span>(gfw_joined<span class="sc">$</span>shipname, ship_links_MAR<span class="sc">$</span>name)</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> </span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> <span class="fu">as.character</span>(missing_names)</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">full_link =</span> <span class="fu">case_when</span>(</span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>      name <span class="sc">%in%</span> <span class="st">"FRAM"</span> <span class="sc">~</span> <span class="st">"https://en.wikipedia.org/wiki/MS_Fram"</span>,</span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>      name <span class="sc">%in%</span> <span class="st">"SILVER WIND"</span> <span class="sc">~</span> <span class="st">"https://en.wikipedia.org/wiki/Silver_Wind"</span>,</span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>      name <span class="sc">%in%</span> <span class="st">"NAVIGATOR OF THE SEA"</span> <span class="sc">~</span> <span class="st">"https://en.wikipedia.org/wiki/Navigator_of_the_Seas"</span>,</span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>      name <span class="sc">%in%</span> <span class="st">"OOSTERDAM"</span> <span class="sc">~</span> <span class="st">"https://en.wikipedia.org/wiki/MS_Oosterdam"</span>,</span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>      name <span class="sc">%in%</span> <span class="st">"ZUIDERDAM"</span> <span class="sc">~</span> <span class="st">"https://en.wikipedia.org/wiki/MS_Zuiderdam"</span>,</span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>      name <span class="sc">%in%</span> <span class="st">"ISLAND PRINCESS"</span> <span class="sc">~</span> <span class="st">"https://en.wikipedia.org/wiki/MS_Island_Princess_(2002)"</span>,</span>
-<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>      name <span class="sc">%in%</span> <span class="st">"ORIANA"</span> <span class="sc">~</span> <span class="st">"https://en.wikipedia.org/wiki/MV_Piano_Land"</span>,</span>
-<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>      name <span class="sc">%in%</span> <span class="st">"REGATTA"</span> <span class="sc">~</span> <span class="st">"https://en.wikipedia.org/wiki/MS_Regatta"</span>,</span>
-<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>      name <span class="sc">%in%</span> <span class="st">"AURORA"</span> <span class="sc">~</span> <span class="st">"https://en.wikipedia.org/wiki/MV_Aurora_(2000)"</span>,</span>
-<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>      name <span class="sc">%in%</span> <span class="st">"CELEBRITYSILHOUETTE"</span> <span class="sc">~</span> <span class="st">"https://en.wikipedia.org/wiki/Celebrity_Silhouette"</span>,</span>
-<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>      name <span class="sc">%in%</span> <span class="st">"NIEUW AMSTERDAM"</span> <span class="sc">~</span> <span class="st">"https://en.wikipedia.org/wiki/MS_Marella_Spirit"</span>,</span>
-<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>      name <span class="sc">%in%</span> <span class="st">"EURODAM"</span> <span class="sc">~</span> <span class="st">"https://en.wikipedia.org/wiki/MS_Eurodam"</span>,</span>
-<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>      name <span class="sc">%in%</span> <span class="st">"CARNIVAL MIRACLE TB1"</span> <span class="sc">~</span> <span class="st">"https://en.wikipedia.org/wiki/Carnival_Miracle"</span>,</span>
-<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>      name <span class="sc">%in%</span> <span class="st">"VIKING SUN"</span> <span class="sc">~</span> <span class="st">"https://en.wikipedia.org/wiki/MS_Amera"</span>,</span>
-<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>      name <span class="sc">%in%</span> <span class="st">"CARIBBEANPRINCE TB22"</span> <span class="sc">~</span> <span class="st">"https://en.wikipedia.org/wiki/MS_Eurodam"</span>,</span>
-<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>      name <span class="sc">%in%</span> <span class="st">"NCL GETAWAY T6"</span> <span class="sc">~</span> <span class="st">"https://en.wikipedia.org/wiki/Norwegian_Getaway"</span>,</span>
-<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>      name <span class="sc">%in%</span> <span class="st">"CARNIVAL MIRACLE TB5"</span> <span class="sc">~</span> <span class="st">"https://en.wikipedia.org/wiki/Carnival_Miracle"</span>,</span>
-<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>      name <span class="sc">%in%</span> <span class="st">"M/S ROTTERDAM"</span> <span class="sc">~</span> <span class="st">"https://en.wikipedia.org/wiki/MS_Borealis"</span>,</span>
-<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>      name <span class="sc">%in%</span> <span class="st">"VEENDAM"</span> <span class="sc">~</span> <span class="st">"https://en.wikipedia.org/wiki/MS_Aegean_Majesty"</span>,</span>
-<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>      name <span class="sc">%in%</span> <span class="st">"INDEPENDENCE OF SEAS"</span> <span class="sc">~</span> <span class="st">"https://en.wikipedia.org/wiki/Independence_of_the_Seas"</span>,</span>
-<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>      name <span class="sc">%in%</span> <span class="st">"ADVENTURE OF THE SEA"</span> <span class="sc">~</span> <span class="st">"https://en.wikipedia.org/wiki/Adventure_of_the_Seas"</span>,</span>
-<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>      name <span class="sc">%in%</span> <span class="st">"BRILLIANCE OFTHESEAS"</span> <span class="sc">~</span> <span class="st">"https://en.wikipedia.org/wiki/Brilliance_of_the_Seas"</span>,</span>
-<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>      name <span class="sc">%in%</span> <span class="st">"ENCHANTMENT OTS"</span> <span class="sc">~</span> <span class="st">"https://en.wikipedia.org/wiki/MS_Aegean_Majesty"</span>,</span>
-<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>      <span class="cn">TRUE</span> <span class="sc">~</span> <span class="st">"NA"</span></span>
-<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
-<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span>full_link <span class="sc">==</span> <span class="st">"NA"</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>missing_names, full_link, name)</span>
-<span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-38"><a href="#cb7-38" aria-hidden="true" tabindex="-1"></a><span class="co"># join with ship links MAR</span></span>
-<span id="cb7-39"><a href="#cb7-39" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-40"><a href="#cb7-40" aria-hidden="true" tabindex="-1"></a>ship_links_MAR_all <span class="ot">&lt;-</span> ship_links_MAR <span class="sc">%&gt;%</span> </span>
-<span id="cb7-41"><a href="#cb7-41" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(full_link,name) <span class="sc">%&gt;%</span> </span>
-<span id="cb7-42"><a href="#cb7-42" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rbind</span>(missing_df)</span>
-<span id="cb7-43"><a href="#cb7-43" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-44"><a href="#cb7-44" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(ship_links_MAR_all, <span class="fu">file.path</span>(dir_interim,<span class="st">"/cruiseships/ship_links_all.csv"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>missing_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">missing_names =</span> <span class="fu">setdiff</span>(gfw_joined<span class="sc">$</span>shipname, ship_links_MAR<span class="sc">$</span>name)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> </span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> <span class="fu">as.character</span>(missing_names)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">full_link =</span> <span class="fu">case_when</span>(</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>      name <span class="sc">%in%</span> <span class="st">"FRAM"</span> <span class="sc">~</span> <span class="st">"https://en.wikipedia.org/wiki/MS_Fram"</span>,</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>      name <span class="sc">%in%</span> <span class="st">"SILVER WIND"</span> <span class="sc">~</span> <span class="st">"https://en.wikipedia.org/wiki/Silver_Wind"</span>,</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>      name <span class="sc">%in%</span> <span class="st">"NAVIGATOR OF THE SEA"</span> <span class="sc">~</span> <span class="st">"https://en.wikipedia.org/wiki/Navigator_of_the_Seas"</span>,</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>      name <span class="sc">%in%</span> <span class="st">"OOSTERDAM"</span> <span class="sc">~</span> <span class="st">"https://en.wikipedia.org/wiki/MS_Oosterdam"</span>,</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>      name <span class="sc">%in%</span> <span class="st">"ZUIDERDAM"</span> <span class="sc">~</span> <span class="st">"https://en.wikipedia.org/wiki/MS_Zuiderdam"</span>,</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>      name <span class="sc">%in%</span> <span class="st">"ISLAND PRINCESS"</span> <span class="sc">~</span> <span class="st">"https://en.wikipedia.org/wiki/MS_Island_Princess_(2002)"</span>,</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>      name <span class="sc">%in%</span> <span class="st">"ORIANA"</span> <span class="sc">~</span> <span class="st">"https://en.wikipedia.org/wiki/MV_Piano_Land"</span>,</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>      name <span class="sc">%in%</span> <span class="st">"REGATTA"</span> <span class="sc">~</span> <span class="st">"https://en.wikipedia.org/wiki/MS_Regatta"</span>,</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>      name <span class="sc">%in%</span> <span class="st">"AURORA"</span> <span class="sc">~</span> <span class="st">"https://en.wikipedia.org/wiki/MV_Aurora_(2000)"</span>,</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>      name <span class="sc">%in%</span> <span class="st">"CELEBRITYSILHOUETTE"</span> <span class="sc">~</span> <span class="st">"https://en.wikipedia.org/wiki/Celebrity_Silhouette"</span>,</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>      name <span class="sc">%in%</span> <span class="st">"NIEUW AMSTERDAM"</span> <span class="sc">~</span> <span class="st">"https://en.wikipedia.org/wiki/MS_Marella_Spirit"</span>,</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>      name <span class="sc">%in%</span> <span class="st">"EURODAM"</span> <span class="sc">~</span> <span class="st">"https://en.wikipedia.org/wiki/MS_Eurodam"</span>,</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>      name <span class="sc">%in%</span> <span class="st">"CARNIVAL MIRACLE TB1"</span> <span class="sc">~</span> <span class="st">"https://en.wikipedia.org/wiki/Carnival_Miracle"</span>,</span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>      name <span class="sc">%in%</span> <span class="st">"VIKING SUN"</span> <span class="sc">~</span> <span class="st">"https://en.wikipedia.org/wiki/MS_Amera"</span>,</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>      name <span class="sc">%in%</span> <span class="st">"CARIBBEANPRINCE TB22"</span> <span class="sc">~</span> <span class="st">"https://en.wikipedia.org/wiki/MS_Eurodam"</span>,</span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>      name <span class="sc">%in%</span> <span class="st">"NCL GETAWAY T6"</span> <span class="sc">~</span> <span class="st">"https://en.wikipedia.org/wiki/Norwegian_Getaway"</span>,</span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>      name <span class="sc">%in%</span> <span class="st">"CARNIVAL MIRACLE TB5"</span> <span class="sc">~</span> <span class="st">"https://en.wikipedia.org/wiki/Carnival_Miracle"</span>,</span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>      name <span class="sc">%in%</span> <span class="st">"M/S ROTTERDAM"</span> <span class="sc">~</span> <span class="st">"https://en.wikipedia.org/wiki/MS_Borealis"</span>,</span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>      name <span class="sc">%in%</span> <span class="st">"VEENDAM"</span> <span class="sc">~</span> <span class="st">"https://en.wikipedia.org/wiki/MS_Aegean_Majesty"</span>,</span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>      name <span class="sc">%in%</span> <span class="st">"INDEPENDENCE OF SEAS"</span> <span class="sc">~</span> <span class="st">"https://en.wikipedia.org/wiki/Independence_of_the_Seas"</span>,</span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>      name <span class="sc">%in%</span> <span class="st">"ADVENTURE OF THE SEA"</span> <span class="sc">~</span> <span class="st">"https://en.wikipedia.org/wiki/Adventure_of_the_Seas"</span>,</span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>      name <span class="sc">%in%</span> <span class="st">"BRILLIANCE OFTHESEAS"</span> <span class="sc">~</span> <span class="st">"https://en.wikipedia.org/wiki/Brilliance_of_the_Seas"</span>,</span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>      name <span class="sc">%in%</span> <span class="st">"ENCHANTMENT OTS"</span> <span class="sc">~</span> <span class="st">"https://en.wikipedia.org/wiki/MS_Aegean_Majesty"</span>,</span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>      <span class="cn">TRUE</span> <span class="sc">~</span> <span class="st">"NA"</span></span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span>full_link <span class="sc">==</span> <span class="st">"NA"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>missing_names, full_link, name)</span>
+<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a><span class="co"># join with ship links MAR</span></span>
+<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a>ship_links_MAR_all <span class="ot">&lt;-</span> ship_links_MAR <span class="sc">%&gt;%</span> </span>
+<span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(full_link,name) <span class="sc">%&gt;%</span> </span>
+<span id="cb5-42"><a href="#cb5-42" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rbind</span>(missing_df)</span>
+<span id="cb5-43"><a href="#cb5-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-44"><a href="#cb5-44" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(ship_links_MAR_all, <span class="st">"outputs/ship_links_all.csv"</span>)</span>
+<span id="cb5-45"><a href="#cb5-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-46"><a href="#cb5-46" aria-hidden="true" tabindex="-1"></a>missing_names <span class="ot">=</span> <span class="fu">setdiff</span>(gfw_joined<span class="sc">$</span>shipname, ship_links_MAR_all<span class="sc">$</span>name)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<p>List of ships we could not find info for:</p>
+<p>List of ships we could not match to links:</p>
 <ul>
 <li>M/V Hamburg</li>
+<li>Costa Luminosa</li>
+<li>Serenade of the Seas</li>
+<li>Seven Seas Mariner</li>
+<li>Sea Cloud II</li>
 <li>RCGS Resolute</li>
-<li>Seven Seas Voyager 7 (we already have the seven seas voyager so not sure what this ship is)</li>
-<li>CaribbeanPrince TB22 (we already have Caribbean Princess?)</li>
+<li>Seven Seas Voyager 7</li>
+<li>Seabourn Quest</li>
+<li>Vision of the seas</li>
 <li>Carnival Triumph (could not find)</li>
+<li>Carnival Victory</li>
+<li>Seven Seas Voyager</li>
 </ul>
-<p>Other notes: Carnival Miracle TB5 is the same as Carnival Miracle, based on IMO number MS FRAM taken out below before running loop because it doesn’t have a crew #</p>
+<p>Other notes: - Carnival Miracle TB5 is the same as Carnival Miracle, based on IMO number - MS FRAM taken out below before running loop because it doesn’t have a crew #</p>
 </section>
 <section id="scrape-passenger-number-from-each-ships-page" class="level1">
 <h1>Scrape passenger number from each ships’ page</h1>
-<p>Try using a loop - not as nice but the above is simply not working.</p>
 <div class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">#read in links csv</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>ship_links_MAR_all <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="fu">file.path</span>(dir_interim,<span class="st">"/cruiseships/ship_links_all.csv"</span>)) <span class="sc">%&gt;%</span> </span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span>name <span class="sc">==</span> <span class="st">"FRAM"</span>)</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>urls <span class="ot">&lt;-</span> ship_links_MAR_all<span class="sc">$</span>full_link</span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="co">#urls_test &lt;- urls[1:55]</span></span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="co">#create empty list </span></span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>capacities_list <span class="ot">&lt;-</span> <span class="fu">list</span>()</span>
-<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="co">#fill list by looping over each link in vector</span></span>
-<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_along</span>(urls)) {</span>
-<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>   <span class="co">#x = urls[[46]]</span></span>
-<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>    x <span class="ot">=</span> urls[i]</span>
-<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>   table <span class="ot">&lt;-</span>  <span class="fu">read_html</span>(x) <span class="sc">%&gt;%</span> </span>
-<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>    rvest<span class="sc">::</span><span class="fu">html_nodes</span>(<span class="st">"table.infobox"</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>    rvest<span class="sc">::</span><span class="fu">html_table</span>(<span class="at">header=</span>F, <span class="at">fill =</span> T) </span>
-<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>   table2 <span class="ot">&lt;-</span> table[[<span class="dv">1</span>]] <span class="sc">%&gt;%</span> </span>
-<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>    <span class="fu">clean_names</span>() <span class="sc">%&gt;%</span> </span>
-<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rename</span>(</span>
-<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a>      <span class="at">name =</span> <span class="dv">1</span>, </span>
-<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a>      <span class="at">value =</span> <span class="dv">2</span></span>
-<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">%&gt;%</span> </span>
-<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a>     <span class="fu">filter</span>(name <span class="sc">!=</span> <span class="st">""</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a>     <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> name,</span>
-<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a>                 <span class="at">values_from =</span> value) </span>
-<span id="cb8-34"><a href="#cb8-34" aria-hidden="true" tabindex="-1"></a>   </span>
-<span id="cb8-35"><a href="#cb8-35" aria-hidden="true" tabindex="-1"></a>   table3 <span class="ot">&lt;-</span> table2 <span class="sc">%&gt;%</span> </span>
-<span id="cb8-36"><a href="#cb8-36" aria-hidden="true" tabindex="-1"></a>       dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="st">`</span><span class="at">Capacity:</span><span class="st">`</span>, <span class="st">`</span><span class="at">Crew:</span><span class="st">`</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb8-37"><a href="#cb8-37" aria-hidden="true" tabindex="-1"></a>       <span class="fu">mutate</span>(</span>
-<span id="cb8-38"><a href="#cb8-38" aria-hidden="true" tabindex="-1"></a>       <span class="at">full_link =</span> x,</span>
-<span id="cb8-39"><a href="#cb8-39" aria-hidden="true" tabindex="-1"></a>       <span class="at">capacity =</span> <span class="fu">as.character</span>(<span class="st">`</span><span class="at">Capacity:</span><span class="st">`</span>),</span>
-<span id="cb8-40"><a href="#cb8-40" aria-hidden="true" tabindex="-1"></a>       <span class="at">crew =</span> <span class="fu">as.character</span>(<span class="st">`</span><span class="at">Crew:</span><span class="st">`</span>)</span>
-<span id="cb8-41"><a href="#cb8-41" aria-hidden="true" tabindex="-1"></a>       ) <span class="sc">%&gt;%</span> </span>
-<span id="cb8-42"><a href="#cb8-42" aria-hidden="true" tabindex="-1"></a>      dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">-</span><span class="st">`</span><span class="at">Capacity:</span><span class="st">`</span>, <span class="sc">-</span><span class="st">`</span><span class="at">Crew:</span><span class="st">`</span>)</span>
-<span id="cb8-43"><a href="#cb8-43" aria-hidden="true" tabindex="-1"></a>   </span>
-<span id="cb8-44"><a href="#cb8-44" aria-hidden="true" tabindex="-1"></a>   <span class="fu">print</span>(i)</span>
-<span id="cb8-45"><a href="#cb8-45" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-46"><a href="#cb8-46" aria-hidden="true" tabindex="-1"></a>   capacities_list[[i]] <span class="ot">&lt;-</span> table3</span>
-<span id="cb8-47"><a href="#cb8-47" aria-hidden="true" tabindex="-1"></a>   </span>
-<span id="cb8-48"><a href="#cb8-48" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb8-49"><a href="#cb8-49" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-50"><a href="#cb8-50" aria-hidden="true" tabindex="-1"></a><span class="co">#unlist</span></span>
-<span id="cb8-51"><a href="#cb8-51" aria-hidden="true" tabindex="-1"></a>capacities_MAR <span class="ot">=</span> <span class="fu">do.call</span>(rbind, capacities_list)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">#read in links csv if starting from here</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>ship_links_MAR_all <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"outputs/ship_links_all.csv"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span>name <span class="sc">==</span> <span class="st">"FRAM"</span>)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>urls <span class="ot">&lt;-</span> ship_links_MAR_all<span class="sc">$</span>full_link</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co">#urls_test &lt;- urls[1:55]</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="co">#create empty list </span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>capacities_list <span class="ot">&lt;-</span> <span class="fu">list</span>()</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="co">#fill list by looping over each link in vector</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_along</span>(urls)) {</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>    <span class="co"># for testing and de bugging </span></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>    <span class="co">#x = urls[[57]]</span></span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>    x <span class="ot">=</span> urls[i]</span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>  <span class="co"># scrape ship info</span></span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>   table <span class="ot">&lt;-</span>  <span class="fu">read_html</span>(x) <span class="sc">%&gt;%</span> </span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>    rvest<span class="sc">::</span><span class="fu">html_nodes</span>(<span class="st">"table.infobox"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>    rvest<span class="sc">::</span><span class="fu">html_table</span>(<span class="at">header=</span>F, <span class="at">fill =</span> T) </span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>   </span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a>  <span class="co"># unlist to create clean table of info for each ship</span></span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a>   table2 <span class="ot">&lt;-</span> table[[<span class="dv">1</span>]] <span class="sc">%&gt;%</span> </span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a>    <span class="fu">clean_names</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rename</span>(</span>
+<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a>      <span class="at">name =</span> <span class="dv">1</span>, </span>
+<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a>      <span class="at">value =</span> <span class="dv">2</span></span>
+<span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">%&gt;%</span> </span>
+<span id="cb6-35"><a href="#cb6-35" aria-hidden="true" tabindex="-1"></a>     <span class="fu">filter</span>(name <span class="sc">!=</span> <span class="st">""</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb6-36"><a href="#cb6-36" aria-hidden="true" tabindex="-1"></a>     <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> name,</span>
+<span id="cb6-37"><a href="#cb6-37" aria-hidden="true" tabindex="-1"></a>                 <span class="at">values_from =</span> value) </span>
+<span id="cb6-38"><a href="#cb6-38" aria-hidden="true" tabindex="-1"></a>   </span>
+<span id="cb6-39"><a href="#cb6-39" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(<span class="st">"Capacity"</span> <span class="sc">%in%</span> <span class="fu">colnames</span>(table2)){</span>
+<span id="cb6-40"><a href="#cb6-40" aria-hidden="true" tabindex="-1"></a>   <span class="co"># select columns and reshape</span></span>
+<span id="cb6-41"><a href="#cb6-41" aria-hidden="true" tabindex="-1"></a>   table3 <span class="ot">&lt;-</span> table2 <span class="sc">%&gt;%</span> </span>
+<span id="cb6-42"><a href="#cb6-42" aria-hidden="true" tabindex="-1"></a>       dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="st">`</span><span class="at">Capacity</span><span class="st">`</span>, <span class="st">`</span><span class="at">Crew</span><span class="st">`</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb6-43"><a href="#cb6-43" aria-hidden="true" tabindex="-1"></a>       <span class="fu">mutate</span>(</span>
+<span id="cb6-44"><a href="#cb6-44" aria-hidden="true" tabindex="-1"></a>       <span class="at">full_link =</span> x,</span>
+<span id="cb6-45"><a href="#cb6-45" aria-hidden="true" tabindex="-1"></a>       <span class="at">capacity =</span> <span class="fu">as.character</span>(<span class="st">`</span><span class="at">Capacity</span><span class="st">`</span>),</span>
+<span id="cb6-46"><a href="#cb6-46" aria-hidden="true" tabindex="-1"></a>       <span class="at">crew =</span> <span class="fu">as.character</span>(<span class="st">`</span><span class="at">Crew</span><span class="st">`</span>)</span>
+<span id="cb6-47"><a href="#cb6-47" aria-hidden="true" tabindex="-1"></a>       ) <span class="sc">%&gt;%</span> </span>
+<span id="cb6-48"><a href="#cb6-48" aria-hidden="true" tabindex="-1"></a>      dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">-</span><span class="st">`</span><span class="at">Capacity</span><span class="st">`</span>, <span class="sc">-</span><span class="st">`</span><span class="at">Crew</span><span class="st">`</span>)</span>
+<span id="cb6-49"><a href="#cb6-49" aria-hidden="true" tabindex="-1"></a>   </span>
+<span id="cb6-50"><a href="#cb6-50" aria-hidden="true" tabindex="-1"></a>   <span class="co">#print(i) # in case it breaks</span></span>
+<span id="cb6-51"><a href="#cb6-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-52"><a href="#cb6-52" aria-hidden="true" tabindex="-1"></a>   capacities_list[[i]] <span class="ot">&lt;-</span> table3</span>
+<span id="cb6-53"><a href="#cb6-53" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb6-54"><a href="#cb6-54" aria-hidden="true" tabindex="-1"></a>  }<span class="cf">else</span> {</span>
+<span id="cb6-55"><a href="#cb6-55" aria-hidden="true" tabindex="-1"></a>    <span class="fu">print</span>(i) <span class="co"># one dropped out, url 57</span></span>
+<span id="cb6-56"><a href="#cb6-56" aria-hidden="true" tabindex="-1"></a>    <span class="cf">next</span></span>
+<span id="cb6-57"><a href="#cb6-57" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb6-58"><a href="#cb6-58" aria-hidden="true" tabindex="-1"></a>   </span>
+<span id="cb6-59"><a href="#cb6-59" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb6-60"><a href="#cb6-60" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-61"><a href="#cb6-61" aria-hidden="true" tabindex="-1"></a><span class="co"># bind all together in a dataframe</span></span>
+<span id="cb6-62"><a href="#cb6-62" aria-hidden="true" tabindex="-1"></a>capacities_MAR <span class="ot">=</span> <span class="fu">do.call</span>(rbind, capacities_list) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p>Last step is to clean up the ship numbers using str - I’ll just split it based on the space, and then grab the first element. Also need to add back in the MS FRAM since we took it out of the loop.</p>
 <div class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co">#best way to get numbers out</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>capacities_MAR_clean <span class="ot">&lt;-</span> capacities_MAR <span class="sc">%&gt;%</span></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>   <span class="fu">mutate</span>(</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">capacity_n =</span> <span class="fu">as.numeric</span>(<span class="fu">parse_number</span>(capacity)),</span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">crew_n =</span> <span class="fu">as.numeric</span>(<span class="fu">parse_number</span>(crew))</span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">total_ship_pop =</span> crew_n <span class="sc">+</span> capacity_n</span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">-</span>crew, <span class="sc">-</span>capacity)</span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a><span class="co">#rejoin with shipnames and links </span></span>
-<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a><span class="co">#FRAM df</span></span>
-<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>fram <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">shipname =</span> <span class="st">"FRAM"</span>,</span>
-<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">capacity_n =</span> <span class="dv">400</span>,</span>
-<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">crew_n =</span> <span class="dv">0</span>,</span>
-<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">total_ship_pop =</span> <span class="dv">400</span></span>
-<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>cruise_capacities_final <span class="ot">&lt;-</span> <span class="fu">full_join</span>(capacities_MAR_clean, ship_links_MAR_all, <span class="at">by =</span> <span class="st">"full_link"</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="at">shipname =</span> name,capacity_n,crew_n,total_ship_pop) <span class="sc">%&gt;%</span> </span>
-<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rbind</span>(fram)</span>
-<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(cruise_capacities_final, <span class="fu">file.path</span>(dir_interim,<span class="st">"/cruiseships/cruise_capacities_final.csv"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">#best way to get numbers out</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>capacities_MAR_clean <span class="ot">&lt;-</span> capacities_MAR <span class="sc">%&gt;%</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>   <span class="fu">mutate</span>(</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">capacity_n =</span> <span class="fu">as.numeric</span>(<span class="fu">parse_number</span>(capacity)),</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">crew_n =</span> <span class="fu">as.numeric</span>(<span class="fu">parse_number</span>(crew))</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">total_ship_pop =</span> crew_n <span class="sc">+</span> capacity_n</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">-</span>crew, <span class="sc">-</span>capacity)</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="co"># rejoin with shipnames and links </span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="co">#FRAM df - missing info </span></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>fram <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">shipname =</span> <span class="st">"FRAM"</span>,</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">capacity_n =</span> <span class="dv">400</span>,</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">crew_n =</span> <span class="dv">0</span>,</span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">total_ship_pop =</span> <span class="dv">400</span></span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>cruise_capacities_final <span class="ot">&lt;-</span> <span class="fu">full_join</span>(capacities_MAR_clean, ship_links_MAR_all, <span class="at">by =</span> <span class="st">"full_link"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="at">shipname =</span> name,capacity_n,crew_n,total_ship_pop) <span class="sc">%&gt;%</span> </span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rbind</span>(fram)</span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a><span class="co">#gt(cruise_capacities_final)</span></span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(cruise_capacities_final, <span class="st">"outputs/cruise_capacities_final.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
+</div>
+<p>Voila! The final table with cruiseship</p>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>gt <span class="ot">&lt;-</span> cruise_capacities_final <span class="sc">%&gt;%</span> </span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="sc">-</span>total_ship_pop) <span class="sc">%&gt;%</span> </span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gt</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_header</span>(</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="fu">md</span>(<span class="st">"Passenger and Crew Capacities of Cruiseships in 2019"</span>),</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="fu">md</span>(<span class="st">"Data for cruisehips present in the Mesoamerican Reef Region only"</span>)</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cols_label</span>(<span class="at">shipname =</span> <span class="st">"Ship name"</span>,</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>             <span class="at">capacity_n =</span> <span class="st">"Passenger Capacity"</span>,</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>             <span class="at">crew_n =</span> <span class="st">"Crew Capacity"</span>,</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>             <span class="at">total_ship_pop =</span> <span class="st">"Total Ship Population"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_source_note</span>(<span class="at">source_note =</span> <span class="st">"Source: List of Cruiseships Wikipedia Webpage"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_options</span>(<span class="at">container.overflow.y =</span> T)</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>gt</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div id="csohxuluoi" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#csohxuluoi table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#csohxuluoi thead, #csohxuluoi tbody, #csohxuluoi tfoot, #csohxuluoi tr, #csohxuluoi td, #csohxuluoi th {
+  border-style: none;
+}
+
+#csohxuluoi p {
+  margin: 0;
+  padding: 0;
+}
+
+#csohxuluoi .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#csohxuluoi .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#csohxuluoi .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#csohxuluoi .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#csohxuluoi .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#csohxuluoi .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#csohxuluoi .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#csohxuluoi .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#csohxuluoi .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#csohxuluoi .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#csohxuluoi .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#csohxuluoi .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#csohxuluoi .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#csohxuluoi .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#csohxuluoi .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#csohxuluoi .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#csohxuluoi .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#csohxuluoi .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#csohxuluoi .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#csohxuluoi .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#csohxuluoi .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#csohxuluoi .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#csohxuluoi .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#csohxuluoi .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#csohxuluoi .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#csohxuluoi .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#csohxuluoi .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#csohxuluoi .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#csohxuluoi .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#csohxuluoi .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#csohxuluoi .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#csohxuluoi .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#csohxuluoi .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#csohxuluoi .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#csohxuluoi .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#csohxuluoi .gt_left {
+  text-align: left;
+}
+
+#csohxuluoi .gt_center {
+  text-align: center;
+}
+
+#csohxuluoi .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#csohxuluoi .gt_font_normal {
+  font-weight: normal;
+}
+
+#csohxuluoi .gt_font_bold {
+  font-weight: bold;
+}
+
+#csohxuluoi .gt_font_italic {
+  font-style: italic;
+}
+
+#csohxuluoi .gt_super {
+  font-size: 65%;
+}
+
+#csohxuluoi .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#csohxuluoi .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#csohxuluoi .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#csohxuluoi .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#csohxuluoi .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#csohxuluoi .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#csohxuluoi .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#csohxuluoi .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#csohxuluoi div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+
+<table class="gt_table caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="gt_heading header">
+<th colspan="4" class="gt_heading gt_title gt_font_normal"><p>Passenger and Crew Capacities of Cruiseships in 2019</p></th>
+</tr>
+<tr class="gt_heading even">
+<th colspan="4" class="gt_heading gt_subtitle gt_font_normal gt_bottom_border"><p>Data for cruisehips present in the Mesoamerican Reef Region only</p></th>
+</tr>
+<tr class="gt_col_headings header">
+<th id="Ship name" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">Ship name</th>
+<th id="Passenger Capacity" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Passenger Capacity</th>
+<th id="Crew Capacity" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Crew Capacity</th>
+<th id="Total Ship Population" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Total Ship Population</th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_left" headers="shipname">OASIS OF THE SEAS</td>
+<td class="gt_row gt_right" headers="capacity_n">5606</td>
+<td class="gt_row gt_right" headers="crew_n">2165</td>
+<td class="gt_row gt_right" headers="total_ship_pop">7771</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="shipname">ALLURE OF THE SEAS</td>
+<td class="gt_row gt_right" headers="capacity_n">5484</td>
+<td class="gt_row gt_right" headers="crew_n">2200</td>
+<td class="gt_row gt_right" headers="total_ship_pop">7684</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="shipname">NORWEGIAN EPIC</td>
+<td class="gt_row gt_right" headers="capacity_n">4100</td>
+<td class="gt_row gt_right" headers="crew_n">1724</td>
+<td class="gt_row gt_right" headers="total_ship_pop">5824</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="shipname">NORWEGIAN BREAKAWAY</td>
+<td class="gt_row gt_right" headers="capacity_n">3963</td>
+<td class="gt_row gt_right" headers="crew_n">1657</td>
+<td class="gt_row gt_right" headers="total_ship_pop">5620</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="shipname">NORWEGIAN GETAWAY</td>
+<td class="gt_row gt_right" headers="capacity_n">3963</td>
+<td class="gt_row gt_right" headers="crew_n">1646</td>
+<td class="gt_row gt_right" headers="total_ship_pop">5609</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="shipname">NCL GETAWAY T6</td>
+<td class="gt_row gt_right" headers="capacity_n">3963</td>
+<td class="gt_row gt_right" headers="crew_n">1646</td>
+<td class="gt_row gt_right" headers="total_ship_pop">5609</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="shipname">NORWEGIAN GETAWAY</td>
+<td class="gt_row gt_right" headers="capacity_n">3963</td>
+<td class="gt_row gt_right" headers="crew_n">1646</td>
+<td class="gt_row gt_right" headers="total_ship_pop">5609</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="shipname">NCL GETAWAY T6</td>
+<td class="gt_row gt_right" headers="capacity_n">3963</td>
+<td class="gt_row gt_right" headers="crew_n">1646</td>
+<td class="gt_row gt_right" headers="total_ship_pop">5609</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="shipname">DISNEY DREAM</td>
+<td class="gt_row gt_right" headers="capacity_n">4000</td>
+<td class="gt_row gt_right" headers="crew_n">1458</td>
+<td class="gt_row gt_right" headers="total_ship_pop">5458</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="shipname">CARNIVAL VISTA</td>
+<td class="gt_row gt_right" headers="capacity_n">3934</td>
+<td class="gt_row gt_right" headers="crew_n">1450</td>
+<td class="gt_row gt_right" headers="total_ship_pop">5384</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="shipname">LIBERTY OF THE SEAS</td>
+<td class="gt_row gt_right" headers="capacity_n">3798</td>
+<td class="gt_row gt_right" headers="crew_n">1300</td>
+<td class="gt_row gt_right" headers="total_ship_pop">5098</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="shipname">ADVENTURE OF THE SEA</td>
+<td class="gt_row gt_right" headers="capacity_n">3807</td>
+<td class="gt_row gt_right" headers="crew_n">1185</td>
+<td class="gt_row gt_right" headers="total_ship_pop">4992</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="shipname">NAVIGATOR OF THE SEA</td>
+<td class="gt_row gt_right" headers="capacity_n">3386</td>
+<td class="gt_row gt_right" headers="crew_n">1200</td>
+<td class="gt_row gt_right" headers="total_ship_pop">4586</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="shipname">EXPLORER OF THE SEAS</td>
+<td class="gt_row gt_right" headers="capacity_n">3286</td>
+<td class="gt_row gt_right" headers="crew_n">1180</td>
+<td class="gt_row gt_right" headers="total_ship_pop">4466</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="shipname">CELEBRITYSILHOUETTE</td>
+<td class="gt_row gt_right" headers="capacity_n">2886</td>
+<td class="gt_row gt_right" headers="crew_n">1500</td>
+<td class="gt_row gt_right" headers="total_ship_pop">4386</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="shipname">CARIBBEAN PRINCESS</td>
+<td class="gt_row gt_right" headers="capacity_n">3142</td>
+<td class="gt_row gt_right" headers="crew_n">1200</td>
+<td class="gt_row gt_right" headers="total_ship_pop">4342</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="shipname">CELEBRITY REFLECTION</td>
+<td class="gt_row gt_right" headers="capacity_n">3046</td>
+<td class="gt_row gt_right" headers="crew_n">1271</td>
+<td class="gt_row gt_right" headers="total_ship_pop">4317</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="shipname">MARINER OF THE SEAS</td>
+<td class="gt_row gt_right" headers="capacity_n">3114</td>
+<td class="gt_row gt_right" headers="crew_n">1185</td>
+<td class="gt_row gt_right" headers="total_ship_pop">4299</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="shipname">CARNIVAL VALOR</td>
+<td class="gt_row gt_right" headers="capacity_n">2974</td>
+<td class="gt_row gt_right" headers="crew_n">1180</td>
+<td class="gt_row gt_right" headers="total_ship_pop">4154</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="shipname">CARNIVAL LIBERTY</td>
+<td class="gt_row gt_right" headers="capacity_n">2974</td>
+<td class="gt_row gt_right" headers="crew_n">1160</td>
+<td class="gt_row gt_right" headers="total_ship_pop">4134</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="shipname">CARNIVAL CONQUEST</td>
+<td class="gt_row gt_right" headers="capacity_n">2980</td>
+<td class="gt_row gt_right" headers="crew_n">1150</td>
+<td class="gt_row gt_right" headers="total_ship_pop">4130</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="shipname">CARNIVAL FREEDOM</td>
+<td class="gt_row gt_right" headers="capacity_n">2980</td>
+<td class="gt_row gt_right" headers="crew_n">1150</td>
+<td class="gt_row gt_right" headers="total_ship_pop">4130</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="shipname">CARNIVAL GLORY</td>
+<td class="gt_row gt_right" headers="capacity_n">2980</td>
+<td class="gt_row gt_right" headers="crew_n">1150</td>
+<td class="gt_row gt_right" headers="total_ship_pop">4130</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="shipname">CARNIVAL SUNSHINE</td>
+<td class="gt_row gt_right" headers="capacity_n">2642</td>
+<td class="gt_row gt_right" headers="crew_n">1150</td>
+<td class="gt_row gt_right" headers="total_ship_pop">3792</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="shipname">MAJESTY OF THE SEAS</td>
+<td class="gt_row gt_right" headers="capacity_n">2767</td>
+<td class="gt_row gt_right" headers="crew_n">833</td>
+<td class="gt_row gt_right" headers="total_ship_pop">3600</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="shipname">NORWEGIAN PEARL</td>
+<td class="gt_row gt_right" headers="capacity_n">2394</td>
+<td class="gt_row gt_right" headers="crew_n">1099</td>
+<td class="gt_row gt_right" headers="total_ship_pop">3493</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="shipname">NORWEGIAN JADE</td>
+<td class="gt_row gt_right" headers="capacity_n">2402</td>
+<td class="gt_row gt_right" headers="crew_n">1037</td>
+<td class="gt_row gt_right" headers="total_ship_pop">3439</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="shipname">MSC ARMONIA</td>
+<td class="gt_row gt_right" headers="capacity_n">2679</td>
+<td class="gt_row gt_right" headers="crew_n">721</td>
+<td class="gt_row gt_right" headers="total_ship_pop">3400</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="shipname">NORWEGIAN STAR</td>
+<td class="gt_row gt_right" headers="capacity_n">2348</td>
+<td class="gt_row gt_right" headers="crew_n">1031</td>
+<td class="gt_row gt_right" headers="total_ship_pop">3379</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="shipname">NORWEGIAN DAWN</td>
+<td class="gt_row gt_right" headers="capacity_n">2340</td>
+<td class="gt_row gt_right" headers="crew_n">1032</td>
+<td class="gt_row gt_right" headers="total_ship_pop">3372</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="shipname">DISNEY WONDER</td>
+<td class="gt_row gt_right" headers="capacity_n">2400</td>
+<td class="gt_row gt_right" headers="crew_n">945</td>
+<td class="gt_row gt_right" headers="total_ship_pop">3345</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="shipname">CELEBRITY INFINITY</td>
+<td class="gt_row gt_right" headers="capacity_n">2170</td>
+<td class="gt_row gt_right" headers="crew_n">999</td>
+<td class="gt_row gt_right" headers="total_ship_pop">3169</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="shipname">ISLAND PRINCESS</td>
+<td class="gt_row gt_right" headers="capacity_n">2214</td>
+<td class="gt_row gt_right" headers="crew_n">900</td>
+<td class="gt_row gt_right" headers="total_ship_pop">3114</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="shipname">CARNIVAL MIRACLE</td>
+<td class="gt_row gt_right" headers="capacity_n">2124</td>
+<td class="gt_row gt_right" headers="crew_n">930</td>
+<td class="gt_row gt_right" headers="total_ship_pop">3054</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="shipname">CARNIVAL MIRACLE TB1</td>
+<td class="gt_row gt_right" headers="capacity_n">2124</td>
+<td class="gt_row gt_right" headers="crew_n">930</td>
+<td class="gt_row gt_right" headers="total_ship_pop">3054</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="shipname">CARNIVAL MIRACLE TB5</td>
+<td class="gt_row gt_right" headers="capacity_n">2124</td>
+<td class="gt_row gt_right" headers="crew_n">930</td>
+<td class="gt_row gt_right" headers="total_ship_pop">3054</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="shipname">CARNIVAL MIRACLE</td>
+<td class="gt_row gt_right" headers="capacity_n">2124</td>
+<td class="gt_row gt_right" headers="crew_n">930</td>
+<td class="gt_row gt_right" headers="total_ship_pop">3054</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="shipname">CARNIVAL MIRACLE TB1</td>
+<td class="gt_row gt_right" headers="capacity_n">2124</td>
+<td class="gt_row gt_right" headers="crew_n">930</td>
+<td class="gt_row gt_right" headers="total_ship_pop">3054</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="shipname">CARNIVAL MIRACLE TB5</td>
+<td class="gt_row gt_right" headers="capacity_n">2124</td>
+<td class="gt_row gt_right" headers="crew_n">930</td>
+<td class="gt_row gt_right" headers="total_ship_pop">3054</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="shipname">CARNIVAL MIRACLE</td>
+<td class="gt_row gt_right" headers="capacity_n">2124</td>
+<td class="gt_row gt_right" headers="crew_n">930</td>
+<td class="gt_row gt_right" headers="total_ship_pop">3054</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="shipname">CARNIVAL MIRACLE TB1</td>
+<td class="gt_row gt_right" headers="capacity_n">2124</td>
+<td class="gt_row gt_right" headers="crew_n">930</td>
+<td class="gt_row gt_right" headers="total_ship_pop">3054</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="shipname">CARNIVAL MIRACLE TB5</td>
+<td class="gt_row gt_right" headers="capacity_n">2124</td>
+<td class="gt_row gt_right" headers="crew_n">930</td>
+<td class="gt_row gt_right" headers="total_ship_pop">3054</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="shipname">EURODAM</td>
+<td class="gt_row gt_right" headers="capacity_n">2104</td>
+<td class="gt_row gt_right" headers="crew_n">929</td>
+<td class="gt_row gt_right" headers="total_ship_pop">3033</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="shipname">CARIBBEANPRINCE TB22</td>
+<td class="gt_row gt_right" headers="capacity_n">2104</td>
+<td class="gt_row gt_right" headers="crew_n">929</td>
+<td class="gt_row gt_right" headers="total_ship_pop">3033</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="shipname">EURODAM</td>
+<td class="gt_row gt_right" headers="capacity_n">2104</td>
+<td class="gt_row gt_right" headers="crew_n">929</td>
+<td class="gt_row gt_right" headers="total_ship_pop">3033</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="shipname">CARIBBEANPRINCE TB22</td>
+<td class="gt_row gt_right" headers="capacity_n">2104</td>
+<td class="gt_row gt_right" headers="crew_n">929</td>
+<td class="gt_row gt_right" headers="total_ship_pop">3033</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="shipname">BRILLIANCE OFTHESEAS</td>
+<td class="gt_row gt_right" headers="capacity_n">2140</td>
+<td class="gt_row gt_right" headers="crew_n">848</td>
+<td class="gt_row gt_right" headers="total_ship_pop">2988</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="shipname">NORWEGIAN SUN</td>
+<td class="gt_row gt_right" headers="capacity_n">1976</td>
+<td class="gt_row gt_right" headers="crew_n">906</td>
+<td class="gt_row gt_right" headers="total_ship_pop">2882</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="shipname">MSC OPERA</td>
+<td class="gt_row gt_right" headers="capacity_n">2150</td>
+<td class="gt_row gt_right" headers="crew_n">728</td>
+<td class="gt_row gt_right" headers="total_ship_pop">2878</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="shipname">OOSTERDAM</td>
+<td class="gt_row gt_right" headers="capacity_n">1964</td>
+<td class="gt_row gt_right" headers="crew_n">812</td>
+<td class="gt_row gt_right" headers="total_ship_pop">2776</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="shipname">RHAPSODY OF THE SEAS</td>
+<td class="gt_row gt_right" headers="capacity_n">1998</td>
+<td class="gt_row gt_right" headers="crew_n">765</td>
+<td class="gt_row gt_right" headers="total_ship_pop">2763</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="shipname">ZUIDERDAM</td>
+<td class="gt_row gt_right" headers="capacity_n">1916</td>
+<td class="gt_row gt_right" headers="crew_n">842</td>
+<td class="gt_row gt_right" headers="total_ship_pop">2758</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="shipname">AURORA</td>
+<td class="gt_row gt_right" headers="capacity_n">1878</td>
+<td class="gt_row gt_right" headers="crew_n">850</td>
+<td class="gt_row gt_right" headers="total_ship_pop">2728</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="shipname">DISNEY MAGIC</td>
+<td class="gt_row gt_right" headers="capacity_n">1750</td>
+<td class="gt_row gt_right" headers="crew_n">945</td>
+<td class="gt_row gt_right" headers="total_ship_pop">2695</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="shipname">NORWEGIAN SKY</td>
+<td class="gt_row gt_right" headers="capacity_n">1928</td>
+<td class="gt_row gt_right" headers="crew_n">766</td>
+<td class="gt_row gt_right" headers="total_ship_pop">2694</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="shipname">ORIANA</td>
+<td class="gt_row gt_right" headers="capacity_n">1822</td>
+<td class="gt_row gt_right" headers="crew_n">794</td>
+<td class="gt_row gt_right" headers="total_ship_pop">2616</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="shipname">MARELLA DISCOVERY 2</td>
+<td class="gt_row gt_right" headers="capacity_n">1836</td>
+<td class="gt_row gt_right" headers="crew_n">771</td>
+<td class="gt_row gt_right" headers="total_ship_pop">2607</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="shipname">MARELLA DISCOVERY 2</td>
+<td class="gt_row gt_right" headers="capacity_n">1836</td>
+<td class="gt_row gt_right" headers="crew_n">771</td>
+<td class="gt_row gt_right" headers="total_ship_pop">2607</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="shipname">MARELLA DISCOVERY 2</td>
+<td class="gt_row gt_right" headers="capacity_n">1836</td>
+<td class="gt_row gt_right" headers="crew_n">771</td>
+<td class="gt_row gt_right" headers="total_ship_pop">2607</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="shipname">MARELLA DISCOVERY 2</td>
+<td class="gt_row gt_right" headers="capacity_n">1836</td>
+<td class="gt_row gt_right" headers="crew_n">771</td>
+<td class="gt_row gt_right" headers="total_ship_pop">2607</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="shipname">M/S ROTTERDAM</td>
+<td class="gt_row gt_right" headers="capacity_n">1404</td>
+<td class="gt_row gt_right" headers="crew_n">600</td>
+<td class="gt_row gt_right" headers="total_ship_pop">2004</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="shipname">VEENDAM</td>
+<td class="gt_row gt_right" headers="capacity_n">1350</td>
+<td class="gt_row gt_right" headers="crew_n">568</td>
+<td class="gt_row gt_right" headers="total_ship_pop">1918</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="shipname">ENCHANTMENT OTS</td>
+<td class="gt_row gt_right" headers="capacity_n">1350</td>
+<td class="gt_row gt_right" headers="crew_n">568</td>
+<td class="gt_row gt_right" headers="total_ship_pop">1918</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="shipname">VEENDAM</td>
+<td class="gt_row gt_right" headers="capacity_n">1350</td>
+<td class="gt_row gt_right" headers="crew_n">568</td>
+<td class="gt_row gt_right" headers="total_ship_pop">1918</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="shipname">ENCHANTMENT OTS</td>
+<td class="gt_row gt_right" headers="capacity_n">1350</td>
+<td class="gt_row gt_right" headers="crew_n">568</td>
+<td class="gt_row gt_right" headers="total_ship_pop">1918</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="shipname">NIEUW AMSTERDAM</td>
+<td class="gt_row gt_right" headers="capacity_n">1350</td>
+<td class="gt_row gt_right" headers="crew_n">520</td>
+<td class="gt_row gt_right" headers="total_ship_pop">1870</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="shipname">VIKING SUN</td>
+<td class="gt_row gt_right" headers="capacity_n">740</td>
+<td class="gt_row gt_right" headers="crew_n">460</td>
+<td class="gt_row gt_right" headers="total_ship_pop">1200</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="shipname">CRYSTAL SYMPHONY</td>
+<td class="gt_row gt_right" headers="capacity_n">650</td>
+<td class="gt_row gt_right" headers="crew_n">495</td>
+<td class="gt_row gt_right" headers="total_ship_pop">1145</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="shipname">AZAMARA JOURNEY</td>
+<td class="gt_row gt_right" headers="capacity_n">694</td>
+<td class="gt_row gt_right" headers="crew_n">407</td>
+<td class="gt_row gt_right" headers="total_ship_pop">1101</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="shipname">REGATTA</td>
+<td class="gt_row gt_right" headers="capacity_n">684</td>
+<td class="gt_row gt_right" headers="crew_n">386</td>
+<td class="gt_row gt_right" headers="total_ship_pop">1070</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="shipname">CLUB MED 2</td>
+<td class="gt_row gt_right" headers="capacity_n">386</td>
+<td class="gt_row gt_right" headers="crew_n">214</td>
+<td class="gt_row gt_right" headers="total_ship_pop">600</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="shipname">SILVER WIND</td>
+<td class="gt_row gt_right" headers="capacity_n">294</td>
+<td class="gt_row gt_right" headers="crew_n">208</td>
+<td class="gt_row gt_right" headers="total_ship_pop">502</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="shipname">FRAM</td>
+<td class="gt_row gt_right" headers="capacity_n">400</td>
+<td class="gt_row gt_right" headers="crew_n">0</td>
+<td class="gt_row gt_right" headers="total_ship_pop">400</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="shipname">CELEBRITY EQUINOX</td>
+<td class="gt_row gt_right" headers="capacity_n">2850</td>
+<td class="gt_row gt_right" headers="crew_n">NA</td>
+<td class="gt_row gt_right" headers="total_ship_pop">NA</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="shipname">INDEPENDENCE OF SEAS</td>
+<td class="gt_row gt_right" headers="capacity_n">NA</td>
+<td class="gt_row gt_right" headers="crew_n">NA</td>
+<td class="gt_row gt_right" headers="total_ship_pop">NA</td>
+</tr>
+</tbody><tfoot class="gt_sourcenotes">
+<tr class="odd">
+<td colspan="4" class="gt_sourcenote">Source: List of Cruiseships Wikipedia Webpage</td>
+</tr>
+</tfoot>
+
+</table>
+
+</div>
+</div>
 </div>
 
 
