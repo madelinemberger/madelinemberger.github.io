@@ -1,0 +1,24 @@
+// custom.scss
+// This file overrides the Minty theme for Madeline's personal site
+
+// Set primary brand color (buttons, links, accents)
+$primary: #007070;
+
+// Set link color
+$link-color: #007070;
+
+// Body text color (slightly softer than pure black)
+$body-color: #222222;
+
+// Optional: header font color (optional tweak)
+$headings-color: #007070;
+
+// Optional: code blocks background (if you want a subtle tweak)
+$code-block-bg: #f8f9fa;
+
+// Optional: slightly rounder buttons
+$btn-border-radius: 0.5rem;
+
+// Optional: slightly more padding for cards
+$card-spacer-y: 1rem;
+$card-spacer-x: 1rem;

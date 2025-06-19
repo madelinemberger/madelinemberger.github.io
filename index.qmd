@@ -7,36 +7,39 @@ about:
   image-width: 15em
   links: 
     - text: LinkedIn
+      icon: linkedin
       href: https://www.linkedin.com/in/madeline-berger-a803a27a/
     - text: GitHub
+      icon: github
       href: https://github.com/madelinemberger
     - text: Email
+      icon: envelope
       href: mailto:maddiemt8@gmail.com
-
+    - text: Bluesky
+      icon: paper-plane
+      href: https://bsky.app/profile/madelinem.bsky.social
 ---
 
-I am a data scientist and spatial ecologist, currently working to support marine conservation and management in Hawaiʻi. I am passionate about leveraging open source tools to create data products that support good science and participatory decision making.
+I am a data scientist and spatial ecologist, currently working to support marine conservation and management in Hawaiʻi. I am passionate about leveraging [open source]{style="color: #007070;"} tools to support good science and participatory decision making.
 
---- 
+------------------------------------------------------------------------
 
 ## Education
 
-**PhD in Marine Biology in Progress** (expected 2027) | University of Hawaiʻi at Mānoa | Honolulu, HI
+**PhD in Marine Biology in Progress** (expected 2027) \| University of Hawaiʻi at Mānoa \| Honolulu, HI
 
-**MESM in Conservation Planning & Data Science** (2020) |
-University of California, Santa Barbara | Santa Barbara, CA
+**MESM in Conservation Planning & Data Science** (2020) \| University of California, Santa Barbara \| Santa Barbara, CA
 
+**BA in Economics** (2016) \| University of California, Los Angeles \| Los Angeles, CA
 
-**BA in Economics** (2016) | University of California, Los Angeles | Los Angeles, CA
-
----
+------------------------------------------------------------------------
 
 ## Experience
 
 **Freelance Data Scientist**, 2024 - Present
 
-**Spatial Analysis and Data Specialist**, 2022 - Present |  [*Hawaii Monitoring and Reporting Collaborative (HIMARC)*](himarc.org)
+**Spatial Analysis and Data Specialist**, 2022 - Present \| [*Hawaii Monitoring and Reporting Collaborative (HIMARC)*](himarc.org)
 
-**Spatial Analyst and Modeler**, September 2020 - October 2022 |  *National Center for Ecological Analysis & Synthesis* & *SeaSketch*
+**Spatial Analyst and Modeler**, September 2020 - October 2022 \| *National Center for Ecological Analysis & Synthesis* & *SeaSketch*
 
-**Ocean Health Index Fellow**, March 2020 - September 2020 | *National Center for Ecological Analysis & Synthesis*
+**Ocean Health Index Fellow**, March 2020 - September 2020 \| *National Center for Ecological Analysis & Synthesis*
