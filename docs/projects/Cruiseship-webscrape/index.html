@@ -108,7 +108,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 }</script>
 
 
-<link rel="stylesheet" href="../../styles.css">
+<link rel="stylesheet" href="styles.css">
 </head>
 
 <body class="nav-fixed quarto-light">
@@ -140,7 +140,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span class="menu-text">Portfolio</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../../CV/MBerger_CV.pdf"> 
+    <a class="nav-link" href="../../CV/MBerger_CV.pdf" target="_blank"> 
 <span class="menu-text">CV</span></a>
   </li>  
 </ul>
@@ -158,10 +158,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">On this page</h2>
    
-  <ul class="collapse">
+  <ul>
   <li><a href="#project-overview" id="toc-project-overview" class="nav-link active" data-scroll-target="#project-overview">Project Overview</a></li>
   <li><a href="#tools-and-libraries-used" id="toc-tools-and-libraries-used" class="nav-link" data-scroll-target="#tools-and-libraries-used">Tools and libraries used</a></li>
-  <li><a href="#code" id="toc-code" class="nav-link" data-scroll-target="#code">Code</a></li>
+  <li><a href="#code" id="toc-code" class="nav-link" data-scroll-target="#code">Code</a>
+  <ul class="collapse">
+  <li><a href="#getting-ship-page-urls" id="toc-getting-ship-page-urls" class="nav-link" data-scroll-target="#getting-ship-page-urls">Getting Ship Page URLs</a></li>
+  <li><a href="#scrape-passenger-number-from-each-ships-page" id="toc-scrape-passenger-number-from-each-ships-page" class="nav-link" data-scroll-target="#scrape-passenger-number-from-each-ships-page">Scrape passenger number from each ships’ page</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -228,21 +232,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="code" class="level2">
 <h2 class="anchored" data-anchor-id="code">Code</h2>
 <p>First, I need to examine the webpage to understand what elements I want. In this case, I want all the cruise ship names. Then, I want to go onto each cruises own page and grab the number that is under the “capacity” row in the right hand summary table.</p>
-<p>To scrape stuff from the web, you need to look “under the hood” at the site code, and ID the xpath of the information you are interested in targeting.</p>
+<p>To scrape stuff from the web, you need to look “under the hood” at the site code by right-clicking the element you are interested in and selecting “inspect”. I had to first ID the “xpath” of the information you are interested in targeting and look for them in the site source code.</p>
+<p>This page has a table with each cruise ship, and the table contains a link to that ship’s own Wikipedia page, where the information I wanted (capacity) could be found.</p>
 <p><strong>Cruise ship names from full list</strong></p>
 <p>url = <a href="https://en.wikipedia.org/wiki/List_of_cruise_ships">’https://en.wikipedia.org/wiki/List_of_cruise_ships</a></p>
-<section id="xpaths-for-the-first-3-tables-a---c" class="level5">
-<h5 class="anchored" data-anchor-id="xpaths-for-the-first-3-tables-a---c">Xpaths for the first 3 tables (A - C) :</h5>
+<p><strong>Xpaths for the first 3 tables (A - C):</strong></p>
 <p>//<span class="citation" data-cites="id">[@id*="mw-content-text"*]</span><em>/div[1]/table[2] //</em><span class="citation" data-cites="id">[@id="mw-content-text"]</span>/div[1]/table[3] //*<span class="citation" data-cites="id">[@id="mw-content-text"]</span>/div[1]/table[4]</p>
-</section>
-<section id="xpaths-for-the-names-of-the-cruiseships" class="level5">
-<h5 class="anchored" data-anchor-id="xpaths-for-the-names-of-the-cruiseships">Xpaths for the names of the cruiseships:</h5>
+<p><strong>Xpaths for the names of the cruiseships:</strong></p>
 <p>//*<span class="citation" data-cites="id">[@id="mw-content-text"]</span>/div[1]/table[2]/tbody/tr[42]/th/i/a</p>
-</section>
-<section id="xpaths-for-the-capacity-element-on-a-ship-page" class="level5">
-<h5 class="anchored" data-anchor-id="xpaths-for-the-capacity-element-on-a-ship-page">Xpaths for the capacity element on a ship page:</h5>
+<p><strong>Xpaths for the capacity element on each ship’s page:</strong></p>
 <p>//*<span class="citation" data-cites="id">[@id="mw-content-text"]</span>/div[1]/table[1]/tbody/tr[30]/td[1]</p>
-</section>
 <section id="getting-ship-page-urls" class="level3">
 <h3 class="anchored" data-anchor-id="getting-ship-page-urls">Getting Ship Page URLs</h3>
 <p>First get a list of URLs to each ships’ own wikipedia page</p>
@@ -278,23 +277,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="fu">gt</span>(<span class="fu">head</span>(links))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div id="tqbvryillt" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#tqbvryillt table {
+<div id="zvcwzcdiod" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#zvcwzcdiod table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#tqbvryillt thead, #tqbvryillt tbody, #tqbvryillt tfoot, #tqbvryillt tr, #tqbvryillt td, #tqbvryillt th {
+#zvcwzcdiod thead, #zvcwzcdiod tbody, #zvcwzcdiod tfoot, #zvcwzcdiod tr, #zvcwzcdiod td, #zvcwzcdiod th {
   border-style: none;
 }
 
-#tqbvryillt p {
+#zvcwzcdiod p {
   margin: 0;
   padding: 0;
 }
 
-#tqbvryillt .gt_table {
+#zvcwzcdiod .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -320,12 +319,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-left-color: #D3D3D3;
 }
 
-#tqbvryillt .gt_caption {
+#zvcwzcdiod .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#tqbvryillt .gt_title {
+#zvcwzcdiod .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -337,7 +336,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-bottom-width: 0;
 }
 
-#tqbvryillt .gt_subtitle {
+#zvcwzcdiod .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -349,7 +348,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-top-width: 0;
 }
 
-#tqbvryillt .gt_heading {
+#zvcwzcdiod .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -361,13 +360,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-right-color: #D3D3D3;
 }
 
-#tqbvryillt .gt_bottom_border {
+#zvcwzcdiod .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#tqbvryillt .gt_col_headings {
+#zvcwzcdiod .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -382,7 +381,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-right-color: #D3D3D3;
 }
 
-#tqbvryillt .gt_col_heading {
+#zvcwzcdiod .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -402,7 +401,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   overflow-x: hidden;
 }
 
-#tqbvryillt .gt_column_spanner_outer {
+#zvcwzcdiod .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -414,15 +413,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 4px;
 }
 
-#tqbvryillt .gt_column_spanner_outer:first-child {
+#zvcwzcdiod .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#tqbvryillt .gt_column_spanner_outer:last-child {
+#zvcwzcdiod .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#tqbvryillt .gt_column_spanner {
+#zvcwzcdiod .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -434,11 +433,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   width: 100%;
 }
 
-#tqbvryillt .gt_spanner_row {
+#zvcwzcdiod .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#tqbvryillt .gt_group_heading {
+#zvcwzcdiod .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -464,7 +463,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   text-align: left;
 }
 
-#tqbvryillt .gt_empty_group_heading {
+#zvcwzcdiod .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -479,15 +478,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   vertical-align: middle;
 }
 
-#tqbvryillt .gt_from_md > :first-child {
+#zvcwzcdiod .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#tqbvryillt .gt_from_md > :last-child {
+#zvcwzcdiod .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#tqbvryillt .gt_row {
+#zvcwzcdiod .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -506,7 +505,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   overflow-x: hidden;
 }
 
-#tqbvryillt .gt_stub {
+#zvcwzcdiod .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -519,7 +518,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#tqbvryillt .gt_stub_row_group {
+#zvcwzcdiod .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -533,15 +532,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   vertical-align: top;
 }
 
-#tqbvryillt .gt_row_group_first td {
+#zvcwzcdiod .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#tqbvryillt .gt_row_group_first th {
+#zvcwzcdiod .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#tqbvryillt .gt_summary_row {
+#zvcwzcdiod .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -551,16 +550,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#tqbvryillt .gt_first_summary_row {
+#zvcwzcdiod .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#tqbvryillt .gt_first_summary_row.thick {
+#zvcwzcdiod .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#tqbvryillt .gt_last_summary_row {
+#zvcwzcdiod .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -570,7 +569,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-bottom-color: #D3D3D3;
 }
 
-#tqbvryillt .gt_grand_summary_row {
+#zvcwzcdiod .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -580,7 +579,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#tqbvryillt .gt_first_grand_summary_row {
+#zvcwzcdiod .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -590,7 +589,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-top-color: #D3D3D3;
 }
 
-#tqbvryillt .gt_last_grand_summary_row_top {
+#zvcwzcdiod .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -600,11 +599,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-bottom-color: #D3D3D3;
 }
 
-#tqbvryillt .gt_striped {
+#zvcwzcdiod .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#tqbvryillt .gt_table_body {
+#zvcwzcdiod .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -613,7 +612,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-bottom-color: #D3D3D3;
 }
 
-#tqbvryillt .gt_footnotes {
+#zvcwzcdiod .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -627,7 +626,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-right-color: #D3D3D3;
 }
 
-#tqbvryillt .gt_footnote {
+#zvcwzcdiod .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -636,7 +635,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#tqbvryillt .gt_sourcenotes {
+#zvcwzcdiod .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -650,7 +649,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-right-color: #D3D3D3;
 }
 
-#tqbvryillt .gt_sourcenote {
+#zvcwzcdiod .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -658,72 +657,72 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#tqbvryillt .gt_left {
+#zvcwzcdiod .gt_left {
   text-align: left;
 }
 
-#tqbvryillt .gt_center {
+#zvcwzcdiod .gt_center {
   text-align: center;
 }
 
-#tqbvryillt .gt_right {
+#zvcwzcdiod .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#tqbvryillt .gt_font_normal {
+#zvcwzcdiod .gt_font_normal {
   font-weight: normal;
 }
 
-#tqbvryillt .gt_font_bold {
+#zvcwzcdiod .gt_font_bold {
   font-weight: bold;
 }
 
-#tqbvryillt .gt_font_italic {
+#zvcwzcdiod .gt_font_italic {
   font-style: italic;
 }
 
-#tqbvryillt .gt_super {
+#zvcwzcdiod .gt_super {
   font-size: 65%;
 }
 
-#tqbvryillt .gt_footnote_marks {
+#zvcwzcdiod .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#tqbvryillt .gt_asterisk {
+#zvcwzcdiod .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#tqbvryillt .gt_indent_1 {
+#zvcwzcdiod .gt_indent_1 {
   text-indent: 5px;
 }
 
-#tqbvryillt .gt_indent_2 {
+#zvcwzcdiod .gt_indent_2 {
   text-indent: 10px;
 }
 
-#tqbvryillt .gt_indent_3 {
+#zvcwzcdiod .gt_indent_3 {
   text-indent: 15px;
 }
 
-#tqbvryillt .gt_indent_4 {
+#zvcwzcdiod .gt_indent_4 {
   text-indent: 20px;
 }
 
-#tqbvryillt .gt_indent_5 {
+#zvcwzcdiod .gt_indent_5 {
   text-indent: 25px;
 }
 
-#tqbvryillt .katex-display {
+#zvcwzcdiod .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#tqbvryillt div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#zvcwzcdiod div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -796,23 +795,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a><span class="fu">gt</span>(<span class="fu">head</span>(ship_links))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div id="uxkcjysevg" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#uxkcjysevg table {
+<div id="xyimkjgwks" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#xyimkjgwks table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#uxkcjysevg thead, #uxkcjysevg tbody, #uxkcjysevg tfoot, #uxkcjysevg tr, #uxkcjysevg td, #uxkcjysevg th {
+#xyimkjgwks thead, #xyimkjgwks tbody, #xyimkjgwks tfoot, #xyimkjgwks tr, #xyimkjgwks td, #xyimkjgwks th {
   border-style: none;
 }
 
-#uxkcjysevg p {
+#xyimkjgwks p {
   margin: 0;
   padding: 0;
 }
 
-#uxkcjysevg .gt_table {
+#xyimkjgwks .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -838,12 +837,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-left-color: #D3D3D3;
 }
 
-#uxkcjysevg .gt_caption {
+#xyimkjgwks .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#uxkcjysevg .gt_title {
+#xyimkjgwks .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -855,7 +854,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-bottom-width: 0;
 }
 
-#uxkcjysevg .gt_subtitle {
+#xyimkjgwks .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -867,7 +866,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-top-width: 0;
 }
 
-#uxkcjysevg .gt_heading {
+#xyimkjgwks .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -879,13 +878,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-right-color: #D3D3D3;
 }
 
-#uxkcjysevg .gt_bottom_border {
+#xyimkjgwks .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#uxkcjysevg .gt_col_headings {
+#xyimkjgwks .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -900,7 +899,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-right-color: #D3D3D3;
 }
 
-#uxkcjysevg .gt_col_heading {
+#xyimkjgwks .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -920,7 +919,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   overflow-x: hidden;
 }
 
-#uxkcjysevg .gt_column_spanner_outer {
+#xyimkjgwks .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -932,15 +931,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 4px;
 }
 
-#uxkcjysevg .gt_column_spanner_outer:first-child {
+#xyimkjgwks .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#uxkcjysevg .gt_column_spanner_outer:last-child {
+#xyimkjgwks .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#uxkcjysevg .gt_column_spanner {
+#xyimkjgwks .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -952,11 +951,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   width: 100%;
 }
 
-#uxkcjysevg .gt_spanner_row {
+#xyimkjgwks .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#uxkcjysevg .gt_group_heading {
+#xyimkjgwks .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -982,7 +981,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   text-align: left;
 }
 
-#uxkcjysevg .gt_empty_group_heading {
+#xyimkjgwks .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -997,15 +996,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   vertical-align: middle;
 }
 
-#uxkcjysevg .gt_from_md > :first-child {
+#xyimkjgwks .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#uxkcjysevg .gt_from_md > :last-child {
+#xyimkjgwks .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#uxkcjysevg .gt_row {
+#xyimkjgwks .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1024,7 +1023,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   overflow-x: hidden;
 }
 
-#uxkcjysevg .gt_stub {
+#xyimkjgwks .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1037,7 +1036,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#uxkcjysevg .gt_stub_row_group {
+#xyimkjgwks .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1051,15 +1050,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   vertical-align: top;
 }
 
-#uxkcjysevg .gt_row_group_first td {
+#xyimkjgwks .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#uxkcjysevg .gt_row_group_first th {
+#xyimkjgwks .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#uxkcjysevg .gt_summary_row {
+#xyimkjgwks .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1069,16 +1068,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#uxkcjysevg .gt_first_summary_row {
+#xyimkjgwks .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#uxkcjysevg .gt_first_summary_row.thick {
+#xyimkjgwks .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#uxkcjysevg .gt_last_summary_row {
+#xyimkjgwks .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1088,7 +1087,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-bottom-color: #D3D3D3;
 }
 
-#uxkcjysevg .gt_grand_summary_row {
+#xyimkjgwks .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1098,7 +1097,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#uxkcjysevg .gt_first_grand_summary_row {
+#xyimkjgwks .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1108,7 +1107,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-top-color: #D3D3D3;
 }
 
-#uxkcjysevg .gt_last_grand_summary_row_top {
+#xyimkjgwks .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1118,11 +1117,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-bottom-color: #D3D3D3;
 }
 
-#uxkcjysevg .gt_striped {
+#xyimkjgwks .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#uxkcjysevg .gt_table_body {
+#xyimkjgwks .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1131,7 +1130,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-bottom-color: #D3D3D3;
 }
 
-#uxkcjysevg .gt_footnotes {
+#xyimkjgwks .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1145,7 +1144,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-right-color: #D3D3D3;
 }
 
-#uxkcjysevg .gt_footnote {
+#xyimkjgwks .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -1154,7 +1153,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#uxkcjysevg .gt_sourcenotes {
+#xyimkjgwks .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1168,7 +1167,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-right-color: #D3D3D3;
 }
 
-#uxkcjysevg .gt_sourcenote {
+#xyimkjgwks .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -1176,72 +1175,72 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#uxkcjysevg .gt_left {
+#xyimkjgwks .gt_left {
   text-align: left;
 }
 
-#uxkcjysevg .gt_center {
+#xyimkjgwks .gt_center {
   text-align: center;
 }
 
-#uxkcjysevg .gt_right {
+#xyimkjgwks .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#uxkcjysevg .gt_font_normal {
+#xyimkjgwks .gt_font_normal {
   font-weight: normal;
 }
 
-#uxkcjysevg .gt_font_bold {
+#xyimkjgwks .gt_font_bold {
   font-weight: bold;
 }
 
-#uxkcjysevg .gt_font_italic {
+#xyimkjgwks .gt_font_italic {
   font-style: italic;
 }
 
-#uxkcjysevg .gt_super {
+#xyimkjgwks .gt_super {
   font-size: 65%;
 }
 
-#uxkcjysevg .gt_footnote_marks {
+#xyimkjgwks .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#uxkcjysevg .gt_asterisk {
+#xyimkjgwks .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#uxkcjysevg .gt_indent_1 {
+#xyimkjgwks .gt_indent_1 {
   text-indent: 5px;
 }
 
-#uxkcjysevg .gt_indent_2 {
+#xyimkjgwks .gt_indent_2 {
   text-indent: 10px;
 }
 
-#uxkcjysevg .gt_indent_3 {
+#xyimkjgwks .gt_indent_3 {
   text-indent: 15px;
 }
 
-#uxkcjysevg .gt_indent_4 {
+#xyimkjgwks .gt_indent_4 {
   text-indent: 20px;
 }
 
-#uxkcjysevg .gt_indent_5 {
+#xyimkjgwks .gt_indent_5 {
   text-indent: 25px;
 }
 
-#uxkcjysevg .katex-display {
+#xyimkjgwks .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#uxkcjysevg div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#xyimkjgwks div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -1495,7 +1494,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="co"># rejoin with shipnames and links </span></span>
 <span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="co">#FRAM df - missing info </span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="co">#create a few dfs to fil in any last missing info </span></span>
 <span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>fram <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
 <span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">shipname =</span> <span class="st">"FRAM"</span>,</span>
@@ -1504,12 +1503,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">total_ship_pop =</span> <span class="dv">400</span></span>
 <span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>cruise_capacities_final <span class="ot">&lt;-</span> <span class="fu">full_join</span>(capacities_MAR_clean, ship_links_MAR_all, <span class="at">by =</span> <span class="st">"full_link"</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="at">shipname =</span> name,capacity_n,crew_n,total_ship_pop) <span class="sc">%&gt;%</span> </span>
-<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rbind</span>(fram)</span>
-<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a><span class="co">#gt(cruise_capacities_final)</span></span>
-<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(cruise_capacities_final, <span class="st">"outputs/cruise_capacities_final.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>cruise_capacities_final <span class="ot">&lt;-</span> <span class="fu">full_join</span>(capacities_MAR_clean, ship_links_MAR_all, <span class="at">by =</span> <span class="st">"full_link"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="at">shipname =</span> name,capacity_n,crew_n,total_ship_pop) <span class="sc">%&gt;%</span> </span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rbind</span>(fram)</span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a><span class="co">#gt(cruise_capacities_final)</span></span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(cruise_capacities_final, <span class="st">"outputs/cruise_capacities_final.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p>Voilá! The final table with cruiseship name, passenger capacity, crew capacity, and total ship population.</p>
@@ -1517,39 +1518,40 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>gt <span class="ot">&lt;-</span> cruise_capacities_final <span class="sc">%&gt;%</span> </span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="sc">-</span>total_ship_pop) <span class="sc">%&gt;%</span> </span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gt</span>() <span class="sc">%&gt;%</span> </span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_header</span>(</span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="fu">md</span>(<span class="st">"Passenger and Crew Capacities of Cruiseships in 2019"</span>),</span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="fu">md</span>(<span class="st">"Data for cruisehips present in the Mesoamerican Reef Region only"</span>)</span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cols_label</span>(<span class="at">shipname =</span> <span class="st">"Ship name"</span>,</span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>             <span class="at">capacity_n =</span> <span class="st">"Passenger Capacity"</span>,</span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>             <span class="at">crew_n =</span> <span class="st">"Crew Capacity"</span>,</span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>             <span class="at">total_ship_pop =</span> <span class="st">"Total Ship Population"</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_source_note</span>(<span class="at">source_note =</span> <span class="st">"Source: List of Cruiseships Wikipedia Webpage"</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_options</span>(<span class="at">container.overflow.y =</span> T)</span>
-<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>gt</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="sc">-</span>total_ship_pop) <span class="sc">%&gt;%</span> </span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gt</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_header</span>(</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="fu">md</span>(<span class="st">"Passenger and Crew Capacities of Cruiseships in 2019"</span>),</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="fu">md</span>(<span class="st">"Data for cruisehips present in the Mesoamerican Reef Region only"</span>)</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cols_label</span>(<span class="at">shipname =</span> <span class="st">"Ship name"</span>,</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>             <span class="at">capacity_n =</span> <span class="st">"Passenger Capacity"</span>,</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>             <span class="at">crew_n =</span> <span class="st">"Crew Capacity"</span>,</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>             <span class="at">total_ship_pop =</span> <span class="st">"Total Ship Population"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_source_note</span>(<span class="at">source_note =</span> <span class="st">"Source: List of Cruiseships Wikipedia Webpage"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_options</span>(<span class="at">container.overflow.y =</span> T)</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>gt</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div id="skvggqbvla" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#skvggqbvla table {
+<div id="ieihjdakdz" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#ieihjdakdz table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#skvggqbvla thead, #skvggqbvla tbody, #skvggqbvla tfoot, #skvggqbvla tr, #skvggqbvla td, #skvggqbvla th {
+#ieihjdakdz thead, #ieihjdakdz tbody, #ieihjdakdz tfoot, #ieihjdakdz tr, #ieihjdakdz td, #ieihjdakdz th {
   border-style: none;
 }
 
-#skvggqbvla p {
+#ieihjdakdz p {
   margin: 0;
   padding: 0;
 }
 
-#skvggqbvla .gt_table {
+#ieihjdakdz .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -1575,12 +1577,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-left-color: #D3D3D3;
 }
 
-#skvggqbvla .gt_caption {
+#ieihjdakdz .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#skvggqbvla .gt_title {
+#ieihjdakdz .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -1592,7 +1594,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-bottom-width: 0;
 }
 
-#skvggqbvla .gt_subtitle {
+#ieihjdakdz .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -1604,7 +1606,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-top-width: 0;
 }
 
-#skvggqbvla .gt_heading {
+#ieihjdakdz .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -1616,13 +1618,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-right-color: #D3D3D3;
 }
 
-#skvggqbvla .gt_bottom_border {
+#ieihjdakdz .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#skvggqbvla .gt_col_headings {
+#ieihjdakdz .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1637,7 +1639,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-right-color: #D3D3D3;
 }
 
-#skvggqbvla .gt_col_heading {
+#ieihjdakdz .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1657,7 +1659,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   overflow-x: hidden;
 }
 
-#skvggqbvla .gt_column_spanner_outer {
+#ieihjdakdz .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1669,15 +1671,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 4px;
 }
 
-#skvggqbvla .gt_column_spanner_outer:first-child {
+#ieihjdakdz .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#skvggqbvla .gt_column_spanner_outer:last-child {
+#ieihjdakdz .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#skvggqbvla .gt_column_spanner {
+#ieihjdakdz .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -1689,11 +1691,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   width: 100%;
 }
 
-#skvggqbvla .gt_spanner_row {
+#ieihjdakdz .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#skvggqbvla .gt_group_heading {
+#ieihjdakdz .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1719,7 +1721,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   text-align: left;
 }
 
-#skvggqbvla .gt_empty_group_heading {
+#ieihjdakdz .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1734,15 +1736,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   vertical-align: middle;
 }
 
-#skvggqbvla .gt_from_md > :first-child {
+#ieihjdakdz .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#skvggqbvla .gt_from_md > :last-child {
+#ieihjdakdz .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#skvggqbvla .gt_row {
+#ieihjdakdz .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1761,7 +1763,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   overflow-x: hidden;
 }
 
-#skvggqbvla .gt_stub {
+#ieihjdakdz .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1774,7 +1776,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#skvggqbvla .gt_stub_row_group {
+#ieihjdakdz .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1788,15 +1790,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   vertical-align: top;
 }
 
-#skvggqbvla .gt_row_group_first td {
+#ieihjdakdz .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#skvggqbvla .gt_row_group_first th {
+#ieihjdakdz .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#skvggqbvla .gt_summary_row {
+#ieihjdakdz .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1806,16 +1808,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#skvggqbvla .gt_first_summary_row {
+#ieihjdakdz .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#skvggqbvla .gt_first_summary_row.thick {
+#ieihjdakdz .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#skvggqbvla .gt_last_summary_row {
+#ieihjdakdz .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1825,7 +1827,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-bottom-color: #D3D3D3;
 }
 
-#skvggqbvla .gt_grand_summary_row {
+#ieihjdakdz .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1835,7 +1837,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#skvggqbvla .gt_first_grand_summary_row {
+#ieihjdakdz .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1845,7 +1847,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-top-color: #D3D3D3;
 }
 
-#skvggqbvla .gt_last_grand_summary_row_top {
+#ieihjdakdz .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1855,11 +1857,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-bottom-color: #D3D3D3;
 }
 
-#skvggqbvla .gt_striped {
+#ieihjdakdz .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#skvggqbvla .gt_table_body {
+#ieihjdakdz .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1868,7 +1870,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-bottom-color: #D3D3D3;
 }
 
-#skvggqbvla .gt_footnotes {
+#ieihjdakdz .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1882,7 +1884,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-right-color: #D3D3D3;
 }
 
-#skvggqbvla .gt_footnote {
+#ieihjdakdz .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -1891,7 +1893,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#skvggqbvla .gt_sourcenotes {
+#ieihjdakdz .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1905,7 +1907,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-right-color: #D3D3D3;
 }
 
-#skvggqbvla .gt_sourcenote {
+#ieihjdakdz .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -1913,72 +1915,72 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#skvggqbvla .gt_left {
+#ieihjdakdz .gt_left {
   text-align: left;
 }
 
-#skvggqbvla .gt_center {
+#ieihjdakdz .gt_center {
   text-align: center;
 }
 
-#skvggqbvla .gt_right {
+#ieihjdakdz .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#skvggqbvla .gt_font_normal {
+#ieihjdakdz .gt_font_normal {
   font-weight: normal;
 }
 
-#skvggqbvla .gt_font_bold {
+#ieihjdakdz .gt_font_bold {
   font-weight: bold;
 }
 
-#skvggqbvla .gt_font_italic {
+#ieihjdakdz .gt_font_italic {
   font-style: italic;
 }
 
-#skvggqbvla .gt_super {
+#ieihjdakdz .gt_super {
   font-size: 65%;
 }
 
-#skvggqbvla .gt_footnote_marks {
+#ieihjdakdz .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#skvggqbvla .gt_asterisk {
+#ieihjdakdz .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#skvggqbvla .gt_indent_1 {
+#ieihjdakdz .gt_indent_1 {
   text-indent: 5px;
 }
 
-#skvggqbvla .gt_indent_2 {
+#ieihjdakdz .gt_indent_2 {
   text-indent: 10px;
 }
 
-#skvggqbvla .gt_indent_3 {
+#ieihjdakdz .gt_indent_3 {
   text-indent: 15px;
 }
 
-#skvggqbvla .gt_indent_4 {
+#ieihjdakdz .gt_indent_4 {
   text-indent: 20px;
 }
 
-#skvggqbvla .gt_indent_5 {
+#ieihjdakdz .gt_indent_5 {
   text-indent: 25px;
 }
 
-#skvggqbvla .katex-display {
+#ieihjdakdz .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#skvggqbvla div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#ieihjdakdz div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -2042,18 +2044,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td class="gt_row gt_right" headers="total_ship_pop">5609</td>
 </tr>
 <tr class="odd">
-<td class="gt_row gt_left" headers="shipname">NORWEGIAN GETAWAY</td>
-<td class="gt_row gt_right" headers="capacity_n">3963</td>
-<td class="gt_row gt_right" headers="crew_n">1646</td>
-<td class="gt_row gt_right" headers="total_ship_pop">5609</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers="shipname">NCL GETAWAY T6</td>
-<td class="gt_row gt_right" headers="capacity_n">3963</td>
-<td class="gt_row gt_right" headers="crew_n">1646</td>
-<td class="gt_row gt_right" headers="total_ship_pop">5609</td>
-</tr>
-<tr class="odd">
 <td class="gt_row gt_left" headers="shipname">DISNEY DREAM</td>
 <td class="gt_row gt_right" headers="capacity_n">4000</td>
 <td class="gt_row gt_right" headers="crew_n">1458</td>
@@ -2096,52 +2086,64 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td class="gt_row gt_right" headers="total_ship_pop">4386</td>
 </tr>
 <tr class="even">
+<td class="gt_row gt_left" headers="shipname">INDEPENDENCE OF SEAS</td>
+<td class="gt_row gt_right" headers="capacity_n">4375</td>
+<td class="gt_row gt_right" headers="crew_n">0</td>
+<td class="gt_row gt_right" headers="total_ship_pop">4375</td>
+</tr>
+<tr class="odd">
 <td class="gt_row gt_left" headers="shipname">CARIBBEAN PRINCESS</td>
 <td class="gt_row gt_right" headers="capacity_n">3142</td>
 <td class="gt_row gt_right" headers="crew_n">1200</td>
 <td class="gt_row gt_right" headers="total_ship_pop">4342</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td class="gt_row gt_left" headers="shipname">CELEBRITY REFLECTION</td>
 <td class="gt_row gt_right" headers="capacity_n">3046</td>
 <td class="gt_row gt_right" headers="crew_n">1271</td>
 <td class="gt_row gt_right" headers="total_ship_pop">4317</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td class="gt_row gt_left" headers="shipname">MARINER OF THE SEAS</td>
 <td class="gt_row gt_right" headers="capacity_n">3114</td>
 <td class="gt_row gt_right" headers="crew_n">1185</td>
 <td class="gt_row gt_right" headers="total_ship_pop">4299</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td class="gt_row gt_left" headers="shipname">CARNIVAL VALOR</td>
 <td class="gt_row gt_right" headers="capacity_n">2974</td>
 <td class="gt_row gt_right" headers="crew_n">1180</td>
 <td class="gt_row gt_right" headers="total_ship_pop">4154</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td class="gt_row gt_left" headers="shipname">CARNIVAL LIBERTY</td>
 <td class="gt_row gt_right" headers="capacity_n">2974</td>
 <td class="gt_row gt_right" headers="crew_n">1160</td>
 <td class="gt_row gt_right" headers="total_ship_pop">4134</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td class="gt_row gt_left" headers="shipname">CARNIVAL CONQUEST</td>
 <td class="gt_row gt_right" headers="capacity_n">2980</td>
 <td class="gt_row gt_right" headers="crew_n">1150</td>
 <td class="gt_row gt_right" headers="total_ship_pop">4130</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td class="gt_row gt_left" headers="shipname">CARNIVAL FREEDOM</td>
 <td class="gt_row gt_right" headers="capacity_n">2980</td>
 <td class="gt_row gt_right" headers="crew_n">1150</td>
 <td class="gt_row gt_right" headers="total_ship_pop">4130</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td class="gt_row gt_left" headers="shipname">CARNIVAL GLORY</td>
 <td class="gt_row gt_right" headers="capacity_n">2980</td>
 <td class="gt_row gt_right" headers="crew_n">1150</td>
 <td class="gt_row gt_right" headers="total_ship_pop">4130</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="shipname">CELEBRITY EQUINOX</td>
+<td class="gt_row gt_right" headers="capacity_n">2850</td>
+<td class="gt_row gt_right" headers="crew_n">1250</td>
+<td class="gt_row gt_right" headers="total_ship_pop">4100</td>
 </tr>
 <tr class="even">
 <td class="gt_row gt_left" headers="shipname">CARNIVAL SUNSHINE</td>
@@ -2222,54 +2224,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td class="gt_row gt_right" headers="total_ship_pop">3054</td>
 </tr>
 <tr class="odd">
-<td class="gt_row gt_left" headers="shipname">CARNIVAL MIRACLE</td>
-<td class="gt_row gt_right" headers="capacity_n">2124</td>
-<td class="gt_row gt_right" headers="crew_n">930</td>
-<td class="gt_row gt_right" headers="total_ship_pop">3054</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers="shipname">CARNIVAL MIRACLE TB1</td>
-<td class="gt_row gt_right" headers="capacity_n">2124</td>
-<td class="gt_row gt_right" headers="crew_n">930</td>
-<td class="gt_row gt_right" headers="total_ship_pop">3054</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers="shipname">CARNIVAL MIRACLE TB5</td>
-<td class="gt_row gt_right" headers="capacity_n">2124</td>
-<td class="gt_row gt_right" headers="crew_n">930</td>
-<td class="gt_row gt_right" headers="total_ship_pop">3054</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers="shipname">CARNIVAL MIRACLE</td>
-<td class="gt_row gt_right" headers="capacity_n">2124</td>
-<td class="gt_row gt_right" headers="crew_n">930</td>
-<td class="gt_row gt_right" headers="total_ship_pop">3054</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers="shipname">CARNIVAL MIRACLE TB1</td>
-<td class="gt_row gt_right" headers="capacity_n">2124</td>
-<td class="gt_row gt_right" headers="crew_n">930</td>
-<td class="gt_row gt_right" headers="total_ship_pop">3054</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers="shipname">CARNIVAL MIRACLE TB5</td>
-<td class="gt_row gt_right" headers="capacity_n">2124</td>
-<td class="gt_row gt_right" headers="crew_n">930</td>
-<td class="gt_row gt_right" headers="total_ship_pop">3054</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers="shipname">EURODAM</td>
-<td class="gt_row gt_right" headers="capacity_n">2104</td>
-<td class="gt_row gt_right" headers="crew_n">929</td>
-<td class="gt_row gt_right" headers="total_ship_pop">3033</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers="shipname">CARIBBEANPRINCE TB22</td>
-<td class="gt_row gt_right" headers="capacity_n">2104</td>
-<td class="gt_row gt_right" headers="crew_n">929</td>
-<td class="gt_row gt_right" headers="total_ship_pop">3033</td>
-</tr>
-<tr class="odd">
 <td class="gt_row gt_left" headers="shipname">EURODAM</td>
 <td class="gt_row gt_right" headers="capacity_n">2104</td>
 <td class="gt_row gt_right" headers="crew_n">929</td>
@@ -2348,112 +2302,70 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td class="gt_row gt_right" headers="total_ship_pop">2607</td>
 </tr>
 <tr class="even">
-<td class="gt_row gt_left" headers="shipname">MARELLA DISCOVERY 2</td>
-<td class="gt_row gt_right" headers="capacity_n">1836</td>
-<td class="gt_row gt_right" headers="crew_n">771</td>
-<td class="gt_row gt_right" headers="total_ship_pop">2607</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers="shipname">MARELLA DISCOVERY 2</td>
-<td class="gt_row gt_right" headers="capacity_n">1836</td>
-<td class="gt_row gt_right" headers="crew_n">771</td>
-<td class="gt_row gt_right" headers="total_ship_pop">2607</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers="shipname">MARELLA DISCOVERY 2</td>
-<td class="gt_row gt_right" headers="capacity_n">1836</td>
-<td class="gt_row gt_right" headers="crew_n">771</td>
-<td class="gt_row gt_right" headers="total_ship_pop">2607</td>
-</tr>
-<tr class="odd">
 <td class="gt_row gt_left" headers="shipname">M/S ROTTERDAM</td>
 <td class="gt_row gt_right" headers="capacity_n">1404</td>
 <td class="gt_row gt_right" headers="crew_n">600</td>
 <td class="gt_row gt_right" headers="total_ship_pop">2004</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td class="gt_row gt_left" headers="shipname">VEENDAM</td>
 <td class="gt_row gt_right" headers="capacity_n">1350</td>
 <td class="gt_row gt_right" headers="crew_n">568</td>
 <td class="gt_row gt_right" headers="total_ship_pop">1918</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td class="gt_row gt_left" headers="shipname">ENCHANTMENT OTS</td>
 <td class="gt_row gt_right" headers="capacity_n">1350</td>
 <td class="gt_row gt_right" headers="crew_n">568</td>
 <td class="gt_row gt_right" headers="total_ship_pop">1918</td>
 </tr>
-<tr class="even">
-<td class="gt_row gt_left" headers="shipname">VEENDAM</td>
-<td class="gt_row gt_right" headers="capacity_n">1350</td>
-<td class="gt_row gt_right" headers="crew_n">568</td>
-<td class="gt_row gt_right" headers="total_ship_pop">1918</td>
-</tr>
 <tr class="odd">
-<td class="gt_row gt_left" headers="shipname">ENCHANTMENT OTS</td>
-<td class="gt_row gt_right" headers="capacity_n">1350</td>
-<td class="gt_row gt_right" headers="crew_n">568</td>
-<td class="gt_row gt_right" headers="total_ship_pop">1918</td>
-</tr>
-<tr class="even">
 <td class="gt_row gt_left" headers="shipname">NIEUW AMSTERDAM</td>
 <td class="gt_row gt_right" headers="capacity_n">1350</td>
 <td class="gt_row gt_right" headers="crew_n">520</td>
 <td class="gt_row gt_right" headers="total_ship_pop">1870</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td class="gt_row gt_left" headers="shipname">VIKING SUN</td>
 <td class="gt_row gt_right" headers="capacity_n">740</td>
 <td class="gt_row gt_right" headers="crew_n">460</td>
 <td class="gt_row gt_right" headers="total_ship_pop">1200</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td class="gt_row gt_left" headers="shipname">CRYSTAL SYMPHONY</td>
 <td class="gt_row gt_right" headers="capacity_n">650</td>
 <td class="gt_row gt_right" headers="crew_n">495</td>
 <td class="gt_row gt_right" headers="total_ship_pop">1145</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td class="gt_row gt_left" headers="shipname">AZAMARA JOURNEY</td>
 <td class="gt_row gt_right" headers="capacity_n">694</td>
 <td class="gt_row gt_right" headers="crew_n">407</td>
 <td class="gt_row gt_right" headers="total_ship_pop">1101</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td class="gt_row gt_left" headers="shipname">REGATTA</td>
 <td class="gt_row gt_right" headers="capacity_n">684</td>
 <td class="gt_row gt_right" headers="crew_n">386</td>
 <td class="gt_row gt_right" headers="total_ship_pop">1070</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td class="gt_row gt_left" headers="shipname">CLUB MED 2</td>
 <td class="gt_row gt_right" headers="capacity_n">386</td>
 <td class="gt_row gt_right" headers="crew_n">214</td>
 <td class="gt_row gt_right" headers="total_ship_pop">600</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td class="gt_row gt_left" headers="shipname">SILVER WIND</td>
 <td class="gt_row gt_right" headers="capacity_n">294</td>
 <td class="gt_row gt_right" headers="crew_n">208</td>
 <td class="gt_row gt_right" headers="total_ship_pop">502</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td class="gt_row gt_left" headers="shipname">FRAM</td>
 <td class="gt_row gt_right" headers="capacity_n">400</td>
 <td class="gt_row gt_right" headers="crew_n">0</td>
 <td class="gt_row gt_right" headers="total_ship_pop">400</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers="shipname">CELEBRITY EQUINOX</td>
-<td class="gt_row gt_right" headers="capacity_n">2850</td>
-<td class="gt_row gt_right" headers="crew_n">NA</td>
-<td class="gt_row gt_right" headers="total_ship_pop">NA</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers="shipname">INDEPENDENCE OF SEAS</td>
-<td class="gt_row gt_right" headers="capacity_n">NA</td>
-<td class="gt_row gt_right" headers="crew_n">NA</td>
-<td class="gt_row gt_right" headers="total_ship_pop">NA</td>
 </tr>
 </tbody><tfoot class="gt_sourcenotes">
 <tr class="odd">

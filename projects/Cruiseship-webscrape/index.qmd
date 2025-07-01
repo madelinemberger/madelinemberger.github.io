@@ -9,7 +9,7 @@ status: completed
 format:
   html:
     toc: true
-    toc-depth: 2
+    toc-depth: 3
     code-fold: show
     page-layout: full
     theme: cosmo
@@ -59,21 +59,23 @@ library(gtExtras)
 
 First, I need to examine the webpage to understand what elements I want. In this case, I want all the cruise ship names. Then, I want to go onto each cruises own page and grab the number that is under the "capacity" row in the right hand summary table.
 
-To scrape stuff from the web, you need to look "under the hood" at the site code, and ID the xpath of the information you are interested in targeting.
+To scrape stuff from the web, you need to look "under the hood" at the site code by right-clicking the element you are interested in and selecting "inspect". I had to first ID the "xpath" of the information you are interested in targeting and look for them in the site source code.
+
+This page has a table with each cruise ship, and the table contains a link to that ship's own Wikipedia page, where the information I wanted (capacity) could be found. 
 
 **Cruise ship names from full list**
 
 url = ['https://en.wikipedia.org/wiki/List_of_cruise_ships](https://en.wikipedia.org/wiki/List_of_cruise_ships)
 
-##### Xpaths for the first 3 tables (A - C) :
+**Xpaths for the first 3 tables (A - C):**
 
 //[@id*="mw-content-text"*]*/div\[1\]/table\[2\] //*[@id="mw-content-text"]/div\[1\]/table\[3\] //\*[@id="mw-content-text"]/div\[1\]/table\[4\]
 
-##### Xpaths for the names of the cruiseships:
+**Xpaths for the names of the cruiseships:**
 
 //\*[@id="mw-content-text"]/div\[1\]/table\[2\]/tbody/tr\[42\]/th/i/a
 
-##### Xpaths for the capacity element on a ship page:
+**Xpaths for the capacity element on each ship's page:**
 
 //\*[@id="mw-content-text"]/div\[1\]/table\[1\]/tbody/tr\[30\]/td\[1\]
 
@@ -349,7 +351,7 @@ capacities_MAR_clean <- capacities_MAR %>%
 
 # rejoin with shipnames and links 
 
-#FRAM df - missing info 
+#create a few dfs to fil in any last missing info 
 
 fram <- data.frame(
   shipname = "FRAM",
@@ -357,6 +359,8 @@ fram <- data.frame(
   crew_n = 0,
   total_ship_pop = 400
 )
+
+
 
 cruise_capacities_final <- full_join(capacities_MAR_clean, ship_links_MAR_all, by = "full_link") %>% 
   dplyr::select(shipname = name,capacity_n,crew_n,total_ship_pop) %>% 
@@ -371,14 +375,31 @@ Voilá! The final table with cruiseship name, passenger capacity, crew capacity,
 
 ```{r include = FALSE}
 
-# read in the csv so the loop above 
-cruise_capacities_final <- read_csv("outputs/cruise_capacities_final.csv")
+# read in the csv so the loop above doesnt have to run everytime (not included)
+cruise_capacities_final <- read_csv("outputs/cruise_capacities_final.csv") %>% 
+  mutate(
+    capacity_n = case_when(
+    shipname == "CELEBRITY EQUINOX" ~ 2850,
+    shipname == "INDEPENDENCE OF SEAS" ~ 4375, #maximum berths, because capacity not listed
+    TRUE ~ capacity_n),
+    crew_n = case_when(
+           shipname == "CELEBRITY EQUINOX" ~ 1250,
+           shipname == "INDEPENDENCE OF SEAS" ~ 0, # could not confirm crew
+           TRUE ~ crew_n)
+         ) %>% 
+  mutate(total_ship_pop = capacity_n + crew_n)
+  
+
+
 
 ```
+
+### Final Dataset
 
 ```{r final-table}
 
 gt <- cruise_capacities_final %>% 
+  distinct() %>% 
   arrange(-total_ship_pop) %>% 
   gt() %>% 
   tab_header(
