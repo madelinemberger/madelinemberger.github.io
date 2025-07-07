@@ -100,37 +100,37 @@
   {
     "objectID": "projects/Mapping-cruisepaths/index.html",
     "href": "projects/Mapping-cruisepaths/index.html",
-    "title": "Mapping Cruiseship Location and Waste Generation",
+    "title": "Mapping Cruiseship Waste Generation",
     "section": "",
-    "text": "After scraping capacity information about cruiseships present in the Mesoamerican Reef Region in 2019 from Wikipedia, I estimated how much N the passengers on board were generating, and estimate where in space that N pollution might be having the most impact.\nA key assumption I relied on to do this:\nMost cruise passengers were from a developed country: OR, were eating the equivalent to a developed country diet while on board. This allowed me to use the estimated daily protein intake for people in developed countries from the FAO. Nitrogen output per person is estimated using protein consumed. I averaged the daily protein consumption of all countries with a development index score of .80 or higher, which came out to 100.27 g per day.\nThumbnail photo by Gabriel Santos on Unsplash"
+    "text": "After scraping capacity information about cruiseships present in the Mesoamerican Reef Region in 2019 from Wikipedia, I estimated how much N the passengers on board were generating, and estimate where in space that N pollution might be having the most impact.\nA key assumption I relied on to do this is that most cruise passengers were from a developed country: OR, were eating the equivalent to a developed country diet while on board. This allowed me to use the estimated daily protein intake for people in developed countries from the FAO. Nitrogen output per person is estimated using protein consumed. I averaged the daily protein consumption of all countries with a development index score of .80 or higher, which came out to 100.27 g per day.\nThumbnail photo by Gabriel Santos on Unsplash"
   },
   {
     "objectID": "projects/Mapping-cruisepaths/index.html#project-overview",
     "href": "projects/Mapping-cruisepaths/index.html#project-overview",
-    "title": "Mapping Cruiseship Location and Waste Generation",
+    "title": "Mapping Cruiseship Waste Generation",
     "section": "",
     "text": "After scraping capacity information about cruiseships present in the Mesoamerican Reef Region in 2019 from Wikipedia, I estimated how much N the passengers on board were generating, and estimate where in space that N pollution might be having the most impact.\nA key assumption I relied on to do this:\nMost cruise passengers were from a developed country: OR, were eating the equivalent to a developed country diet while on board. This allowed me to use the estimated daily protein intake for people in developed countries from the FAO. Nitrogen output per person is estimated using protein consumed. I averaged the daily protein consumption of all countries with a development index score of .80 or higher, which came out to 100.27 g per day.\nThumbnail photo by Gabriel Santos on Unsplash"
   },
   {
     "objectID": "projects/Mapping-cruisepaths/index.html#tools-and-libraries-used",
     "href": "projects/Mapping-cruisepaths/index.html#tools-and-libraries-used",
-    "title": "Mapping Cruiseship Location and Waste Generation",
+    "title": "Mapping Cruiseship Waste Generation",
     "section": "Tools and libraries used",
-    "text": "Tools and libraries used\n\nWrangling: tidyverse, lubridate\nGeospatial: terra, sf"
+    "text": "Tools and libraries used\n\nWrangling: tidyverse, lubridate\nGeospatial: terra, sf, ggplot, ggspatial"
   },
   {
     "objectID": "projects/Mapping-cruisepaths/index.html#code",
     "href": "projects/Mapping-cruisepaths/index.html#code",
-    "title": "Mapping Cruiseship Location and Waste Generation",
+    "title": "Mapping Cruiseship Waste Generation",
     "section": "Code",
-    "text": "Code\n\nCalculate Daily N generation, via waste, per ship\n\n\nCode\n# calculated prior using FAO average daily protein consumption per country\navg_tourist_protein &lt;- 100.27\n\nper_ship_n &lt;- passengers %&gt;% \n  mutate(\n    N_per_day_g = total_ship_pop*avg_tourist_protein*0.16\n  )\n\n\ncruise_hrs &lt;- gfw_joined %&gt;%\n  group_by(shipname) %&gt;% \n  summarize(\n    total_hrs = sum(hours) # how many hours total was this ship in the MAR\n  ) %&gt;% \n  left_join(., per_ship_n, by = \"shipname\") %&gt;% \n  filter(!is.na(N_per_day_g)) %&gt;% # remove any for which we don't have enought information\n  mutate(\n    N_per_hour =  N_per_day_g / 24\n  ) %&gt;% \n  ungroup() %&gt;% \n  distinct()\n\n# re join the N per hour information to the spatial dataset from Global Fishing Watch\n\ncruise_n_hours &lt;- cruise_hrs %&gt;% \n  left_join(.,gfw_joined, by = \"shipname\") %&gt;%\n  mutate(\n    N_per_pixel_g = N_per_hour * hours,\n    N_per_pixel_kg = N_per_pixel_g/1000\n  ) %&gt;% \n  dplyr::select(shipname, ssvid, date, lat_bin, lon_bin, hours, imo, N_per_pixel_g, N_per_pixel_kg, total_ship_pop)\n\n\n\n\nVisualize what we have so far\nNow we can visualize where in the MAR region might be most exposed to N pollution from cruiseships - if the ships were disposing of wastewater as soon as it was generated (in other words, it was continuously being released from the ship as it traveled). We know this is probably (hopefully) not the case, but cool to visualize it anyway using a pretty simple ggplot:\n\n\nCode\n# Static\nN_raster &lt;- cruise_n_hours %&gt;% \n  group_by(lon_bin,lat_bin) %&gt;% \n  summarize(\n    N_poll_g = sum(N_per_pixel_g, na.rm = T)\n  )\n  #filter(N_poll_g &gt; 10000)\n\n# Make a color palette\n\nN_pal &lt;- colorRampPalette(c('#0C276C', '#3B9088', '#EEFF00', '#ffffff'), \n                               interpolate = 'linear')\n\n# Plot - note I loged transformed this to make hotspots pop out more\np1 &lt;- N_raster %&gt;% \n  ggplot()+\n  geom_tile(aes(x = lon_bin, y = lat_bin, fill = log(N_poll_g)))+\n  scale_fill_gradientn(\n        \"N pollution\",\n        na.value = NA,\n        colours = N_pal(5), # Linear Green\n       )\n  \n\np1\n\n\n\n\n\n\n\n\n\nPS: Interested in learning how to make basemaps like this in ggplot? Check out my other post on making beautiful basemaps in R and how to easily incorporate them into reproducible workflows.\n\n\nCalculate N Pulse from Cruiseships at port\nRather than assume wastewater is constantly being released from the cruiseships as they move, I then estimated the impact assuming that most wastewater from the ship was disposed of while the ship at port. This is considered “best practice”, and what cruiseship companies generally say they do, but really it depends on if there is a wastewater processing facility large enough to receive the ships’ waste. For certain stops in the Caribbean this is unlikely to be true - the largest ships often can’t even dock on land due to the small size of the islands and atolls (unless of course they dredge away fragile reefs and mangroves to make it happen). They stay offshore and ferry the passengers over for a day on land. But for this analysis I gave them the benefit of the doubt and assumed that ships’ wastewater was properly disposed of while at port."
+    "text": "Code\n\nCalculate Daily N generation, via waste, per ship\n\n\nCode\n# calculated prior using FAO average daily protein consumption per country\navg_tourist_protein &lt;- 100.27\n\nper_ship_n &lt;- passengers %&gt;% \n  mutate(\n    N_per_day_g = total_ship_pop*avg_tourist_protein*0.16\n  )\n\n\ncruise_hrs &lt;- gfw_joined %&gt;%\n  group_by(shipname) %&gt;% \n  summarize(\n    total_hrs = sum(hours) # how many hours total was this ship in the MAR\n  ) %&gt;% \n  left_join(., per_ship_n, by = \"shipname\") %&gt;% \n  filter(!is.na(N_per_day_g)) %&gt;% # remove any for which we don't have enought information\n  mutate(\n    N_per_hour =  N_per_day_g / 24\n  ) %&gt;% \n  ungroup() %&gt;% \n  distinct()\n\n# re join the N per hour information to the spatial dataset from Global Fishing Watch\n\ncruise_n_hours &lt;- cruise_hrs %&gt;% \n  left_join(.,gfw_joined, by = \"shipname\") %&gt;%\n  mutate(\n    N_per_pixel_g = N_per_hour * hours,\n    N_per_pixel_kg = N_per_pixel_g/1000\n  ) %&gt;% \n  dplyr::select(shipname, ssvid, date, lat_bin, lon_bin, hours, imo, N_per_pixel_g, N_per_pixel_kg, total_ship_pop)\n\n\n\n\nVisualize what we have so far\nNow we can visualize where in the MAR region might be most exposed to N pollution from cruiseships - if the ships were disposing of wastewater as soon as it was generated (in other words, it was continuously being released from the ship as it traveled). We know this is probably (hopefully) not the case, but cool to visualize it anyway using a pretty simple ggplot.\n\n\nCode\n# read in some helpful pacakges for basemaps\n\nlibrary(ggspatial)\nlibrary(rosm)\n\n# Static\nN_raster &lt;- cruise_n_hours %&gt;% \n  group_by(lon_bin,lat_bin) %&gt;% \n  summarize(\n    N_poll_g = sum(N_per_pixel_g, na.rm = T)\n  ) \n\n\n# Make a color palette\n\nN_pal &lt;- colorRampPalette(c('#0C276C', '#3B9088', '#EEFF00', '#ffffff'), \n                               interpolate = 'linear')\n\n# Plot - note I loged transformed this to make hotspots pop out more\n# Plot - note I loged transformed this to make hotspots pop out more\np1 &lt;- N_raster %&gt;% \n  ggplot()+\n  geom_tile(aes(x = lon_bin, y = lat_bin, fill = log(N_poll_g)))+\n  scale_fill_gradientn(\n        \"Log N pollution (grams)\",\n        na.value = NA,\n        colours = N_pal(5), # Linear Green\n       )+\n  labs(x = \"Latitude\", y = \"Longitude\",\n       title = \"Estimated Cruiseship Nitrogen Pollution Intensity (2019)\")+\n  theme_bw()\n  \n\np1 \n\n\n\n\n\n\n\n\n\nThis looks great - I can clean it up by reading in a pre-made basemap, something I do for most of my big geospatial projects, and layering the pollution layer on top.\n\n\nCode\n# clean it up to add to a basemap\n\n\n# source the basemap script\n\nsource(here(\"projects/Mapping-cruisepaths/MAR_basemaps.R\"))\n\n# code the cruise layer separately\n\npollution_layer &lt;- geom_tile(\n  data = N_raster,\n  aes(x = lon_bin, y = lat_bin, fill = log(N_poll_g)),\n  alpha = 0.8\n)\n\n# create color scheme and label\npollution_colors &lt;- scale_fill_gradientn(\n  \"Log N pollution (grams)\",\n  colours = N_pal(5),\n  na.value = NA\n)\n\n# overlay with basemap\np &lt;- MAR_basemap_zoom +\n  pollution_layer +\n  pollution_colors+\n  labs(title = \"Estimated Cruiseship Nitrogen Pollution Intensity (2019)\")\n\np\n\n\n\n\n\n\n\n\n\nPS: See this post on how to create a streamlined mapping workflow with beautiful basemaps in R"
   },
   {
     "objectID": "projects/Mapping-cruisepaths/index.html#references",
     "href": "projects/Mapping-cruisepaths/index.html#references",
-    "title": "Mapping Cruiseship Location and Waste Generation",
+    "title": "Mapping Cruiseship Waste Generation",
     "section": "References",
-    "text": "References"
+    "text": "References\n\nFAO"
   },
   {
     "objectID": "projects/MAR-paper/index.html",
@@ -193,6 +193,41 @@
     "href": "posts.html",
     "title": "Portfolio",
     "section": "",
-    "text": "Dynamic cartography using Mapbox\n\n\nExploring new tools for spatial data visualization\n\n\n\nMadeline Berger\n\n\nApr 10, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\nMapping Cruiseship Location and Waste Generation\n\n\nVisualizing where cruiseships spend time to estimate environmental impact from wastewater generated on board\n\n\n\nMadeline Berger\n\n\nJul 25, 2021\n\n\n\n\n\n\n\n\n\n\n\n\n\nWebscraping for Cruiseship Information\n\n\nUsing the rvest R package to help estimate cruiseship impact on marine habitats\n\n\n\nMadeline Berger\n\n\nJun 11, 2021\n\n\n\n\n\n\n\n\n\n\n\n\n\nQuantifying nitrogen pollution to the worlds 2nd largest barrier reef\n\n\nSpatial analysis of anthropogenic sources of Nitrogen to the Mesoamerican Reef using R and open data.\n\n\n\nMadeline Berger\n\n\nJun 11, 2021\n\n\n\n\n\n\nNo matching items"
+    "text": "Beautiful Basemaps in R\n\n\nDesigning a streamlined workflow for publication-ready cartography in R\n\n\n\nMadeline Berger\n\n\nJul 6, 2025\n\n\n\n\n\n\n\n\n\n\n\n\n\nDynamic cartography using Mapbox\n\n\nExploring new tools for spatial data visualization\n\n\n\nMadeline Berger\n\n\nApr 10, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\nMapping Cruiseship Waste Generation\n\n\nVisualizing where cruiseships spend time to estimate environmental impact from wastewater generated on board\n\n\n\nMadeline Berger\n\n\nJul 25, 2021\n\n\n\n\n\n\n\n\n\n\n\n\n\nWebscraping for Cruiseship Information\n\n\nUsing the rvest R package to help estimate cruiseship impact on marine habitats\n\n\n\nMadeline Berger\n\n\nJun 11, 2021\n\n\n\n\n\n\n\n\n\n\n\n\n\nQuantifying nitrogen pollution to the worlds 2nd largest barrier reef\n\n\nSpatial analysis of anthropogenic sources of Nitrogen to the Mesoamerican Reef using R and open data.\n\n\n\nMadeline Berger\n\n\nJun 11, 2021\n\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "projects/Mapping-cruisepaths/index.html#note---how-we-actually-analyzed-cruise-pollution-in-the-paper",
+    "href": "projects/Mapping-cruisepaths/index.html#note---how-we-actually-analyzed-cruise-pollution-in-the-paper",
+    "title": "Mapping Cruiseship Waste Generation",
+    "section": "Note - How we actually analyzed cruise pollution in the paper",
+    "text": "Note - How we actually analyzed cruise pollution in the paper\nRather than assume wastewater is constantly being released from the cruiseships as they move, I then estimated the impact assuming that most wastewater from the ship was disposed of while the ship at port. This is considered “best practice”, and what cruiseship companies generally say they do, but really it depends on if there is a wastewater processing facility large enough to receive the ships’ waste. For certain stops in the Caribbean this is unlikely to be true - the largest ships often can’t even dock on land due to the small size of the islands and atolls (unless of course they dredge away fragile reefs and mangroves to make it happen). They stay offshore and ferry the passengers over for a day on land. But for this analysis I gave them the benefit of the doubt and assumed that ships’ wastewater was properly disposed of while at port.\nThe final results from that analysis can be found in the paper we published in 2022."
+  },
+  {
+    "objectID": "projects/Mapping-cruisepaths/index.html#overview",
+    "href": "projects/Mapping-cruisepaths/index.html#overview",
+    "title": "Mapping Cruiseship Waste Generation",
+    "section": "",
+    "text": "After scraping capacity information about cruiseships present in the Mesoamerican Reef Region in 2019 from Wikipedia, I estimated how much N the passengers on board were generating, and estimate where in space that N pollution might be having the most impact.\nA key assumption I relied on to do this is that most cruise passengers were from a developed country: OR, were eating the equivalent to a developed country diet while on board. This allowed me to use the estimated daily protein intake for people in developed countries from the FAO. Nitrogen output per person is estimated using protein consumed. I averaged the daily protein consumption of all countries with a development index score of .80 or higher, which came out to 100.27 g per day.\nThumbnail photo by Gabriel Santos on Unsplash"
+  },
+  {
+    "objectID": "projects/Mapping-cruisepaths/index.html#conclusions",
+    "href": "projects/Mapping-cruisepaths/index.html#conclusions",
+    "title": "Mapping Cruiseship Waste Generation",
+    "section": "Conclusions",
+    "text": "Conclusions\nIf we assume most cruises h like the notorious 2013 poop cruise, and are continously discharging waste as the move through ocean space, this visualizing shows where the hotspots for that waste impact to reefs will be: the waters surrounding Cancún, Roatan, and the peninsula just below Quintana Roo.\n\nHow we actually analyzed cruise pollution in the paper\nRather than assume wastewater is constantly being released from the cruiseships as they move, I then estimated the impact assuming that most wastewater from the ship was disposed of while the ship at port. This is considered “best practice”, and what cruiseship companies generally say they do, but really it depends on if there is a wastewater processing facility large enough to receive the ships’ waste. For certain stops in the Caribbean this is unlikely to be true - the largest ships often can’t even dock on land due to the small size of the islands and atolls (unless of course they dredge away fragile reefs and mangroves to make it happen). They stay offshore and ferry the passengers over for a day on land. But for this analysis I gave them the benefit of the doubt and assumed that ships’ wastewater was properly disposed of while at port.\nThe final results from that analysis can be found in the paper we published in 2022."
+  },
+  {
+    "objectID": "projects/Basemaps-R/index.html#tools-and-libraries-used",
+    "href": "projects/Basemaps-R/index.html#tools-and-libraries-used",
+    "title": "Beautiful Basemaps in R",
+    "section": "Tools and libraries used",
+    "text": "Tools and libraries used\n\nWrangling: tidyverse\nGeospatial: terra, sf, ggplot, ggspatial\nMapping: tmap, ggplot"
+  },
+  {
+    "objectID": "projects/Basemaps-R/index.html#code",
+    "href": "projects/Basemaps-R/index.html#code",
+    "title": "Beautiful Basemaps in R",
+    "section": "Code",
+    "text": "Code"
   }
 ]

@@ -10,7 +10,7 @@
 <meta name="dcterms.date" content="2021-07-25">
 <meta name="description" content="Visualizing where cruiseships spend time to estimate environmental impact from wastewater generated on board">
 
-<title>Mapping Cruiseship Location and Waste Generation –</title>
+<title>Mapping Cruiseship Waste Generation –</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -159,15 +159,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#project-overview" id="toc-project-overview" class="nav-link active" data-scroll-target="#project-overview">Project Overview</a></li>
+  <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview">Overview</a></li>
   <li><a href="#tools-and-libraries-used" id="toc-tools-and-libraries-used" class="nav-link" data-scroll-target="#tools-and-libraries-used">Tools and libraries used</a></li>
   <li><a href="#code" id="toc-code" class="nav-link" data-scroll-target="#code">Code</a>
   <ul class="collapse">
   <li><a href="#calculate-daily-n-generation-via-waste-per-ship" id="toc-calculate-daily-n-generation-via-waste-per-ship" class="nav-link" data-scroll-target="#calculate-daily-n-generation-via-waste-per-ship">Calculate Daily N generation, via waste, per ship</a></li>
   <li><a href="#visualize-what-we-have-so-far" id="toc-visualize-what-we-have-so-far" class="nav-link" data-scroll-target="#visualize-what-we-have-so-far">Visualize what we have so far</a></li>
-  <li><a href="#calculate-n-pulse-from-cruiseships-at-port" id="toc-calculate-n-pulse-from-cruiseships-at-port" class="nav-link" data-scroll-target="#calculate-n-pulse-from-cruiseships-at-port">Calculate N Pulse from Cruiseships at port</a></li>
   </ul></li>
-  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
+  <li><a href="#conclusions" id="toc-conclusions" class="nav-link" data-scroll-target="#conclusions">Conclusions</a>
+  <ul class="collapse">
+  <li><a href="#how-we-actually-analyzed-cruise-pollution-in-the-paper" id="toc-how-we-actually-analyzed-cruise-pollution-in-the-paper" class="nav-link" data-scroll-target="#how-we-actually-analyzed-cruise-pollution-in-the-paper">How we actually analyzed cruise pollution in the paper</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -176,7 +178,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Mapping Cruiseship Location and Waste Generation</h1>
+<h1 class="title">Mapping Cruiseship Waste Generation</h1>
   <div class="quarto-categories">
     <div class="quarto-category">Geospatial</div>
     <div class="quarto-category">Data visualization</div>
@@ -217,18 +219,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="project-overview" class="level2">
-<h2 class="anchored" data-anchor-id="project-overview">Project Overview</h2>
+<section id="overview" class="level2">
+<h2 class="anchored" data-anchor-id="overview">Overview</h2>
 <p>After scraping capacity information about cruiseships present in the Mesoamerican Reef Region in 2019 from Wikipedia, I estimated how much N the passengers on board were generating, and estimate where in space that N pollution might be having the most impact.</p>
-<p>A key assumption I relied on to do this:</p>
-<p><strong>Most cruise passengers were from a developed country</strong>: OR, were eating the equivalent to a developed country diet while on board. This allowed me to use the estimated daily protein intake for people in developed countries from the FAO. Nitrogen output per person is estimated using protein consumed. I averaged the daily protein consumption of all countries with a development index score of .80 or higher, which came out to <strong>100.27</strong> g per day.</p>
+<p>A key assumption I relied on to do this is that <strong>most cruise passengers were from a developed country</strong>: OR, were eating the equivalent to a developed country diet while on board. This allowed me to use the estimated daily protein intake for people in developed countries from the FAO. Nitrogen output per person is estimated using protein consumed. I averaged the daily protein consumption of all countries with a development index score of .80 or higher, which came out to <strong>100.27</strong> g per day.</p>
 <p><em>Thumbnail photo by Gabriel Santos on Unsplash</em></p>
 </section>
 <section id="tools-and-libraries-used" class="level2">
 <h2 class="anchored" data-anchor-id="tools-and-libraries-used">Tools and libraries used</h2>
 <ul>
 <li>Wrangling: <code>tidyverse</code>, <code>lubridate</code></li>
-<li>Geospatial: <code>terra</code>, <code>sf</code></li>
+<li>Geospatial: <code>terra</code>, <code>sf</code>, <code>ggplot</code>, <code>ggspatial</code></li>
 </ul>
 </section>
 <section id="code" class="level2">
@@ -274,35 +275,44 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="visualize-what-we-have-so-far" class="level3">
 <h3 class="anchored" data-anchor-id="visualize-what-we-have-so-far">Visualize what we have so far</h3>
-<p>Now we can visualize where in the MAR region might be most exposed to N pollution from cruiseships - if the ships were disposing of wastewater as soon as it was generated (in other words, it was continuously being released from the ship as it traveled). We know this is probably (hopefully) not the case, but cool to visualize it anyway using a pretty simple <code>ggplot</code>:</p>
+<p>Now we can visualize where in the MAR region might be most exposed to N pollution from cruiseships - if the ships were disposing of wastewater as soon as it was generated (in other words, it was continuously being released from the ship as it traveled). We know this is probably (hopefully) not the case, but cool to visualize it anyway using a pretty simple <code>ggplot</code>.</p>
 <div class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Static</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>N_raster <span class="ot">&lt;-</span> cruise_n_hours <span class="sc">%&gt;%</span> </span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(lon_bin,lat_bin) <span class="sc">%&gt;%</span> </span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">N_poll_g =</span> <span class="fu">sum</span>(N_per_pixel_g, <span class="at">na.rm =</span> T)</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="co">#filter(N_poll_g &gt; 10000)</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Make a color palette</span></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>N_pal <span class="ot">&lt;-</span> <span class="fu">colorRampPalette</span>(<span class="fu">c</span>(<span class="st">'#0C276C'</span>, <span class="st">'#3B9088'</span>, <span class="st">'#EEFF00'</span>, <span class="st">'#ffffff'</span>), </span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>                               <span class="at">interpolate =</span> <span class="st">'linear'</span>)</span>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># read in some helpful pacakges for basemaps</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggspatial)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rosm)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Static</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>N_raster <span class="ot">&lt;-</span> cruise_n_hours <span class="sc">%&gt;%</span> </span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(lon_bin,lat_bin) <span class="sc">%&gt;%</span> </span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">N_poll_g =</span> <span class="fu">sum</span>(N_per_pixel_g, <span class="at">na.rm =</span> T)</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  ) </span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot - note I loged transformed this to make hotspots pop out more</span></span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> N_raster <span class="sc">%&gt;%</span> </span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>()<span class="sc">+</span></span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_tile</span>(<span class="fu">aes</span>(<span class="at">x =</span> lon_bin, <span class="at">y =</span> lat_bin, <span class="at">fill =</span> <span class="fu">log</span>(N_poll_g)))<span class="sc">+</span></span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_gradientn</span>(</span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>        <span class="st">"N pollution"</span>,</span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>        <span class="at">na.value =</span> <span class="cn">NA</span>,</span>
-<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>        <span class="at">colours =</span> <span class="fu">N_pal</span>(<span class="dv">5</span>), <span class="co"># Linear Green</span></span>
-<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>       )</span>
-<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>p1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Make a color palette</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>N_pal <span class="ot">&lt;-</span> <span class="fu">colorRampPalette</span>(<span class="fu">c</span>(<span class="st">'#0C276C'</span>, <span class="st">'#3B9088'</span>, <span class="st">'#EEFF00'</span>, <span class="st">'#ffffff'</span>), </span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>                               <span class="at">interpolate =</span> <span class="st">'linear'</span>)</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot - note I loged transformed this to make hotspots pop out more</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot - note I loged transformed this to make hotspots pop out more</span></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> N_raster <span class="sc">%&gt;%</span> </span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>()<span class="sc">+</span></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_tile</span>(<span class="fu">aes</span>(<span class="at">x =</span> lon_bin, <span class="at">y =</span> lat_bin, <span class="at">fill =</span> <span class="fu">log</span>(N_poll_g)))<span class="sc">+</span></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_gradientn</span>(</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Log N pollution (grams)"</span>,</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>        <span class="at">na.value =</span> <span class="cn">NA</span>,</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>        <span class="at">colours =</span> <span class="fu">N_pal</span>(<span class="dv">5</span>), <span class="co"># Linear Green</span></span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>       )<span class="sc">+</span></span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Latitude"</span>, <span class="at">y =</span> <span class="st">"Longitude"</span>,</span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Estimated Cruiseship Nitrogen Pollution Intensity (2019)"</span>)<span class="sc">+</span></span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>p1 </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -312,17 +322,61 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<p>PS: Interested in learning how to make basemaps like this in ggplot? Check out my other post on making beautiful basemaps in R and how to easily incorporate them into reproducible workflows.</p>
+<p>This looks great - I can clean it up by reading in a pre-made basemap, something I do for most of my big geospatial projects, and layering the pollution layer on top.</p>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># clean it up to add to a basemap</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># source the basemap script</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="fu">here</span>(<span class="st">"projects/Mapping-cruisepaths/MAR_basemaps.R"</span>))</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co"># code the cruise layer separately</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>pollution_layer <span class="ot">&lt;-</span> <span class="fu">geom_tile</span>(</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> N_raster,</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(<span class="at">x =</span> lon_bin, <span class="at">y =</span> lat_bin, <span class="at">fill =</span> <span class="fu">log</span>(N_poll_g)),</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">alpha =</span> <span class="fl">0.8</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="co"># create color scheme and label</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>pollution_colors <span class="ot">&lt;-</span> <span class="fu">scale_fill_gradientn</span>(</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Log N pollution (grams)"</span>,</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">colours =</span> <span class="fu">N_pal</span>(<span class="dv">5</span>),</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">na.value =</span> <span class="cn">NA</span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a><span class="co"># overlay with basemap</span></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> MAR_basemap_zoom <span class="sc">+</span></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>  pollution_layer <span class="sc">+</span></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>  pollution_colors<span class="sc">+</span></span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Estimated Cruiseship Nitrogen Pollution Intensity (2019)"</span>)</span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>p</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>PS: See <a href="../Basemaps-R">this post</a> on how to create a streamlined mapping workflow with beautiful basemaps in R</p>
 </section>
-<section id="calculate-n-pulse-from-cruiseships-at-port" class="level3">
-<h3 class="anchored" data-anchor-id="calculate-n-pulse-from-cruiseships-at-port">Calculate N Pulse from Cruiseships at port</h3>
-<p>Rather than assume wastewater is constantly being released from the cruiseships as they move, I then estimated the impact assuming that <strong>most wastewater from the ship was disposed of while the ship at port</strong>. This is considered “best practice”, and what cruiseship companies generally <em>say</em> they do, but really it depends on if there is a wastewater processing facility large enough to receive the ships’ waste. For certain stops in the Caribbean this is unlikely to be true - the largest ships often can’t even dock on land due to the small size of the islands and atolls (unless of course they dredge away fragile reefs and mangroves to make it happen). They stay offshore and ferry the passengers over for a day on land. But for this analysis I gave them the benefit of the doubt and assumed that ships’ wastewater was properly disposed of while at port.</p>
 </section>
-</section>
-<section id="references" class="level2">
-<h2 class="anchored" data-anchor-id="references">References</h2>
+<section id="conclusions" class="level2">
+<h2 class="anchored" data-anchor-id="conclusions">Conclusions</h2>
+<p>If we assume most cruises h like the notorious 2013 poop cruise, and are continously discharging waste as the move through ocean space, this visualizing shows where the hotspots for that waste impact to reefs will be: the waters surrounding Cancún, Roatan, and the peninsula just below Quintana Roo.</p>
+<section id="how-we-actually-analyzed-cruise-pollution-in-the-paper" class="level3">
+<h3 class="anchored" data-anchor-id="how-we-actually-analyzed-cruise-pollution-in-the-paper">How we actually analyzed cruise pollution in the paper</h3>
+<p>Rather than assume wastewater is constantly being released from the cruiseships as they move, I then estimated the impact assuming that <strong>most wastewater from the ship was disposed of while the ship at port</strong>. This is considered “best practice”, and what cruiseship companies generally <em>say</em> they do, but really it depends on if there is a wastewater processing facility large enough to receive the ships’ waste. For certain stops in the Caribbean this is unlikely to be true - the largest ships often can’t even dock on land due to the small size of the islands and atolls (unless of course <a href="https://sanddollarsports.com/why-is-a-cruise-terminal-being-built-on-top-of-cozumels-coral-reefs/">they dredge away fragile reefs and mangroves to make it happen</a>). They stay offshore and ferry the passengers over for a day on land. But for this analysis I gave them the benefit of the doubt and assumed that ships’ wastewater was properly disposed of while at port.</p>
+<p>The final results from that analysis can be found in the paper we published in 2022.</p>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->

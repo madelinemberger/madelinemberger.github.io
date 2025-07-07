@@ -1,0 +1,42 @@
+---
+title: "Beautiful Basemaps in R"
+description: "Designing a streamlined workflow for publication-ready cartography in R"
+author: "Madeline Berger"
+date: 2025-07-06
+categories: [Geospatial, Data visualization, R, Cartography]
+#image: 
+status: completed
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    code-fold: show
+    page-layout: full
+    theme: cosmo
+---
+
+## Overview
+
+
+
+## Tools and libraries used
+
+-   Wrangling: `tidyverse`
+-   Geospatial: `terra`, `sf`, `ggplot`, `ggspatial`
+-   Mapping: `tmap`, `ggplot`
+
+## Code
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      message = FALSE,
+                      warning = FALSE)
+
+
+library(tidyverse)
+library(sf)
+library(tmap)
+library(raster)
+
+
+```

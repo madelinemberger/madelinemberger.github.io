@@ -2,6 +2,7 @@
   {
     "listing": "/posts_alt.html",
     "items": [
+      "/projects/Basemaps-R/index.html",
       "/projects/Mapbox-maps/index.html",
       "/projects/Mapping-cruisepaths/index.html",
       "/projects/Cruiseship-webscrape/index.html",
@@ -11,6 +12,7 @@
   {
     "listing": "/posts.html",
     "items": [
+      "/projects/Basemaps-R/index.html",
       "/projects/Mapbox-maps/index.html",
       "/projects/Mapping-cruisepaths/index.html",
       "/projects/Cruiseship-webscrape/index.html",

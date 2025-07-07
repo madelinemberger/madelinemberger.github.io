@@ -1,0 +1,15 @@
+{
+  "hash": "6c1b799c0447e36c121ebd01694fbf0b",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"Beautiful Basemaps in R\"\ndescription: \"Designing a streamlined workflow for publication-ready cartography in R\"\nauthor: \"Madeline Berger\"\ndate: 2025-07-06\ncategories: [Geospatial, Data visualization, R, Cartography]\n#image: \nstatus: completed\nformat:\n  html:\n    toc: true\n    toc-depth: 3\n    code-fold: show\n    page-layout: full\n    theme: cosmo\n---\n\n## Overview\n\n\n\n## Tools and libraries used\n\n-   Wrangling: `tidyverse`\n-   Geospatial: `terra`, `sf`, `ggplot`, `ggspatial`\n-   Mapping: `tmap`, `ggplot`\n\n## Code\n\n\n",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}
