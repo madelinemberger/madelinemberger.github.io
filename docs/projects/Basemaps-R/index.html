@@ -23,6 +23,41 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -124,9 +159,16 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview">Overview</a></li>
+  <li><a href="#creating-a-cartography-workflow" id="toc-creating-a-cartography-workflow" class="nav-link active" data-scroll-target="#creating-a-cartography-workflow">Creating a cartography workflow</a></li>
   <li><a href="#tools-and-libraries-used" id="toc-tools-and-libraries-used" class="nav-link" data-scroll-target="#tools-and-libraries-used">Tools and libraries used</a></li>
-  <li><a href="#code" id="toc-code" class="nav-link" data-scroll-target="#code">Code</a></li>
+  <li><a href="#code" id="toc-code" class="nav-link" data-scroll-target="#code">Code</a>
+  <ul class="collapse">
+  <li><a href="#elegant-3d-basemaps-using-ggplot" id="toc-elegant-3d-basemaps-using-ggplot" class="nav-link" data-scroll-target="#elegant-3d-basemaps-using-ggplot">Elegant 3D Basemaps using <code>ggplot</code></a></li>
+  <li><a href="#elegant-3d-basemaps-using-tmap" id="toc-elegant-3d-basemaps-using-tmap" class="nav-link" data-scroll-target="#elegant-3d-basemaps-using-tmap">Elegant 3D Basemaps using <code>tmap</code></a></li>
+  <li><a href="#adding-inset-maps-and-other-annotations-in-tmap" id="toc-adding-inset-maps-and-other-annotations-in-tmap" class="nav-link" data-scroll-target="#adding-inset-maps-and-other-annotations-in-tmap">Adding inset maps and other annotations in <code>tmap</code></a></li>
+  <li><a href="#other-basemap-resources" id="toc-other-basemap-resources" class="nav-link" data-scroll-target="#other-basemap-resources">Other basemap resources</a></li>
+  </ul></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   </ul>
 </nav>
     </div>
@@ -175,8 +217,12 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="overview" class="level2">
-<h2 class="anchored" data-anchor-id="overview">Overview</h2>
+<section id="creating-a-cartography-workflow" class="level2">
+<h2 class="anchored" data-anchor-id="creating-a-cartography-workflow">Creating a cartography workflow</h2>
+<p>Having spent my entire data science career thus far mainly using open-source tools, I am forever looking for ways to prove that anything you can do in ESRI (ArcPro) you can do in R or Python. One big challenge in this area cartography - generally speaking, cartography is much easier in a point-and-click interface with built in basemaps and easy to manipulate layouts.</p>
+<p>However, that doesn’t mean you cannot use some simple organizational tricks to build a clean, flexible workflow in R to make publication-ready maps in R. While they may not be QUITE as customizable as using an ArcMap layout, <code>ggplot</code> and <code>tmap</code> have an extraordinary array of options to customize maps. And even better, working in a scripting environment makes it super easy to standardize a mapping aesthetic across all figures, and therefore across all collaborators, a win for open and reproducible science.</p>
+<p>The trick is to create a separate R script with your basemap code, so that you can source it in any other script and have a ready-to-go basemap on which you can layer on other data. I usually organize my spatial code repositories like so:</p>
+<p>Below I’ll create my go-to basemap for some of my work based in Hawai’i. The original 3D grey design is the brain child of my colleague Joey Lecky at NOAA. I’ll show how I recreated it using <code>ggplot</code> and <code>tmap</code>. I’ll also show how you can add inset maps with AOI footprints to finalize figures in <code>tmap</code></p>
 </section>
 <section id="tools-and-libraries-used" class="level2">
 <h2 class="anchored" data-anchor-id="tools-and-libraries-used">Tools and libraries used</h2>
@@ -188,6 +234,225 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="code" class="level2">
 <h2 class="anchored" data-anchor-id="code">Code</h2>
+<section id="elegant-3d-basemaps-using-ggplot" class="level3">
+<h3 class="anchored" data-anchor-id="elegant-3d-basemaps-using-ggplot">Elegant 3D Basemaps using <code>ggplot</code></h3>
+<p>This map has just two layers: terrain from a digital elevation model (DEM) and outlines. I find that for my work, which is mostly focused on displaying data in near shore coast area, visualizing the land areas in a simple way is most effective.</p>
+<p><strong>Data Prep</strong></p>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># read in dems and convert to data frames</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>hi_dem <span class="ot">&lt;-</span> <span class="fu">rast</span>(<span class="fu">file.path</span>(basemap_dir,<span class="st">"data/dem_hi_smaller.tif"</span>))</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>oahu_dem <span class="ot">&lt;-</span> <span class="fu">rast</span>(<span class="fu">file.path</span>(basemap_dir,<span class="st">"data/dem_oahu_smaller.tif"</span>))</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>mauinui_dem <span class="ot">&lt;-</span> <span class="fu">rast</span>(<span class="fu">file.path</span>(basemap_dir,<span class="st">"data/dem_mauinui_smaller.tif"</span>))</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>kauai_dem <span class="ot">&lt;-</span> <span class="fu">rast</span>(<span class="fu">file.path</span>(basemap_dir,<span class="st">"data/dem_kauai_smaller.tif"</span>))</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>hi_dem_df <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">as.data.frame</span>(hi_dem, <span class="at">xy =</span> <span class="cn">TRUE</span>,<span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(hi_dem_df)[<span class="dv">3</span>] <span class="ot">&lt;-</span> <span class="st">"elevation"</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>oahu_dem_df <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">as.data.frame</span>(oahu_dem, <span class="at">xy =</span> <span class="cn">TRUE</span>,<span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(oahu_dem_df)[<span class="dv">3</span>] <span class="ot">&lt;-</span> <span class="st">"elevation"</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>mauinui_dem_df <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">as.data.frame</span>(mauinui_dem, <span class="at">xy =</span> <span class="cn">TRUE</span>,<span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(mauinui_dem_df)[<span class="dv">3</span>] <span class="ot">&lt;-</span> <span class="st">"elevation"</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>kauai_dem_df <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">as.data.frame</span>(kauai_dem, <span class="at">xy =</span> <span class="cn">TRUE</span>,<span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(kauai_dem_df)[<span class="dv">3</span>] <span class="ot">&lt;-</span> <span class="st">"elevation"</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="co"># read in coastlines and separate by islands</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>coastlines <span class="ot">&lt;-</span> <span class="fu">read_sf</span>(<span class="fu">file.path</span>(basemap_dir,<span class="st">"data/shoreline_CorrectedInlets_2022-23.shp"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_transform</span>(., <span class="at">crs =</span> <span class="fu">crs</span>(hi_dem))</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>hi_coast <span class="ot">&lt;-</span> <span class="fu">filter</span>(coastlines, Island <span class="sc">==</span> <span class="st">"Hawaii"</span>)</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>oahu_coast <span class="ot">&lt;-</span> <span class="fu">filter</span>(coastlines, Island <span class="sc">==</span> <span class="st">"Oahu"</span>)</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>mauinui_coast <span class="ot">&lt;-</span> <span class="fu">filter</span>(coastlines, Island <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Maui"</span>,<span class="st">"Molokai"</span>,<span class="st">"Lanai"</span>,<span class="st">"Kahoolawe"</span>))</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>kauai_coast <span class="ot">&lt;-</span> <span class="fu">filter</span>(coastlines, Island <span class="sc">==</span> <span class="st">"Kauai"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p><strong>Build the baseplot</strong></p>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>oahu_with_dem <span class="ot">&lt;-</span> <span class="fu">ggplot</span>()<span class="sc">+</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">data =</span> oahu_coast, <span class="at">fill =</span> <span class="st">"white"</span>, <span class="at">color =</span> <span class="st">"#696969"</span>, <span class="at">size =</span> <span class="fl">0.3</span>)<span class="sc">+</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_raster</span>(<span class="at">data =</span> oahu_dem_df, <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y, <span class="at">fill =</span> elevation), <span class="at">alpha =</span> <span class="fl">0.7</span>)<span class="sc">+</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_gradientn</span>(<span class="at">colours=</span><span class="fu">c</span>(<span class="st">"#454545"</span>, <span class="st">"#e9e9e9"</span>))<span class="sc">+</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">fill =</span> <span class="st">"none"</span>)<span class="sc">+</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_sf</span>()<span class="sc">+</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()<span class="sc">+</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>))<span class="sc">+</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">panel.grid.major =</span> <span class="fu">element_blank</span>(), <span class="at">panel.grid.minor =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>        <span class="at">panel.background =</span> <span class="fu">element_blank</span>())<span class="sc">+</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_blank</span>(), <span class="at">axis.text.y =</span> <span class="fu">element_blank</span>())<span class="sc">+</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.title.x =</span> <span class="fu">element_blank</span>(), <span class="at">axis.title.y =</span> <span class="fu">element_blank</span>())<span class="sc">+</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.ticks =</span> <span class="fu">element_blank</span>())</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>oahu_with_dem</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>We can add on the data we want to display, for example, this layer depicting near shore areas we estimate are most impacted by runoff from injection wells (a method for disposing of grey water and sewage) on Oahu:</p>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># read in sewage layer and make sure its the right crs</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>oahu_iw <span class="ot">&lt;-</span> <span class="fu">rast</span>(<span class="fu">file.path</span>(basemap_dir,<span class="st">"data/Oahu_IW_eff.tif"</span>))</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="fu">crs</span>(oahu_iw) <span class="sc">==</span> <span class="fu">crs</span>(oahu_dem) <span class="co"># true </span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] TRUE</code></pre>
+</div>
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># need to convert sewage layer to xy</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>oahu_iw_df <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">as.data.frame</span>(oahu_iw, <span class="at">xy =</span> <span class="cn">TRUE</span>,<span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(oahu_iw_df)[<span class="dv">3</span>] <span class="ot">&lt;-</span> <span class="st">"pollution"</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>oahu_IW_gg <span class="ot">&lt;-</span> oahu_with_dem<span class="sc">+</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_raster</span>(<span class="at">data =</span> oahu_iw_df, <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y, <span class="at">fill =</span> pollution))<span class="sc">+</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_gradientn</span>(<span class="at">colors=</span><span class="fu">c</span>(<span class="st">"lightblue"</span>, <span class="st">"chocolate"</span>))</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>oahu_IW_gg</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>This doesn’t look great - unfortunately ggplot has a hard time plotting two layers with two different color scales so the more recent one has written over the 3D basemap. The best solution I’ve found is to use <a href="https://github.com/eliocamp/ggnewscale"><code>ggnewscale</code></a>, a cool add-on package.</p>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggnewscale)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>oahu_IW_gg <span class="ot">&lt;-</span> oahu_with_dem<span class="sc">+</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">new_scale_fill</span>()<span class="sc">+</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_raster</span>(<span class="at">data =</span> oahu_iw_df, <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y, <span class="at">fill =</span> <span class="fu">log</span>(pollution)))<span class="sc">+</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_gradientn</span>(<span class="at">colors=</span><span class="fu">c</span>(<span class="st">"lightblue"</span>, <span class="st">"chocolate"</span>))</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>oahu_IW_gg</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="elegant-3d-basemaps-using-tmap" class="level3">
+<h3 class="anchored" data-anchor-id="elegant-3d-basemaps-using-tmap">Elegant 3D Basemaps using <code>tmap</code></h3>
+<p><code>tmap</code> has fairly different syntax than ggplot, but I find it very intuitive and closer to how you might think about it in GIS software - you add a layer using <code>tm_shape</code>, and then add the layer style using <code>tm_polygons</code> or <code>tm_raster</code>, depending on if you are working with a raster or polygon. Unlike <code>ggplot</code>, we don’t have to convert rasters to a xy dataframe:</p>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>mauinui_with_dem <span class="ot">&lt;-</span> tmap<span class="sc">::</span><span class="fu">tm_shape</span>(mauinui_coast)<span class="sc">+</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>(</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">col =</span> <span class="st">"white"</span>,</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">border.col =</span> <span class="st">"#696969"</span>,</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">border.lwd =</span> <span class="fl">0.3</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  )<span class="sc">+</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_shape</span>(mauinui_dem)<span class="sc">+</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_raster</span>(</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">alpha =</span> <span class="fl">0.7</span>,</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">style =</span> <span class="st">"cont"</span> <span class="co"># continous stretch</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>mauinui_with_dem</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>We can see here the default raster colors are orange / brown, and that <code>tmap</code> is treating the dem as categorial. We need to specify a grey scale palette and a continous stertch. If you are used to ggplot for visualization color scales in <code>tmap</code> can be a bit less intuitive but its still very easy. I find it easiest to define a palette outside the map code, and then reference it.</p>
+<p>You can also use a built in palette from tmap by running tmaptools::palette_explorer() in your console, which will open a cool shiny app that helps you build a palette that best fits your data (note, you do need to install <code>shinyjs</code>).</p>
+<p>Lastly, I added some layout specifications at the bottom to remove the legend and the frame. I find tmap much easier to add or take away small details like these, which is why I tend to use it for publication-ready maps.</p>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>dem_pal <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"#454545"</span>, <span class="st">"#e9e9e9"</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>mauinui_with_dem <span class="ot">&lt;-</span> tmap<span class="sc">::</span><span class="fu">tm_shape</span>(mauinui_coast)<span class="sc">+</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>(</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">col =</span> <span class="st">"white"</span>,</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">border.col =</span> <span class="st">"#696969"</span>,</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">border.lwd =</span> <span class="fl">0.3</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>  )<span class="sc">+</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_shape</span>(mauinui_dem)<span class="sc">+</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_raster</span>(</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">alpha =</span> <span class="fl">0.7</span>,</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>    <span class="co">#palette = "Greys" # built in tmap palette</span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">palette =</span> dem_pal,</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">style =</span> <span class="st">"cont"</span> <span class="co"># smooths it out a bit more</span></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>  )<span class="sc">+</span></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_layout</span>(</span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.show =</span> F, <span class="co"># remove legend</span></span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">frame =</span> F <span class="co"># remove frame</span></span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>mauinui_with_dem</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="adding-inset-maps-and-other-annotations-in-tmap" class="level3">
+<h3 class="anchored" data-anchor-id="adding-inset-maps-and-other-annotations-in-tmap">Adding inset maps and other annotations in <code>tmap</code></h3>
+</section>
+<section id="other-basemap-resources" class="level3">
+<h3 class="anchored" data-anchor-id="other-basemap-resources">Other basemap resources</h3>
+</section>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">References</h2>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">citation</span>(<span class="st">"ggnewscale"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>To cite package 'ggnewscale' in publications use:
+
+  Campitelli E (2025). _ggnewscale: Multiple Fill and Colour Scales in
+  'ggplot2'_. R package version 0.5.2,
+  &lt;https://CRAN.R-project.org/package=ggnewscale&gt;.
+
+A BibTeX entry for LaTeX users is
+
+  @Manual{,
+    title = {ggnewscale: Multiple Fill and Colour Scales in 'ggplot2'},
+    author = {Elio Campitelli},
+    year = {2025},
+    note = {R package version 0.5.2},
+    url = {https://CRAN.R-project.org/package=ggnewscale},
+  }</code></pre>
+</div>
+</div>
 
 
 </section>
