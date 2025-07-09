@@ -7,3 +7,4 @@ listing:
   categories: false # allows you to sort posts by assigned categories 
 ---
 
+This page contains bite-sized examples drawn from my professional projects as a marine spatial ecologist, as well as mini-side projects on topics that interest me more generally. 

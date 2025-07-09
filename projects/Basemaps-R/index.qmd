@@ -63,13 +63,10 @@ This map has just two layers: terrain from a digital elevation model (DEM) and o
 
 # read in dems and convert to data frames
 
-hi_dem <- rast(file.path(basemap_dir,"data/dem_hi_smaller.tif"))
+#hi_dem <- rast(file.path(basemap_dir,"data/dem_hi_smaller.tif"))
 oahu_dem <- rast(file.path(basemap_dir,"data/dem_oahu_smaller.tif"))
 mauinui_dem <- rast(file.path(basemap_dir,"data/dem_mauinui_smaller.tif"))
-kauai_dem <- rast(file.path(basemap_dir,"data/dem_kauai_smaller.tif"))
-
-hi_dem_df <- terra::as.data.frame(hi_dem, xy = TRUE,na.rm = TRUE)
-colnames(hi_dem_df)[3] <- "elevation"
+#kauai_dem <- rast(file.path(basemap_dir,"data/dem_kauai_smaller.tif"))
 
 oahu_dem_df <- terra::as.data.frame(oahu_dem, xy = TRUE,na.rm = TRUE)
 colnames(oahu_dem_df)[3] <- "elevation"
@@ -77,18 +74,16 @@ colnames(oahu_dem_df)[3] <- "elevation"
 mauinui_dem_df <- terra::as.data.frame(mauinui_dem, xy = TRUE,na.rm = TRUE)
 colnames(mauinui_dem_df)[3] <- "elevation"
 
-kauai_dem_df <- terra::as.data.frame(kauai_dem, xy = TRUE,na.rm = TRUE)
-colnames(kauai_dem_df)[3] <- "elevation"
 
 # read in coastlines and separate by islands
 
 coastlines <- read_sf(file.path(basemap_dir,"data/shoreline_CorrectedInlets_2022-23.shp")) %>% 
-  st_transform(., crs = crs(hi_dem))
+  st_transform(., crs = crs(oahu_dem))
 
-hi_coast <- filter(coastlines, Island == "Hawaii")
+
 oahu_coast <- filter(coastlines, Island == "Oahu")
 mauinui_coast <- filter(coastlines, Island %in% c("Maui","Molokai","Lanai","Kahoolawe"))
-kauai_coast <- filter(coastlines, Island == "Kauai")
+
 
 
 
@@ -108,7 +103,8 @@ oahu_with_dem <- ggplot()+
   theme_bw()+
   theme(plot.title = element_text(hjust = 0.5))+
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
-        panel.background = element_blank())+
+        panel.background = element_blank(),
+        panel.border = element_blank())+
   theme(axis.text.x = element_blank(), axis.text.y = element_blank())+
   theme(axis.title.x = element_blank(), axis.title.y = element_blank())+
   theme(axis.ticks = element_blank())
@@ -124,7 +120,9 @@ We can add on the data we want to display, for example, this layer depicting nea
 
 # read in sewage layer and make sure its the right crs
 
-oahu_iw <- rast(file.path(basemap_dir,"data/Oahu_IW_eff.tif"))
+oahu_iw <- rast(file.path(basemap_dir,"data/Oahu_OSDS_2010_2014_eff.tif"))
+
+oahu_iw[oahu_iw == 0] <- NA
 
 crs(oahu_iw) == crs(oahu_dem) # true 
 
@@ -142,26 +140,26 @@ oahu_IW_gg
 
 ```
 
-This doesn't look great - unfortunately ggplot has a hard time plotting two layers with two different color scales so the more recent one has written over the 3D basemap. The best solution I've found is to use [`ggnewscale`](https://github.com/eliocamp/ggnewscale), a cool add-on package.
+This doesn't look great - unfortunately ggplot has a hard time plotting two layers with two different color scales so the more recent one has written over the 3D basemap. The best solution I've found is to use [`ggnewscale`](https://github.com/eliocamp/ggnewscale), a cool add-on package by Elio Campitelli. 
 
 ```{r}
 
 library(ggnewscale)
 
 oahu_IW_gg <- oahu_with_dem+
-  new_scale_fill()+
-  geom_raster(data = oahu_iw_df, aes(x = x, y = y, fill = log(pollution)))+
-  scale_fill_gradientn(colors=c("lightblue", "chocolate"))
+  new_scale_fill()+ # we have 2 fills, the basemap gradient and the pollution graident
+  geom_raster(data = oahu_iw_df, aes(x = x, y = y, fill = pollution))+
+  scale_fill_gradientn(colors=c("lightblue", "chocolate"))+
+  labs(fill = "Wastewater Pollution (kg p day)")
 
 oahu_IW_gg
 
 ```
 
 
-
 ### Elegant 3D Basemaps using `tmap`
 
-`tmap` has fairly different syntax than ggplot, but I find it very intuitive and closer to how you might think about it in GIS software - you add a layer using `tm_shape`, and then add the layer style using `tm_polygons` or `tm_raster`, depending on if you are working with a raster or polygon. Unlike `ggplot`, we don't have to convert rasters to a xy dataframe:
+`tmap` has fairly different syntax than ggplot, but I find it very intuitive and closer to how you might think about it in GIS software - you add a layer using `tm_shape`, and then add the layer *style* using `tm_polygons` or `tm_raster`, depending on if you are working with a raster or polygon. Unlike `ggplot`, we don't have to convert rasters to a xy dataframe:
 
 ```{r}
 
@@ -184,9 +182,9 @@ mauinui_with_dem
 
 We can see here the default raster colors are orange / brown, and that `tmap` is treating the dem as categorial. We need to specify a grey scale palette and a continous stertch. If you are used to ggplot for visualization color scales in `tmap` can be a bit less intuitive but its still very easy. I find it easiest to define a palette outside the map code, and then reference it.
 
-You can also use a built in palette from tmap by running tmaptools::palette_explorer() in your console, which will open a cool shiny app that helps you build a palette that best fits your data (note, you do need to install `shinyjs`).
+You can also use a built in palette from tmap by running tmaptools::palette_explorer() in your console, which will open a cool shiny app that helps you build a palette that best fits your data (requires `shinyjs` to be installed).
 
-Lastly, I added some layout specifications at the bottom to remove the legend and the frame. I find tmap much easier to add or take away small details like these, which is why I tend to use it for publication-ready maps. 
+Lastly, I added some layout specifications at the bottom to remove the legend and the frame, add a north arrow, and scale bar. I find `tmap` much easier to add or take away these small graphic details, which is why I tend to use it for publication-ready maps. 
 
 
 ```{r}
@@ -202,14 +200,20 @@ mauinui_with_dem <- tmap::tm_shape(mauinui_coast)+
   tm_shape(mauinui_dem)+
   tm_raster(
     alpha = 0.7,
-    #palette = "Greys" # built in tmap palette
+    #palette = "Greys" # built in tmap palette as an option
     palette = dem_pal,
     style = "cont" # smooths it out a bit more
   )+
   tm_layout(
     legend.show = F, # remove legend
     frame = F # remove frame
-  )
+  )+
+  tm_compass(
+    type = "arrow",
+    position = c("right","bottom") # the order here matters
+  )+
+  tm_scale_bar(breaks = c(0,5,10),
+               position = c("left","bottom"))
 
 mauinui_with_dem
 
@@ -218,14 +222,45 @@ mauinui_with_dem
 
 ### Adding inset maps and other annotations in `tmap`
 
+Another key element to a publication ready map is an inset map with a footprint of your study area at a zoomed-out scale, helping the viewer to see where this area is in relation to recognizable geographic features (i.e. a country or continent border). 
+
+You can create one pretty easily in `tmap` and using the `rnaturalearth` package to get generic outlines of countries or continents. They key is to set up the bounding boxes for both the extent the map should show, and the annotations. I tend to use an online bounding box finder to get exact coordinates, because that allows me to really customize the extents to what looks good visually rather than relying on the extent of the data sets. 
+
+
+```{r}
+
+library(rnaturalearth)
+
+# build bounding boxes - one for the study area footprint, one to crop the rnatural earth data
+mhi_box <- st_bbox(c(xmin = -89.0595, xmax = -88.0303,
+                         ymin = 15.5737, ymax = 16.5728), 
+                       crs = st_crs(26904)) %>% 
+  st_as_sfc()
+
+mauinui_box <- st_bbox(c(xmin = -160.962195, xmax = -152.622821,
+                         ymin = 18.649417, ymax = 22.728611), 
+                       crs = st_crs(4326)) %>% 
+  st_as_sfc()
+
+# get outlines from rnatural earth
+
+hi_outline <- rnaturalearth::ne_states(country = "united states of america") %>% 
+  filter(name == "Hawaii") # this includes the northerwester hawaiian islands
+
+
+# create the inset map with tmap
+
+
+
+# 
+
+```
+
 
 ### Other basemap resources
 
 
 ## References
 
-```{r}
-citation("ggnewscale")
-
-```
-
+1. Wedding & Lecky et al 2018
+2. Campitelli E (2025). _ggnewscale: Multiple Fill and Colour Scales in 'ggplot2'_. doi:10.5281/zenodo.2543762 <https://doi.org/10.5281/zenodo.2543762>, R package version 0.5.2.
