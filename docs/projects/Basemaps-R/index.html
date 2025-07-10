@@ -165,7 +165,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul class="collapse">
   <li><a href="#elegant-3d-basemaps-using-ggplot" id="toc-elegant-3d-basemaps-using-ggplot" class="nav-link" data-scroll-target="#elegant-3d-basemaps-using-ggplot">Elegant 3D Basemaps using <code>ggplot</code></a></li>
   <li><a href="#elegant-3d-basemaps-using-tmap" id="toc-elegant-3d-basemaps-using-tmap" class="nav-link" data-scroll-target="#elegant-3d-basemaps-using-tmap">Elegant 3D Basemaps using <code>tmap</code></a></li>
-  <li><a href="#adding-inset-maps-and-other-annotations-in-tmap" id="toc-adding-inset-maps-and-other-annotations-in-tmap" class="nav-link" data-scroll-target="#adding-inset-maps-and-other-annotations-in-tmap">Adding inset maps and other annotations in <code>tmap</code></a></li>
+  <li><a href="#adding-inset-locator-maps-in-tmap" id="toc-adding-inset-locator-maps-in-tmap" class="nav-link" data-scroll-target="#adding-inset-locator-maps-in-tmap">Adding inset locator maps in <code>tmap</code></a></li>
   <li><a href="#other-basemap-resources" id="toc-other-basemap-resources" class="nav-link" data-scroll-target="#other-basemap-resources">Other basemap resources</a></li>
   </ul></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
@@ -221,15 +221,29 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="creating-a-cartography-workflow">Creating a cartography workflow</h2>
 <p>Having spent my entire data science career thus far mainly using open-source tools, I am forever looking for ways to prove that anything you can do in ESRI (ArcPro) you can do in R or Python. One big challenge in this area cartography - generally speaking, cartography is much easier in a point-and-click interface with built in basemaps and easy to manipulate layouts.</p>
 <p>However, that doesn’t mean you cannot use some simple organizational tricks to build a clean, flexible workflow in R to make publication-ready maps in R. While they may not be QUITE as customizable as using an ArcMap layout, <code>ggplot</code> and <code>tmap</code> have an extraordinary array of options to customize maps. And even better, working in a scripting environment makes it super easy to standardize a mapping aesthetic across all figures, and therefore across all collaborators, a win for open and reproducible science.</p>
-<p>The trick is to create a separate R script with your basemap code, so that you can source it in any other script and have a ready-to-go basemap on which you can layer on other data. I usually organize my spatial code repositories like so:</p>
+<p>The trick is to create a separate R script with your basemap code, so that you can source it in any other script and have a ready-to-go basemap on which you can layer on other data. That script lives in a <em>workflow</em> folder, where I store other scripts with objects used throughout the project. This really helps with staying organized, standardizing across analyses, and transparency. I usually organize my spatial code repositories like this.</p>
+<blockquote class="blockquote">
+<p>Root -</p>
+<ul>
+<li><p>Workflow -</p>
+<ul>
+<li><p>filepaths.R</p></li>
+<li><p>basemaps.R</p></li>
+<li><p>(other scripts that contain parameters, libraries, custom functions or objects you frequently use in multiple scripts for the project)</p></li>
+</ul></li>
+<li><p>Analysis_Scripts</p></li>
+<li><p>Figures</p></li>
+<li><p>Data</p></li>
+</ul>
+</blockquote>
 <p>Below I’ll create my go-to basemap for some of my work based in Hawai’i. The original 3D grey design is the brain child of my colleague Joey Lecky at NOAA. I’ll show how I recreated it using <code>ggplot</code> and <code>tmap</code>. I’ll also show how you can add inset maps with AOI footprints to finalize figures in <code>tmap</code></p>
 </section>
 <section id="tools-and-libraries-used" class="level2">
 <h2 class="anchored" data-anchor-id="tools-and-libraries-used">Tools and libraries used</h2>
 <ul>
-<li>Wrangling: <code>tidyverse</code></li>
-<li>Geospatial: <code>terra</code>, <code>sf</code>, <code>ggplot</code>, <code>ggspatial</code></li>
-<li>Mapping: <code>tmap</code>, <code>ggplot</code></li>
+<li>Wrangling: <code>tidyverse</code>,<code>here</code></li>
+<li>Geospatial: <code>terra</code>, <code>sf</code>, <code>ggplot</code>, <code>ggspatial</code>, <code>rnaturalearth</code></li>
+<li>Mapping: <code>tmap</code>, <code>ggplot</code>, <code>ggnewscale</code>,<code>grid</code></li>
 </ul>
 </section>
 <section id="code" class="level2">
@@ -295,7 +309,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<p>We can add on the data we want to display, for example, this layer depicting near shore areas we estimate are most impacted by runoff from injection wells (a method for disposing of grey water and sewage) on Oahu:</p>
+<p>We can add on the data we want to display, for example, this layer depicting near shore areas we estimate are most impacted by runoff from septic sewage on Oahu:</p>
 <div class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
@@ -356,7 +370,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="elegant-3d-basemaps-using-tmap" class="level3">
 <h3 class="anchored" data-anchor-id="elegant-3d-basemaps-using-tmap">Elegant 3D Basemaps using <code>tmap</code></h3>
-<p><code>tmap</code> has fairly different syntax than ggplot, but I find it very intuitive and closer to how you might think about it in GIS software - you add a layer using <code>tm_shape</code>, and then add the layer <em>style</em> using <code>tm_polygons</code> or <code>tm_raster</code>, depending on if you are working with a raster or polygon. Unlike <code>ggplot</code>, we don’t have to convert rasters to a xy dataframe:</p>
+<p><code>tmap</code> has pretty different syntax than ggplot, yet I find it very intuitive and closer to how you might think about it in GIS software - you add a layer using <code>tm_shape</code>, and then add the layer <em>style</em> using <code>tm_polygons</code> or <code>tm_raster</code>, depending on if you are working with a raster or polygon. Unlike <code>ggplot</code>, we don’t have to convert rasters to a xy data frame:</p>
 <div class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
@@ -382,9 +396,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<p>We can see here the default raster colors are orange / brown, and that <code>tmap</code> is treating the dem as categorial. We need to specify a grey scale palette and a continous stertch. If you are used to ggplot for visualization color scales in <code>tmap</code> can be a bit less intuitive but its still very easy. I find it easiest to define a palette outside the map code, and then reference it.</p>
+<p>We can see here the default raster colors are orange / brown. We need to specify a grey scale palette and a continuous stretch. If you are used to ggplot for visualization color scales in <code>tmap</code> can be a bit less intuitive but its still very easy. I find it easiest to define a palette outside the map code, and then reference it.</p>
 <p>You can also use a built in palette from tmap by running tmaptools::palette_explorer() in your console, which will open a cool shiny app that helps you build a palette that best fits your data (requires <code>shinyjs</code> to be installed).</p>
-<p>Lastly, I added some layout specifications at the bottom to remove the legend and the frame, add a north arrow, and scale bar. I find <code>tmap</code> much easier to add or take away these small graphic details, which is why I tend to use it for publication-ready maps.</p>
+<p>Lastly, I added some layout specifications at the bottom to remove the legend and the frame, add a north arrow, and scale bar. I find <code>tmap</code> makes it much easier to add or take away these small graphic details, which is why I tend to use it for publication-ready maps.</p>
 <div class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
@@ -425,37 +439,123 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </section>
-<section id="adding-inset-maps-and-other-annotations-in-tmap" class="level3">
-<h3 class="anchored" data-anchor-id="adding-inset-maps-and-other-annotations-in-tmap">Adding inset maps and other annotations in <code>tmap</code></h3>
-<p>Another key element to a publication ready map is an inset map with a footprint of your study area at a zoomed-out scale, helping the viewer to see where this area is in relation to recognizable geographic features (i.e.&nbsp;a country or continent border).</p>
-<p>You can create one pretty easily in <code>tmap</code> and using the <code>rnaturalearth</code> package to get generic outlines of countries or continents. They key is to set up the bounding boxes for both the extent the map should show, and the annotations. I tend to use an online bounding box finder to get exact coordinates, because that allows me to really customize the extents to what looks good visually rather than relying on the extent of the data sets.</p>
+<section id="adding-inset-locator-maps-in-tmap" class="level3">
+<h3 class="anchored" data-anchor-id="adding-inset-locator-maps-in-tmap">Adding inset locator maps in <code>tmap</code></h3>
+<p>Another key element to a publication ready map is an inset map with a footprint of your study area at a zoomed-out scale, helping the viewer to locate where this area is in relation to recognizable geographic features (i.e.&nbsp;a country or continent border).</p>
+<p>You can create one pretty easily in <code>tmap</code> and using the <code>rnaturalearth</code> package to get generic outlines of countries or continents. They key is to set up the bounding boxes for both the extent the map should show, and the annotations. I tend to use an <a href="http://bboxfinder.com/#18.649417,-160.962195,22.728611,-154.480262">online bounding box finder</a> to get exact coordinates, because that allows me to customize the extents to what looks good visually rather than relying on the extent of the data sets. The one I’ve linked here is a little janky, but I like it because it clearly provides an xmin, xmax, etc. which is what I find easiest to plug into <code>st_bbox</code>.</p>
 <div class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rnaturalearth)</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co"># build bounding boxes - one for the study area footprint, one to crop the rnatural earth data</span></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>mhi_box <span class="ot">&lt;-</span> <span class="fu">st_bbox</span>(<span class="fu">c</span>(<span class="at">xmin =</span> <span class="sc">-</span><span class="fl">89.0595</span>, <span class="at">xmax =</span> <span class="sc">-</span><span class="fl">88.0303</span>,</span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>                         <span class="at">ymin =</span> <span class="fl">15.5737</span>, <span class="at">ymax =</span> <span class="fl">16.5728</span>), </span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>                       <span class="at">crs =</span> <span class="fu">st_crs</span>(<span class="dv">26904</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>mauinui_box <span class="ot">&lt;-</span> <span class="fu">st_bbox</span>(<span class="fu">c</span>(<span class="at">xmin =</span> <span class="sc">-</span><span class="fl">157.532959</span>, <span class="at">xmax =</span> <span class="sc">-</span><span class="fl">155.857544</span>,</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>                         <span class="at">ymin =</span> <span class="fl">20.414143</span>, <span class="at">ymax =</span> <span class="fl">21.343107</span>), </span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>                       <span class="at">crs =</span> <span class="fu">st_crs</span>(<span class="dv">4326</span>)) <span class="sc">%&gt;%</span> </span>
 <span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_as_sfc</span>()</span>
 <span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>mauinui_box <span class="ot">&lt;-</span> <span class="fu">st_bbox</span>(<span class="fu">c</span>(<span class="at">xmin =</span> <span class="sc">-</span><span class="fl">160.962195</span>, <span class="at">xmax =</span> <span class="sc">-</span><span class="fl">152.622821</span>,</span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>                         <span class="at">ymin =</span> <span class="fl">18.649417</span>, <span class="at">ymax =</span> <span class="fl">22.728611</span>), </span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>                       <span class="at">crs =</span> <span class="fu">st_crs</span>(<span class="dv">4326</span>)) <span class="sc">%&gt;%</span> </span>
-<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_as_sfc</span>()</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a><span class="co"># get outlines from rnatural earth</span></span>
 <span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a><span class="co"># get outlines from rnatural earth</span></span>
-<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>hi_outline <span class="ot">&lt;-</span> rnaturalearth<span class="sc">::</span><span class="fu">ne_states</span>(<span class="at">country =</span> <span class="st">"united states of america"</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(name <span class="sc">==</span> <span class="st">"Hawaii"</span>) <span class="co"># this includes the northerwester hawaiian islands</span></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>hi_outline <span class="ot">&lt;-</span> rnaturalearth<span class="sc">::</span><span class="fu">ne_states</span>(<span class="at">country =</span> <span class="st">"united states of america"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(name <span class="sc">==</span> <span class="st">"Hawaii"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_transform</span>(<span class="at">crs =</span> <span class="fu">st_crs</span>(<span class="dv">4326</span>))</span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>  </span>
 <span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a><span class="co"># create the inset map with tmap</span></span>
-<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a><span class="co"># create the inset locator map with tmap</span></span>
 <span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>locator_tmap <span class="ot">&lt;-</span> <span class="fu">tm_shape</span>(hi_outline)<span class="sc">+</span></span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>()<span class="sc">+</span></span>
+<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_shape</span>(mauinui_box)<span class="sc">+</span></span>
+<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_borders</span>(</span>
+<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">lwd =</span> <span class="dv">1</span>,</span>
+<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">lty =</span> <span class="dv">2</span>,</span>
+<span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">col =</span> <span class="st">"red"</span></span>
+<span id="cb9-30"><a href="#cb9-30" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb9-31"><a href="#cb9-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-32"><a href="#cb9-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-33"><a href="#cb9-33" aria-hidden="true" tabindex="-1"></a>locator_tmap</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The Hawaii outline for <code>rnaturalearth</code> includes the Northwestern Islands, which are part of an amazing marine national monument and are uninhabited. What I love about <code>tmap</code> is that I don’t have to worry about cropping the shape itself, which depending on your data can be a bit of a hassle, and just add a short specification in our mapping code to zoom in to the right bounding extent:</p>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create bouding box for just the main hawaiian islands</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>mhi_box <span class="ot">&lt;-</span> <span class="fu">st_bbox</span>(<span class="fu">c</span>(<span class="at">xmin =</span> <span class="sc">-</span><span class="fl">160.762195</span>, <span class="at">xmax =</span> <span class="sc">-</span><span class="fl">154.622821</span>,</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>                         <span class="at">ymin =</span> <span class="fl">18.649417</span>, <span class="at">ymax =</span> <span class="fl">22.728611</span>), </span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>                       <span class="at">crs =</span> <span class="fu">st_crs</span>(<span class="dv">4326</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_as_sfc</span>()</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="co"># add to locator map </span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>locator_tmap <span class="ot">&lt;-</span> <span class="fu">tm_shape</span>(hi_outline, </span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>                         <span class="at">bbox =</span> mhi_box)<span class="sc">+</span> <span class="co"># all you have to add to "zoom in"</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>()<span class="sc">+</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_shape</span>(mauinui_box)<span class="sc">+</span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_borders</span>(</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">lwd =</span> <span class="dv">1</span>,</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">lty =</span> <span class="dv">2</span>,</span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">col =</span> <span class="st">"red"</span></span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>locator_tmap</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The last step is to put this all together into one map layout. There are multiple ways to do this, I find that using the <code>grid</code> package allows for the most detailed customization.</p>
+<p>The print() line of code is adding your inset map. The viewport numbers can be thought of as coordinates on the frame, with the bottom as x axis and the left side as the y axis. Width and height define how big or small the inset map is. I usually just mess around with the numbers but you can make this process more automated by calculating aspect ratios - there is a lot to explore in the <code>viewport</code> function.</p>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(grid)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>mauinui_with_dem</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(locator_tmap,</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">vp =</span> <span class="fu">viewport</span>(<span class="fl">0.87</span>, <span class="fl">0.82</span>, <span class="at">width =</span> <span class="fl">0.35</span>, <span class="at">height =</span> <span class="fl">0.25</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>To save, name your viewport as a separate object and then specify that and the locator map in tmap_save:</p>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>vp <span class="ot">&lt;-</span> <span class="fu">viewport</span>(<span class="fl">0.87</span>, <span class="fl">0.82</span>, <span class="at">width =</span> <span class="fl">0.35</span>, <span class="at">height =</span> <span class="fl">0.25</span>)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="co"># export to a figure</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="fu">tmap_save</span>(mauinui_with_dem,</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>          <span class="at">filename =</span> <span class="st">"mauinui_basemap.png"</span>,</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>          <span class="at">dpi =</span> <span class="dv">300</span>,</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>          <span class="at">insets_tm =</span> locator_tmap,</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>          <span class="at">insets_vp =</span> vp,</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>          <span class="at">height =</span> <span class="dv">5</span>,</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>          <span class="at">width =</span> <span class="dv">6</span>,</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>          <span class="at">units =</span> <span class="st">"in"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 </section>
@@ -466,8 +566,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="references" class="level2">
 <h2 class="anchored" data-anchor-id="references">References</h2>
 <ol type="1">
-<li>Wedding &amp; Lecky et al 2018</li>
-<li>Campitelli E (2025). <em>ggnewscale: Multiple Fill and Colour Scales in ‘ggplot2’</em>. doi:10.5281/zenodo.2543762 <a href="https://doi.org/10.5281/zenodo.2543762" class="uri">https://doi.org/10.5281/zenodo.2543762</a>, R package version 0.5.2.</li>
+<li><p>Wedding, L. M., Lecky, J., Gove, J. M., Walecka, H. R., Donovan, M. K., Williams, G. J., Jouffray, J.-B., Crowder, L. B., Erickson, A., Falinski, K., Friedlander, A. M., Kappel, C. V., Kittinger, J. N., McCoy, K., Norström, A., Nyström, M., Oleson, K. L. L., Stamoulis, K. A., White, C., &amp; Selkoe, K. A. (2018). Advancing the integration of spatial data to map human and natural drivers on coral reefs. PLOS ONE, 13(3), Article 3 https://doi.org/10.1371/journal.pone.0189792</p></li>
+<li><p>Campitelli E (2025). <em>ggnewscale: Multiple Fill and Colour Scales in ‘ggplot2’</em>. doi:10.5281/zenodo.2543762 <a href="https://doi.org/10.5281/zenodo.2543762" class="uri">https://doi.org/10.5281/zenodo.2543762</a>, R package version 0.5.2.</p></li>
 </ol>
 
 

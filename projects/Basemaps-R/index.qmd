@@ -4,7 +4,7 @@ description: "Designing a streamlined workflow for publication-ready cartography
 author: "Madeline Berger"
 date: 2025-07-06
 categories: [Geospatial, Data visualization, R, Cartography]
-#image: 
+image: mauinui_basemap.png
 status: completed
 format:
   html:
@@ -19,19 +19,33 @@ format:
 
 Having spent my entire data science career thus far mainly using open-source tools, I am forever looking for ways to prove that anything you can do in ESRI (ArcPro) you can do in R or Python. One big challenge in this area cartography - generally speaking, cartography is much easier in a point-and-click interface with built in basemaps and easy to manipulate layouts.
 
-However, that doesn't mean you cannot use some simple organizational tricks to build a clean, flexible workflow in R to make publication-ready maps in R. While they may not be QUITE as customizable as using an ArcMap layout, `ggplot` and `tmap` have an extraordinary array of options to customize maps. And even better, working in a scripting environment makes it super easy to standardize a mapping aesthetic across all figures, and therefore across all collaborators, a win for open and reproducible science. 
+However, that doesn't mean you cannot use some simple organizational tricks to build a clean, flexible workflow in R to make publication-ready maps in R. While they may not be QUITE as customizable as using an ArcMap layout, `ggplot` and `tmap` have an extraordinary array of options to customize maps. And even better, working in a scripting environment makes it super easy to standardize a mapping aesthetic across all figures, and therefore across all collaborators, a win for open and reproducible science.
 
-The trick is to create a separate R script with your basemap code, so that you can source it in any other script and have a ready-to-go basemap on which you can layer on other data. I usually organize my spatial code repositories like so: 
+The trick is to create a separate R script with your basemap code, so that you can source it in any other script and have a ready-to-go basemap on which you can layer on other data. That script lives in a *workflow* folder, where I store other scripts with objects used throughout the project. This really helps with staying organized, standardizing across analyses, and transparency. I usually organize my spatial code repositories like this.
 
+> Root -
+>
+> -   Workflow -
+>
+>     -   filepaths.R
+>
+>     -   basemaps.R
+>
+>     -   (other scripts that contain parameters, libraries, custom functions or objects you frequently use in multiple scripts for the project)
+>
+> -   Analysis_Scripts
+>
+> -   Figures
+>
+> -   Data
 
-Below I'll create my go-to basemap for some of my work based in Hawai'i. The original 3D grey design is the brain child of my colleague Joey Lecky at NOAA. I'll show how I recreated it using `ggplot` and `tmap`. I'll also show how you can add inset maps with AOI footprints to finalize figures in `tmap` 
-
+Below I'll create my go-to basemap for some of my work based in Hawai'i. The original 3D grey design is the brain child of my colleague Joey Lecky at NOAA. I'll show how I recreated it using `ggplot` and `tmap`. I'll also show how you can add inset maps with AOI footprints to finalize figures in `tmap`
 
 ## Tools and libraries used
 
--   Wrangling: `tidyverse`
--   Geospatial: `terra`, `sf`, `ggplot`, `ggspatial`
--   Mapping: `tmap`, `ggplot`
+-   Wrangling: `tidyverse`,`here`
+-   Geospatial: `terra`, `sf`, `ggplot`, `ggspatial`, `rnaturalearth`
+-   Mapping: `tmap`, `ggplot`, `ggnewscale`,`grid`
 
 ## Code
 
@@ -53,12 +67,12 @@ basemap_dir <- file.path(here("projects/Basemaps-R"))
 
 ```
 
-
 ### Elegant 3D Basemaps using `ggplot`
 
-This map has just two layers: terrain from a digital elevation model (DEM) and outlines. I find that for my work, which is mostly focused on displaying data in near shore coast area, visualizing the land areas in a simple way is most effective. 
+This map has just two layers: terrain from a digital elevation model (DEM) and outlines. I find that for my work, which is mostly focused on displaying data in near shore coast area, visualizing the land areas in a simple way is most effective.
 
 **Data Prep**
+
 ```{r}
 
 # read in dems and convert to data frames
@@ -89,7 +103,6 @@ mauinui_coast <- filter(coastlines, Island %in% c("Maui","Molokai","Lanai","Kaho
 
 ```
 
-
 **Build the baseplot**
 
 ```{r}
@@ -114,7 +127,7 @@ oahu_with_dem
 
 ```
 
-We can add on the data we want to display, for example, this layer depicting near shore areas we estimate are most impacted by runoff from injection wells (a method for disposing of grey water and sewage) on Oahu:
+We can add on the data we want to display, for example, this layer depicting near shore areas we estimate are most impacted by runoff from septic sewage on Oahu:
 
 ```{r}
 
@@ -140,7 +153,7 @@ oahu_IW_gg
 
 ```
 
-This doesn't look great - unfortunately ggplot has a hard time plotting two layers with two different color scales so the more recent one has written over the 3D basemap. The best solution I've found is to use [`ggnewscale`](https://github.com/eliocamp/ggnewscale), a cool add-on package by Elio Campitelli. 
+This doesn't look great - unfortunately ggplot has a hard time plotting two layers with two different color scales so the more recent one has written over the 3D basemap. The best solution I've found is to use [`ggnewscale`](https://github.com/eliocamp/ggnewscale), a cool add-on package by Elio Campitelli.
 
 ```{r}
 
@@ -156,10 +169,9 @@ oahu_IW_gg
 
 ```
 
-
 ### Elegant 3D Basemaps using `tmap`
 
-`tmap` has fairly different syntax than ggplot, but I find it very intuitive and closer to how you might think about it in GIS software - you add a layer using `tm_shape`, and then add the layer *style* using `tm_polygons` or `tm_raster`, depending on if you are working with a raster or polygon. Unlike `ggplot`, we don't have to convert rasters to a xy dataframe:
+`tmap` has pretty different syntax than ggplot, yet I find it very intuitive and closer to how you might think about it in GIS software - you add a layer using `tm_shape`, and then add the layer *style* using `tm_polygons` or `tm_raster`, depending on if you are working with a raster or polygon. Unlike `ggplot`, we don't have to convert rasters to a xy data frame:
 
 ```{r}
 
@@ -180,12 +192,11 @@ mauinui_with_dem
 
 ```
 
-We can see here the default raster colors are orange / brown, and that `tmap` is treating the dem as categorial. We need to specify a grey scale palette and a continous stertch. If you are used to ggplot for visualization color scales in `tmap` can be a bit less intuitive but its still very easy. I find it easiest to define a palette outside the map code, and then reference it.
+We can see here the default raster colors are orange / brown. We need to specify a grey scale palette and a continuous stretch. If you are used to ggplot for visualization color scales in `tmap` can be a bit less intuitive but its still very easy. I find it easiest to define a palette outside the map code, and then reference it.
 
 You can also use a built in palette from tmap by running tmaptools::palette_explorer() in your console, which will open a cool shiny app that helps you build a palette that best fits your data (requires `shinyjs` to be installed).
 
-Lastly, I added some layout specifications at the bottom to remove the legend and the frame, add a north arrow, and scale bar. I find `tmap` much easier to add or take away these small graphic details, which is why I tend to use it for publication-ready maps. 
-
+Lastly, I added some layout specifications at the bottom to remove the legend and the frame, add a north arrow, and scale bar. I find `tmap` makes it much easier to add or take away these small graphic details, which is why I tend to use it for publication-ready maps.
 
 ```{r}
 
@@ -219,48 +230,118 @@ mauinui_with_dem
 
 ```
 
+### Adding inset locator maps in `tmap`
 
-### Adding inset maps and other annotations in `tmap`
+Another key element to a publication ready map is an inset map with a footprint of your study area at a zoomed-out scale, helping the viewer to locate where this area is in relation to recognizable geographic features (i.e. a country or continent border).
 
-Another key element to a publication ready map is an inset map with a footprint of your study area at a zoomed-out scale, helping the viewer to see where this area is in relation to recognizable geographic features (i.e. a country or continent border). 
-
-You can create one pretty easily in `tmap` and using the `rnaturalearth` package to get generic outlines of countries or continents. They key is to set up the bounding boxes for both the extent the map should show, and the annotations. I tend to use an online bounding box finder to get exact coordinates, because that allows me to really customize the extents to what looks good visually rather than relying on the extent of the data sets. 
-
+You can create one pretty easily in `tmap` and using the `rnaturalearth` package to get generic outlines of countries or continents. They key is to set up the bounding boxes for both the extent the map should show, and the annotations. I tend to use an [online bounding box finder](http://bboxfinder.com/#18.649417,-160.962195,22.728611,-154.480262) to get exact coordinates, because that allows me to customize the extents to what looks good visually rather than relying on the extent of the data sets. The one I've linked here is a little janky, but I like it because it clearly provides an xmin, xmax, etc. which is what I find easiest to plug into `st_bbox`.
 
 ```{r}
 
 library(rnaturalearth)
 
 # build bounding boxes - one for the study area footprint, one to crop the rnatural earth data
-mhi_box <- st_bbox(c(xmin = -89.0595, xmax = -88.0303,
-                         ymin = 15.5737, ymax = 16.5728), 
-                       crs = st_crs(26904)) %>% 
-  st_as_sfc()
-
-mauinui_box <- st_bbox(c(xmin = -160.962195, xmax = -152.622821,
-                         ymin = 18.649417, ymax = 22.728611), 
+mauinui_box <- st_bbox(c(xmin = -157.532959, xmax = -155.857544,
+                         ymin = 20.414143, ymax = 21.343107), 
                        crs = st_crs(4326)) %>% 
   st_as_sfc()
+
+
+
 
 # get outlines from rnatural earth
 
 hi_outline <- rnaturalearth::ne_states(country = "united states of america") %>% 
-  filter(name == "Hawaii") # this includes the northerwester hawaiian islands
+  filter(name == "Hawaii") %>% 
+  st_transform(crs = st_crs(4326))
+  
 
 
-# create the inset map with tmap
+
+# create the inset locator map with tmap
+
+locator_tmap <- tm_shape(hi_outline)+
+  tm_polygons()+
+  tm_shape(mauinui_box)+
+  tm_borders(
+    lwd = 1,
+    lty = 2,
+    col = "red"
+  )
 
 
+locator_tmap
 
-# 
 
 ```
 
+The Hawaii outline for `rnaturalearth` includes the Northwestern Islands, which are part of an amazing marine national monument and are uninhabited. What I love about `tmap` is that I don't have to worry about cropping the shape itself, which depending on your data can be a bit of a hassle, and just add a short specification in our mapping code to zoom in to the right bounding extent:
+
+```{r}
+
+# create bouding box for just the main hawaiian islands
+mhi_box <- st_bbox(c(xmin = -160.762195, xmax = -154.622821,
+                         ymin = 18.649417, ymax = 22.728611), 
+                       crs = st_crs(4326)) %>% 
+  st_as_sfc()
+
+
+# add to locator map 
+locator_tmap <- tm_shape(hi_outline, 
+                         bbox = mhi_box)+ # all you have to add to "zoom in"
+  tm_polygons()+
+  tm_shape(mauinui_box)+
+  tm_borders(
+    lwd = 1,
+    lty = 2,
+    col = "red"
+  )
+
+
+locator_tmap
+
+
+
+```
+
+The last step is to put this all together into one map layout. There are multiple ways to do this, I find that using the `grid` package allows for the most detailed customization.
+
+The print() line of code is adding your inset map. The viewport numbers can be thought of as coordinates on the frame, with the bottom as x axis and the left side as the y axis. Width and height define how big or small the inset map is. I usually just mess around with the numbers but you can make this process more automated by calculating aspect ratios - there is a lot to explore in the `viewport` function.
+
+```{r, warning=FALSE}
+
+library(grid)
+
+mauinui_with_dem
+print(locator_tmap,
+      vp = viewport(0.87, 0.82, width = 0.35, height = 0.25))
+
+
+```
+
+To save, name your viewport as a separate object and then specify that and the locator map in tmap_save:
+
+```{r, eval=FALSE}
+
+vp <- viewport(0.87, 0.82, width = 0.35, height = 0.25)
+
+# export to a figure
+
+tmap_save(mauinui_with_dem,
+          filename = "mauinui_basemap.png",
+          dpi = 300,
+          insets_tm = locator_tmap,
+          insets_vp = vp,
+          height = 5,
+          width = 6,
+          units = "in")
+
+```
 
 ### Other basemap resources
 
-
 ## References
 
-1. Wedding & Lecky et al 2018
-2. Campitelli E (2025). _ggnewscale: Multiple Fill and Colour Scales in 'ggplot2'_. doi:10.5281/zenodo.2543762 <https://doi.org/10.5281/zenodo.2543762>, R package version 0.5.2.
+1.  Wedding, L. M., Lecky, J., Gove, J. M., Walecka, H. R., Donovan, M. K., Williams, G. J., Jouffray, J.-B., Crowder, L. B., Erickson, A., Falinski, K., Friedlander, A. M., Kappel, C. V., Kittinger, J. N., McCoy, K., Norström, A., Nyström, M., Oleson, K. L. L., Stamoulis, K. A., White, C., & Selkoe, K. A. (2018). Advancing the integration of spatial data to map human and natural drivers on coral reefs. PLOS ONE, 13(3), Article 3 https://doi.org/10.1371/journal.pone.0189792
+
+2.  Campitelli E (2025). *ggnewscale: Multiple Fill and Colour Scales in 'ggplot2'*. doi:10.5281/zenodo.2543762 <https://doi.org/10.5281/zenodo.2543762>, R package version 0.5.2.

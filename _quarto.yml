@@ -34,6 +34,9 @@ format:
     theme: minty
     css: styles.css
     toc: false
+    
 
+preview:
+  browser: true
 
 
