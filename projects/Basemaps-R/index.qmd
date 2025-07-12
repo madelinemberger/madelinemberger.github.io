@@ -127,7 +127,7 @@ oahu_with_dem
 
 ```
 
-We can add on the data we want to display, for example, this layer depicting near shore areas we estimate are most impacted by runoff from septic sewage on Oahu:
+We can add on the data we want to display, for example, this layer depicting near shore areas we estimate are most impacted by runoff from septic sewage on Oahu^1^:
 
 ```{r}
 
@@ -153,16 +153,18 @@ oahu_IW_gg
 
 ```
 
-This doesn't look great - unfortunately ggplot has a hard time plotting two layers with two different color scales so the more recent one has written over the 3D basemap. The best solution I've found is to use [`ggnewscale`](https://github.com/eliocamp/ggnewscale), a cool add-on package by Elio Campitelli.
+This doesn't look great - unfortunately ggplot has a hard time plotting two layers with two different color scales so the more recent one has written over the 3D basemap. The best solution I've found is to use [`ggnewscale`](https://github.com/eliocamp/ggnewscale)^2^, a cool add-on package by Elio Campitelli.
+
+All I have to do it call the \`new_scale_fill\` function between the two raster layers:
 
 ```{r}
 
 library(ggnewscale)
 
-oahu_IW_gg <- oahu_with_dem+
-  new_scale_fill()+ # we have 2 fills, the basemap gradient and the pollution graident
+oahu_IW_gg <- oahu_with_dem+ # the basemap fill is part of this map
+  new_scale_fill()+ # reset scale
   geom_raster(data = oahu_iw_df, aes(x = x, y = y, fill = pollution))+
-  scale_fill_gradientn(colors=c("lightblue", "chocolate"))+
+  scale_fill_gradientn(colors=c("lightblue", "chocolate"))+ # pollution layer scale
   labs(fill = "Wastewater Pollution (kg p day)")
 
 oahu_IW_gg
@@ -306,20 +308,20 @@ locator_tmap
 
 The last step is to put this all together into one map layout. There are multiple ways to do this, I find that using the `grid` package allows for the most detailed customization.
 
-The print() line of code is adding your inset map. The viewport numbers can be thought of as coordinates on the frame, with the bottom as x axis and the left side as the y axis. Width and height define how big or small the inset map is. I usually just mess around with the numbers but you can make this process more automated by calculating aspect ratios - there is a lot to explore in the `viewport` function.
+The print() line of code is adding your inset map. The viewport numbers can be thought of as coordinates on the frame, with the bottom as x axis that ranges from 0 - 1 and the left side as the y axis that ranges from 0 - 1. Width and height define how big or small the inset map is. I usually just mess around with the numbers until it looks good, but you can make this process more automated by calculating aspect ratios - there is a lot to explore in the `viewport` function.
 
 ```{r, warning=FALSE}
 
 library(grid)
 
-mauinui_with_dem
+mauinui_with_dem # call the larger map
 print(locator_tmap,
-      vp = viewport(0.87, 0.82, width = 0.35, height = 0.25))
+      vp = viewport(0.87, 0.82, width = 0.35, height = 0.25)) # print it with the locator map in a  view port
 
 
 ```
 
-To save, name your viewport as a separate object and then specify that and the locator map in tmap_save:
+To save, name your viewport as a separate object and then specify that and the locator map in `tmap_save`:
 
 ```{r, eval=FALSE}
 
@@ -345,3 +347,5 @@ tmap_save(mauinui_with_dem,
 1.  Wedding, L. M., Lecky, J., Gove, J. M., Walecka, H. R., Donovan, M. K., Williams, G. J., Jouffray, J.-B., Crowder, L. B., Erickson, A., Falinski, K., Friedlander, A. M., Kappel, C. V., Kittinger, J. N., McCoy, K., Norström, A., Nyström, M., Oleson, K. L. L., Stamoulis, K. A., White, C., & Selkoe, K. A. (2018). Advancing the integration of spatial data to map human and natural drivers on coral reefs. PLOS ONE, 13(3), Article 3 https://doi.org/10.1371/journal.pone.0189792
 
 2.  Campitelli E (2025). *ggnewscale: Multiple Fill and Colour Scales in 'ggplot2'*. doi:10.5281/zenodo.2543762 <https://doi.org/10.5281/zenodo.2543762>, R package version 0.5.2.
+
+Thank you to Kelly Speare for sharing the ggplot color scheme she uses for similar maps in her work.

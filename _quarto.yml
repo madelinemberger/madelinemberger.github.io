@@ -15,9 +15,15 @@ website:
     #   text: Resources
       - href: posts.qmd
         text: Portfolio
-      - href: CV/MBerger_CV.pdf
+      - href: CV/CV_01_2025_MBerger.pdf
         text: CV
-        target: _blank
+        menu:
+        - text: English
+          href: CV/CV_Spanish.pdf
+          target: _blank
+        - text: Español
+          href: CV/MBerger_CV_Spanish.pdf
+          target: _blank
   page-footer: 
     background: light
     left: 
@@ -25,8 +31,8 @@ website:
     right: 
       - icon: github
         href: https://github.com/madelinemberger
-      #- icon: twitter
-       # href: https://twitter.com/SamanthaCsik
+      - icon: linkedin
+       href: https://www.linkedin.com/in/madeline-berger-a803a27a
   
 
 format:
