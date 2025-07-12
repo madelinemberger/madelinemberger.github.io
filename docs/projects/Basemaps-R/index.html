@@ -140,7 +140,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span class="menu-text">Portfolio</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../../CV/MBerger_CV.pdf" target="_blank"> 
+    <a class="nav-link" href="../../CV/CV_01_2025_MBerger.pdf"> 
 <span class="menu-text">CV</span></a>
   </li>  
 </ul>
@@ -309,7 +309,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<p>We can add on the data we want to display, for example, this layer depicting near shore areas we estimate are most impacted by runoff from septic sewage on Oahu:</p>
+<p>We can add on the data we want to display, for example, this layer depicting near shore areas we estimate are most impacted by runoff from septic sewage on Oahu<sup>1</sup>:</p>
 <div class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
@@ -345,16 +345,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<p>This doesn’t look great - unfortunately ggplot has a hard time plotting two layers with two different color scales so the more recent one has written over the 3D basemap. The best solution I’ve found is to use <a href="https://github.com/eliocamp/ggnewscale"><code>ggnewscale</code></a>, a cool add-on package by Elio Campitelli.</p>
+<p>This doesn’t look great - unfortunately ggplot has a hard time plotting two layers with two different color scales so the more recent one has written over the 3D basemap. The best solution I’ve found is to use <a href="https://github.com/eliocamp/ggnewscale"><code>ggnewscale</code></a><sup>2</sup>, a cool add-on package by Elio Campitelli.</p>
+<p>All I have to do it call the `new_scale_fill` function between the two raster layers:</p>
 <div class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggnewscale)</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>oahu_IW_gg <span class="ot">&lt;-</span> oahu_with_dem<span class="sc">+</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">new_scale_fill</span>()<span class="sc">+</span> <span class="co"># we have 2 fills, the basemap gradient and the pollution graident</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>oahu_IW_gg <span class="ot">&lt;-</span> oahu_with_dem<span class="sc">+</span> <span class="co"># the basemap fill is part of this map</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">new_scale_fill</span>()<span class="sc">+</span> <span class="co"># reset scale</span></span>
 <span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_raster</span>(<span class="at">data =</span> oahu_iw_df, <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y, <span class="at">fill =</span> pollution))<span class="sc">+</span></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_gradientn</span>(<span class="at">colors=</span><span class="fu">c</span>(<span class="st">"lightblue"</span>, <span class="st">"chocolate"</span>))<span class="sc">+</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_gradientn</span>(<span class="at">colors=</span><span class="fu">c</span>(<span class="st">"lightblue"</span>, <span class="st">"chocolate"</span>))<span class="sc">+</span> <span class="co"># pollution layer scale</span></span>
 <span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">fill =</span> <span class="st">"Wastewater Pollution (kg p day)"</span>)</span>
 <span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>oahu_IW_gg</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -522,15 +523,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>The last step is to put this all together into one map layout. There are multiple ways to do this, I find that using the <code>grid</code> package allows for the most detailed customization.</p>
-<p>The print() line of code is adding your inset map. The viewport numbers can be thought of as coordinates on the frame, with the bottom as x axis and the left side as the y axis. Width and height define how big or small the inset map is. I usually just mess around with the numbers but you can make this process more automated by calculating aspect ratios - there is a lot to explore in the <code>viewport</code> function.</p>
+<p>The print() line of code is adding your inset map. The viewport numbers can be thought of as coordinates on the frame, with the bottom as x axis that ranges from 0 - 1 and the left side as the y axis that ranges from 0 - 1. Width and height define how big or small the inset map is. I usually just mess around with the numbers until it looks good, but you can make this process more automated by calculating aspect ratios - there is a lot to explore in the <code>viewport</code> function.</p>
 <div class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(grid)</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>mauinui_with_dem</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>mauinui_with_dem <span class="co"># call the larger map</span></span>
 <span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(locator_tmap,</span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">vp =</span> <span class="fu">viewport</span>(<span class="fl">0.87</span>, <span class="fl">0.82</span>, <span class="at">width =</span> <span class="fl">0.35</span>, <span class="at">height =</span> <span class="fl">0.25</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">vp =</span> <span class="fu">viewport</span>(<span class="fl">0.87</span>, <span class="fl">0.82</span>, <span class="at">width =</span> <span class="fl">0.35</span>, <span class="at">height =</span> <span class="fl">0.25</span>)) <span class="co"># print it with the locator map in a  view port</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -540,7 +541,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<p>To save, name your viewport as a separate object and then specify that and the locator map in tmap_save:</p>
+<p>To save, name your viewport as a separate object and then specify that and the locator map in <code>tmap_save</code>:</p>
 <div class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
@@ -569,6 +570,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><p>Wedding, L. M., Lecky, J., Gove, J. M., Walecka, H. R., Donovan, M. K., Williams, G. J., Jouffray, J.-B., Crowder, L. B., Erickson, A., Falinski, K., Friedlander, A. M., Kappel, C. V., Kittinger, J. N., McCoy, K., Norström, A., Nyström, M., Oleson, K. L. L., Stamoulis, K. A., White, C., &amp; Selkoe, K. A. (2018). Advancing the integration of spatial data to map human and natural drivers on coral reefs. PLOS ONE, 13(3), Article 3 https://doi.org/10.1371/journal.pone.0189792</p></li>
 <li><p>Campitelli E (2025). <em>ggnewscale: Multiple Fill and Colour Scales in ‘ggplot2’</em>. doi:10.5281/zenodo.2543762 <a href="https://doi.org/10.5281/zenodo.2543762" class="uri">https://doi.org/10.5281/zenodo.2543762</a>, R package version 0.5.2.</p></li>
 </ol>
+<p>Thank you to Kelly Speare for sharing the ggplot color scheme she uses for similar maps in her work.</p>
 
 
 </section>
@@ -991,6 +993,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <li class="nav-item compact">
     <a class="nav-link" href="https://github.com/madelinemberger">
       <i class="bi bi-github" role="img">
+</i> 
+    </a>
+  </li>  
+    <li class="nav-item compact">
+    <a class="nav-link" href="https://www.linkedin.com/in/madeline-berger-a803a27a">
+      <i class="bi bi-linkedin" role="img">
 </i> 
     </a>
   </li>  
