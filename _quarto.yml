@@ -11,19 +11,18 @@ website:
     right:
       - href: index.qmd
         text: Home
-     # - href: resources.qmd
-    #   text: Resources
+      # - href: resources.qmd
+      #   text: Resources
       - href: posts.qmd
         text: Portfolio
-      - href: CV/CV_01_2025_MBerger.pdf
-        text: CV
+      - text: CV
         menu:
-        - text: English
-          href: CV/CV_Spanish.pdf
-          target: _blank
-        - text: Español
-          href: CV/MBerger_CV_Spanish.pdf
-          target: _blank
+          - text: English
+            href: CV/CV_01_2025_MBerger.pdf
+            target: _blank
+          - text: Español
+            href: CV/MBerger_CV_Spanish.pdf
+            target: _blank
   page-footer: 
     background: light
     left: 
@@ -33,6 +32,7 @@ website:
         href: https://github.com/madelinemberger
       - icon: linkedin
         href: https://www.linkedin.com/in/madeline-berger-a803a27a
+
   
 
 format:
