@@ -1,10 +1,16 @@
 ---
 title: "Portfolio"
 listing: 
-  contents: projects # all Quarto docs in the `posts` directory will be included on your listing page
-  type: grid # or `default` or `table`; each type has its own set of yaml options to include
-  sort: "date desc" # can also sort on more than one field
-  categories: false # allows you to sort posts by assigned categories 
+  contents:
+    - "projects/**/*.qmd"
+    - title: "Ocean Health Index Assessment for Tetiaroa"
+      path: "https://ohi-4site.github.io/tet-scores/documents/methods-results/Supplement.html"
+      image: "images/tetiaroa.jpg"
+      description: "I completed and OHI assessment for Tetiaroa Atoll as the 2020 Ocean Health Index fellow at NCEAS"
+      date: 2020-08-01 
+  type: grid
+  sort: "date desc"
+  categories: false
 ---
 
 This page contains bite-sized examples drawn from my professional projects as a marine spatial ecologist, as well as mini-side projects on topics that interest me more generally. 
