@@ -1,6 +1,6 @@
 ---
 title: "Madeline Berger"
-image: images/maddie_headshot.jpeg
+image: images/IMG_4257.jpg
 about:
   template: trestles
   image-shape: round
